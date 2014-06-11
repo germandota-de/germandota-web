@@ -1,5 +1,3 @@
-<?
-
 /* germandota.de - Sources of the website
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,22 +14,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once '../template/begin-head.inc.php';
-?>
-
-  <title>GermanDota.de - Community</title>
-
-<?
-include_once '../template/head-title.inc.php';
-?>
-
-  GermanDota Community
-
-<?
-include_once '../template/title-content.inc.php';
-?>
-
-  Hello World Content xD ...
-
-<?
-include_once '../template/content-end.inc.php';
+function init()
+{
+}

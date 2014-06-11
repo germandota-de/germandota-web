@@ -16,22 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once '../template/begin-head.inc.php';
-?>
+?>  <!-- begin of head-title -->
+</head>
+<body onload="init()">
+  <div id="topnav">
+    <a class="topnav_link" href="/">Home</a>
+    | <a class="topnav_link" href="/">Live Stream</a>
+  </div>
 
-  <title>GermanDota.de - Community</title>
-
-<?
-include_once '../template/head-title.inc.php';
-?>
-
-  GermanDota Community
-
-<?
-include_once '../template/title-content.inc.php';
-?>
-
-  Hello World Content xD ...
-
-<?
-include_once '../template/content-end.inc.php';
+  <div id="main">
+    <div id="title">
+  <!-- end of head-title -->

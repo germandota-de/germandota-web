@@ -16,22 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once '../template/begin-head.inc.php';
-?>
-
-  <title>GermanDota.de - Community</title>
-
-<?
-include_once '../template/head-title.inc.php';
-?>
-
-  GermanDota Community
-
-<?
-include_once '../template/title-content.inc.php';
-?>
-
-  Hello World Content xD ...
-
-<?
-include_once '../template/content-end.inc.php';
+?>  <!-- begin of content-end -->
+  </div>
+  <script type="text/javascript">var _paq = _paq || []; _paq.push(["trackPageView"]); _paq.push(["enableLinkTracking"]); (function() { var u="https://ssl-id.de/dj-l.de/dynamic/"; _paq.push(["setTrackerUrl", u+"piwik.php"]); _paq.push(["setSiteId", "1"]); var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript"; g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s); })();</script>
+  <noscript><img src="https://ssl-id.de/dj-l.de/dynamic/piwik.php?idsite=1&amp;rec=1" style="border:0" alt=""></noscript>
+</body>
+</html>
