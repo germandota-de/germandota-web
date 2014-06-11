@@ -111,12 +111,10 @@ II.  Easiest Git workflow
       updates from other contributors and rebase these to your local
       branch
 
-        sandbox/germandota-web$> git branch
-            ...
-          * my-contribution
-            ...
+        sandbox/germandota-web$> git checkout master
+        sandbox/germandota-web$> git pull
 
-        sandbox/germandota-web$> git pull origin master
+        sandbox/germandota-web$> git checkout my-contribution
         sandbox/germandota-web$> git pull --rebase
 
    b) Repeatedly make your changes, check your changes and commit
@@ -124,7 +122,8 @@ II.  Easiest Git workflow
 
         sandbox/germandota-web$> emacs bar/foo.php
         sandbox/germandota-web$> git add bar/foo.php
-        sandbox/germandota-web$> git commit
+           ...
+        sandbox/germandota-web$> git commit -a
 
       also for your interest during this phase
 
