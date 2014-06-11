@@ -1,0 +1,106 @@
+
+Installing Apache httpd on a Debian system
+******************************************
+
+TODO
+
+======================================================================
+
+Easiest Git workflow
+********************
+
+1. Setting up a branch in your local machine where you can work and
+   commit.
+
+  a) Fork this project from the origin repository to your GitHub
+     account via web interface at
+
+       https://github.com/germandota-de/germandota-web
+
+     Your forked repository on GitHub will be known as Upstream.
+
+  b) Clone the official (aka Origin) repository to your local machine
+
+       sandbox$> \
+         git clone https://github.com/germandota-de/germandota-web.git
+
+  c) Configure the Upstream repository so that you are able to commit
+     to GitHub.  Replace <ACCOUNT> with your GitHub account:
+
+       sandbox/germandota-web$> \
+         git config remote.upstream.url https://github.com/<ACCOUNT>/germandota-web.git
+
+  d) Create a branch for your work from master branch which will be
+     tracked and check it out
+
+       sandbox/germandota-web$> git branch --track my-contribution
+       sandbox/germandota-web$> git checkout my-contribution
+
+  x.1) Optionally (if not globally configured) add your real name and
+       email for commits
+
+         sandbox/germandota-web$> git config user.name "Martin Dota"
+         sandbox/germandota-web$> git config user.email thats.me@email.org
+
+  x.2) Optionally you can check your config (or edit) with an text
+       editor by opening the file
+
+         sandbox/germandota-web$> emacs .git/config
+
+----------------------------------------------------------------------
+
+2. This could be the workflow of an hacking session:
+
+   a) At the beginning you should check the origin/master branch for
+      updates from other contributors and rebase these to your local
+      branch
+
+        sandbox/germandota-web$> git branch
+            ...
+          * my-contribution
+            ...
+
+        sandbox/germandota-web$> git pull origin master
+        sandbox/germandota-web$> git pull --rebase
+
+   b) Repeatedly make your changes, check your changes and commit
+      these to your local branch
+
+        sandbox/germandota-web$> emacs bar/foo.php
+        sandbox/germandota-web$> git add bar/foo.php
+
+        sandbox/germandota-web$> git status
+        sandbox/germandota-web$> git diff
+
+        sandbox/germandota-web$> git commit
+
+   c) At the end of your hacking session you should upload (push) your
+      changes to your GitHub repository (aka Upstream)
+
+        sandbox/germandota-web$> git branch
+            ...
+          * my-contribution
+            ...
+
+        sandbox/germandota-web$> git push upstream
+
+----------------------------------------------------------------------
+
+3. If your contribution is ready for use then you can create a pull
+   request via web interface to push your changes to the official
+   origin repository.  You can do the by clicking the green button at
+   (replace <ACCOUNT>)
+
+     https://github.com/<ACCOUNT>/germandota-web
+
+   and choose after clicking the `Edit'-Button
+
+     * base fork: germandota-de/germandota-web
+
+     * base: master
+
+     * head fork: <ACCOUNT>/germandota-web
+
+     * compare: my-contribution
+
+TODO
