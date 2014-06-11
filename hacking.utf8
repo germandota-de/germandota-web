@@ -1,15 +1,70 @@
-
-Installing Apache httpd on a Debian system
-******************************************
-
-TODO
+/* germandota.de - Sources of the website
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 ======================================================================
 
-Easiest Git workflow
-********************
+Table of Contents
+*****************
 
-1. Setting up a branch in your local machine where you can work and
+    I. Coding Guidelines
+
+   II. Easiest Git workflow
+
+  III. Installing Apache httpd on a Debian system
+
+======================================================================
+
+I.  Coding Guidelines
+*********************
+
+a) If it possible then prevent that lines of code are not longer than
+   70 CHARCTERS PER LINE.
+
+b) If you are not sure how to format or document or what ever
+   something then consider the
+
+     - GNU Coding Standards
+       http://www.gnu.org/prep/standards/
+
+c) If you ADD A NEW FILE to this project THEN ADD THE FOLLOWING
+   LICENSE text at the beginning of that file to prevent abusing of
+   your code
+
+/* germandota.de - Sources of the website
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+======================================================================
+
+II.  Easiest Git workflow
+*************************
+
+1. Setting up a branch at your local machine where you can work and
    commit.
 
   a) Fork this project from the origin repository to your GitHub
@@ -17,21 +72,21 @@ Easiest Git workflow
 
        https://github.com/germandota-de/germandota-web
 
-     Your forked repository on GitHub will be known as Upstream.
+     Your forked repository on GitHub will be known as upstream.
 
-  b) Clone the official (aka Origin) repository to your local machine
+  b) Clone the official (aka origin) repository to your local machine
 
        sandbox$> \
          git clone https://github.com/germandota-de/germandota-web.git
 
-  c) Configure the Upstream repository so that you are able to commit
-     to GitHub.  Replace <ACCOUNT> with your GitHub account:
+  c) Configure the upstream repository so that you are able to push
+     (upload) to GitHub.  Replace <ACCOUNT> with your GitHub account:
 
        sandbox/germandota-web$> \
          git config remote.upstream.url https://github.com/<ACCOUNT>/germandota-web.git
 
   d) Create a branch for your work from master branch which will be
-     tracked and check it out
+     tracked and check it out to your working tree
 
        sandbox/germandota-web$> git branch --track my-contribution
        sandbox/germandota-web$> git checkout my-contribution
@@ -42,8 +97,9 @@ Easiest Git workflow
          sandbox/germandota-web$> git config user.name "Martin Dota"
          sandbox/germandota-web$> git config user.email thats.me@email.org
 
-  x.2) Optionally you can check your config (or edit) with an text
-       editor by opening the file
+  x.2) Optionally you can check your config (or edit) with a text
+       editor by opening the file, [$> git help config] for more
+       details
 
          sandbox/germandota-web$> emacs .git/config
 
@@ -68,11 +124,13 @@ Easiest Git workflow
 
         sandbox/germandota-web$> emacs bar/foo.php
         sandbox/germandota-web$> git add bar/foo.php
+        sandbox/germandota-web$> git commit
+
+      also for your interest during this phase
 
         sandbox/germandota-web$> git status
         sandbox/germandota-web$> git diff
-
-        sandbox/germandota-web$> git commit
+        sandbox/germandota-web$> git log
 
    c) At the end of your hacking session you should upload (push) your
       changes to your GitHub repository (aka Upstream)
@@ -86,9 +144,9 @@ Easiest Git workflow
 
 ----------------------------------------------------------------------
 
-3. If your contribution is ready for use then you can create a pull
+3. If your contribution is ready to use then you can create a pull
    request via web interface to push your changes to the official
-   origin repository.  You can do the by clicking the green button at
+   origin repository.  You can do this by clicking the green button at
    (replace <ACCOUNT>)
 
      https://github.com/<ACCOUNT>/germandota-web
@@ -103,4 +161,47 @@ Easiest Git workflow
 
      * compare: my-contribution
 
-TODO
+  After that a maintainer will be informed and react to your pull
+  request.
+
+======================================================================
+
+III.  Installing Apache httpd on a Debian system
+***********************************************
+
+1. Install Apache httpd via apt package manager as root
+
+     root$> apt-get install libapache2-mod-php
+
+2. Change as root the directive DocumentRoot in the configuration file
+
+     root$> emacs /etc/apache2/sites-available/000-default.conf
+
+   to the www directory of your contribution branch (see section
+   `Easiest Git workflow')
+
+     DocumentRoot <path-to>/germandota-web/www
+
+3. Make sure that localhost (and only localhost) has access to that
+   directory and .htaccess can override.  For that check in file
+
+     root$> emacs /etc/apache2/sites-available/000-default.conf
+
+   if the following lines are existing
+
+     <Directory <path-to>/germandota-web/www/>
+         ...
+       AllowOverride All
+       Require ip ::1 127.0.0.1
+         ...
+     </Directory>
+
+4. Restart the httpd as root
+
+     root$> apache2ctl restart
+
+5. Test if your setup is working by entering into your web browser
+
+     http://localhost
+
+======================================================================
