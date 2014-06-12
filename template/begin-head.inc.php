@@ -16,24 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once '../template/begin-head.inc.php';
-?>
-
-  <title>GermanDota.de - Community</title>
-
-<?
-include_once '../template/head-title.inc.php';
-?>
-
-  GermanDota Community
-
-<?
-include_once '../template/title-content.inc.php';
-for ($i=0; $i<100; $i++) {
-?>
-
-  Hello World Content xD ...<br>
-
-<?
-}
-include_once '../template/content-end.inc.php';
+?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+          "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" type="text/css" href="/default.css">
+  <script type="text/javascript" src="/default.js"></script>
+  <!-- end of begin-head -->
