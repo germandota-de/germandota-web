@@ -21,6 +21,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <link href="/default.css" rel="stylesheet" type="text/css">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" type="text/css" href="/default.css">
   <script type="text/javascript" src="/default.js"></script>
   <!-- end of begin-head -->

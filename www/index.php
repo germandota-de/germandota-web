@@ -29,9 +29,11 @@ include_once '../template/head-title.inc.php';
 
 <?
 include_once '../template/title-content.inc.php';
+for ($i=0; $i<100; $i++) {
 ?>
 
-  Hello World Content xD ...
+  Hello World Content xD ...<br>
 
 <?
+}
 include_once '../template/content-end.inc.php';

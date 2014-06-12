@@ -16,4 +16,8 @@
 
 function init()
 {
+  for (var i=0; i<parent.frames.length; i++) {
+    if (parent.frames[i].location.href == window.location.href)
+      parent.location.href = window.location.href;
+  }
 }
