@@ -14,12 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-html {
-  height: 100%;
-}
-
 body {
-  height: 100%;
   padding: 0px;
   margin: 0px;
 
@@ -29,16 +24,53 @@ body {
   text-align: justify;
 }
 
-div#topnav {
+a {
+  outline: 0;
+
+  color: #900000;
+  text-decoration: none;
+  border-style: none;
+}
+a:hover {
+  border-bottom: 1px solid;
+}
+
+/* ***************************************************************  */
+
+div.topnav {
   position: fixed;
   height: 40px;
   z-index: 60;
 
   background-color: #353535;
   text-align: center;
-  vertical-align: bottom;
   width: 100%;
 }
+
+span.topnav {
+  position: relative;
+  top: -10px; /*  (40 - 14)/2 - 14/4 */
+  vertical-align: bottom;
+
+  color: #a0a0a0;
+}
+
+img#topnav_logo {
+  margin-top: 4px; /* (40 - 32)/2 */
+}
+
+a.topnav_link {
+  color: #f0f0f0;
+  font-variant: small-caps;
+  font-weight: bold;
+  padding: 4px;
+}
+a:hover.topnav_link {
+  color: #b0b0b0;
+  border-style: none;
+}
+
+/* ***************************************************************  */
 
 div#main {
   position: relative;
@@ -46,7 +78,10 @@ div#main {
   z-index: 30;
 
   background-color: #a0a0a0;
+  border: 1px solid #505050;
+  border-top: none;
   width: 900px;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 60px;
 }

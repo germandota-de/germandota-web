@@ -19,9 +19,12 @@
 ?>  <!-- begin of head-title -->
 </head>
 <body onload="init()">
-  <div id="topnav">
-    <a class="topnav_link" href="/">Home</a>
-    | <a class="topnav_link" href="/">Live Stream</a>
+  <div class="topnav">
+    <img id="topnav_logo" src="/img/logo.32.png" alt="(logo)">
+    <span class="topnav">
+      <a class="topnav_link" href="/">Home</a>
+      | <a class="topnav_link" href="/">Live Stream</a>
+    </span>
   </div>
 
   <div id="main">
