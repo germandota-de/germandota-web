@@ -30,8 +30,8 @@ Table of Contents
 I.  Coding Guidelines
 *********************
 
-a) If it possible then prevent that lines of code are not longer than
-   70 CHARCTERS PER LINE.
+a) If it possible then prevent that lines of code are longer than 70
+   CHARCTERS PER LINE.
 
 b) If you are not sure how to format or document or what ever
    something then consider the
