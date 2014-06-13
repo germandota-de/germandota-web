@@ -17,6 +17,13 @@
  */
 
 ?>  <!-- begin of content-end -->
+    </div>
+  </div>
+  <div id="footer">
+    <span class="floatleft"><a target="_blank" href="https://github.com/germandota-de">github.com/germandota-de</a></span>
+    Laufen? Iiieh, Sport! Hier gehts zur <i>Iiieh Sports League</i>:
+      <a target="_blank" href="https://running.aitiba.com/">running.aitiba.com</a>
+    <span class="floatright"><a id="impressum" href="/impressum/">Impressum</a></span>
   </div>
   <script type="text/javascript">var _paq = _paq || []; _paq.push(["trackPageView"]); _paq.push(["enableLinkTracking"]); (function() { var u="https://ssl-id.de/dj-l.de/dynamic/"; _paq.push(["setTrackerUrl", u+"piwik.php"]); _paq.push(["setSiteId", "1"]); var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript"; g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s); })();</script>
   <noscript><img src="https://ssl-id.de/dj-l.de/dynamic/piwik.php?idsite=1&amp;rec=1" style="border:0" alt=""></noscript>

@@ -29,11 +29,33 @@ include_once '../template/head-title.inc.php';
 
 <?
 include_once '../template/title-content.inc.php';
-for ($i=0; $i<100; $i++) {
 ?>
 
-  Hello World Content xD ...<br>
+  <div class="textblock">
+    <p>Hier ist der Anlaufpunkt für alle, die gerne die Dota 2 Let&rsquo;s
+    Play&rsquo;s von Martin sehen.  Diese Seite ist noch im Aufbau.
+    Und das ist gut, denn so kannst du auch mithelfen diese Webseite
+    zu erweitern und zu verbessern.</p>
+    <p>Und so kannst du helfen:</p>
+    <table class="default_table">
+       <tr><th>Videos gucken :D</th><td>Ist das aller wichtigste!
+         Denn nur so wirst<br>du ein ruhiges und sorgenfreies Leben führen
+         ;P</td></tr>
+      <tr><th>Bugs / Probleme / Eigene Ideen</th><td><a target="_blank"
+        href="https://github.com/germandota-de/germandota-web/issues">Kannst
+        du hier rein schreiben</a></td></tr>
+      <tr><th>Eigene Ideen verwirklichen</th><td><a target="_blank"
+        href="https://github.com/germandota-de/germandota-web">Im Code
+          herum stöbern und herum probieren</a></td></tr>
+    </table>
+    <p>Was hoffentlich in den nächsten Tagen noch kommt:</p>
+    <ul>
+       <li>Youtube Videos der Playlist <a target="_blank"
+         href="http://www.youtube.com/playlist?list=PLNn2VtDvrJFjyeE1NiSv3uYguvzEnQ_19">Dota 2</a></li>
+       <li>Irgend eine Art von Mini-Forum, mal sehen xD ...</li>
+       <li>Eure Vorschläge ???</li>
+    </ul>
+  </div>
 
 <?
-}
 include_once '../template/content-end.inc.php';

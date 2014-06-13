@@ -23,7 +23,7 @@
     <img id="topnav_logo" src="/img/logo.32.png" alt="(logo)">
     <span class="topnav">
       <a class="topnav_link" href="/">Home</a>
-      | <a class="topnav_link" href="/">Live Stream</a>
+      | <a class="topnav_link" href="/live/">Live Stream</a>
     </span>
   </div>
 

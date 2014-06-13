@@ -1,5 +1,3 @@
-<?
-
 /* germandota.de - Sources of the website
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-?>  <!-- begin of title-content -->
-    </div>
-    <div id="content">
-  <!-- end of title-content -->
+/* Do also change www/default.css  */
+div#content {
+  height: 520px; /* top: -507px;  */
+}
