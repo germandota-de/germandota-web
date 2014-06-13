@@ -16,7 +16,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-?>  <!-- begin of title-content -->
-    </div>
-    <div id="content">
-  <!-- end of title-content -->
+include_once '../../template/begin-head.inc.php';
+?>
+
+  <title>GermanDota.de - Impressum</title>
+
+<?
+include_once '../../template/head-title.inc.php';
+?>
+
+  Impressum
+
+<?
+include_once '../../template/title-content.inc.php';
+?>
+
+  <p>Diese Site ist eine Zusammenarbeit der Community.  Die Inhalte
+     werden größten Teils von dieser erstellt.</p>
+  <hr>
+  <p>
+    <b>Angaben gemäß &sect; 5 TMG</b><br>
+    Dirk Lehmann<br>Sickingenstr. 58<br>10553 Berlin<br>
+  </p><p>
+    <b>Kontakt</b><br>
+    Email: <a href="mailto:dotadirk@dj-l.de">dotadirk@dj-l.de</a>
+  </p>
+
+<?
+include_once '../../template/content-end.inc.php';
