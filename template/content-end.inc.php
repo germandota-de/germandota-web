@@ -20,6 +20,7 @@
     </div>
   </div>
   <div id="footer">
+    <span class="floatleft"><a target="_blank" href="https://github.com/germandota-de">github.com/germandota-de</a></span>
     Laufen? Iiieh, Sport! Hier gehts zur <i>Iiieh Sports League</i>:
       <a target="_blank" href="https://running.aitiba.com/">running.aitiba.com</a>
     <span class="floatright"><a id="impressum" href="/impressum/">Impressum</a></span>

@@ -35,8 +35,35 @@ a:hover {
   border-bottom: 1px solid;
 }
 
-.floatright {
-  float: right;
+.floatright { float: right; }
+.floatleft { float: left; }
+
+/* ***************************************************************  */
+
+div.textblock {
+  background-color: #c0c0c0;
+  padding: 14px;
+}
+
+li {
+  padding: 2px;
+}
+
+table.default_table {
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #a0a0b5;
+  border-spacing: 0px;
+}
+table.default_table td {
+  vertical-align: top;
+  padding: 8px;
+}
+table.default_table th {
+  vertical-align: top;
+  background-color: #9090a5;
+  font-weight: bold;
+  padding: 8px;
 }
 
 /* ***************************************************************  */
@@ -53,14 +80,14 @@ div.topnav {
 
 span.topnav {
   position: relative;
-  top: -10px; /*  (40 - 14)/2 - 14/4 */
+  top: -10px; /*  (40 - 14)/2 - 14/4  */
   vertical-align: bottom;
 
   color: #a0a0a0;
 }
 
 img#topnav_logo {
-  margin-top: 4px; /* (40 - 32)/2 */
+  margin-top: 4px; /* (40 - 32)/2  */
 }
 
 a.topnav_link {
@@ -99,7 +126,9 @@ div#title {
 }
 
 div#content {
+  font-size: 12px;
   padding: 14px;
+  min-height: 500px;
 }
 
 div#footer {
@@ -110,7 +139,7 @@ div#footer {
 
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 40px;
+  margin-bottom: 35px;
 
   text-align: center;
   font-size: 10px;
@@ -119,3 +148,40 @@ div#footer {
 a#impressum {
   color: #707070;
 }
+
+/* ***************************************************************  */
+
+div#live_videoframe {
+  display: table;
+  position: relative;
+  left: -140px;
+
+  background-color: #202020;
+  padding: 3px;
+  text-align: center;
+
+  font-size: 11px;
+}
+
+div#live_videoframe_bottom {
+  background-color: #404040;
+  padding: 4px;
+}
+div#live_videoframe_bottom a {
+  color: #a0a0a0;
+}
+
+div#live_chatframe {
+  display: table;
+  position: relative;
+
+  /* Do also change www/live/fix.css  */
+  top: -507px;  /* 480 + 2*3 + 2*4 + ~11  */
+
+  left: 653px;  /* 787 + 2*3  */
+
+  background-color: #808080;
+  padding: 3px;
+}
+
+/* ***************************************************************  */
