@@ -45,7 +45,7 @@ include_once '../../template/title-content.inc.php';
         <param name="allowScriptAccess" value="always">
         <param name="allowNetworking" value="all">
         <param name="movie" value="http://www.twitch.tv/widgets/live_embed_player.swf">
-        <param name="flashvars" value="hostname=www.twitch.tv&channel=germandota&auto_play=false&start_volume=70">
+        <param name="flashvars" value="hostname=www.twitch.tv&amp;channel=germandota&amp;auto_play=false&amp;start_volume=70">
     </object>
     <div id="live_videoframe_bottom">
       <a href="http://www.twitch.tv/germandota">GermanDota live auf
