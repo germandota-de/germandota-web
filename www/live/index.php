@@ -19,7 +19,6 @@
 include_once '../../template/begin-head.inc.php';
 ?>
 
-  <link rel="stylesheet" type="text/css" href="fix.css">
   <title>GermanDota.de - Live Stream</title>
 
 <?
@@ -31,35 +30,39 @@ include_once '../../template/head-title.inc.php';
 <?
 include_once '../../template/title-content.inc.php';
 ?>
-  <div id="live_videoframe">
 
-    <!-- height="378" width="620" -->
-    <!-- Do also change www/default.css -->
+  <table id="live_videoframe">
+    <tr><td>
 
-    <object type="application/x-shockwave-flash"
-      height="480" width="787"
-      id="live_embed_player_flash"
-      data="http://www.twitch.tv/widgets/live_embed_player.swf?channel=germandota"
-      bgcolor="#000000">
+      <!-- height="378" width="620"  -->
+      <!-- Do also change www/default.css  -->
+
+      <object height="480" width="787">
+        <param name="movie"
+          value="http://www.twitch.tv/widgets/live_embed_player.swf?hostname=www.twitch.tv&amp;channel=germandota&amp;auto_play=false&amp;start_volume=50">
         <param name="allowFullScreen" value="true">
         <param name="allowScriptAccess" value="always">
         <param name="allowNetworking" value="all">
-        <param name="movie" value="http://www.twitch.tv/widgets/live_embed_player.swf">
-        <param name="flashvars" value="hostname=www.twitch.tv&amp;channel=germandota&amp;auto_play=false&amp;start_volume=70">
-    </object>
-    <div id="live_videoframe_bottom">
-      <a href="http://www.twitch.tv/germandota">GermanDota live auf
-        www.twitch.tv</a>
-    </div>
-  </div>
-  <div id="live_chatframe">
-    <iframe frameborder="0" scrolling="no"
-      src="http://twitch.tv/germandota/chat?popout="
+        <param name="bgcolor" value="#000000">
+        <embed
+          src="http://www.twitch.tv/widgets/live_embed_player.swf?hostname=www.twitch.tv&amp;channel=germandota&amp;auto_play=false&amp;start_volume=50"
+          type="application/x-shockwave-flash"
+          height="480" width="787"
+          allowfullscreen="true" allowscriptaccess="always"
+          allownetworking="all" bgcolor="#000000">
+      </object>
+      <div id="live_videoframe_bottom">
+        <a href="http://www.twitch.tv/germandota">GermanDota live auf
+          www.twitch.tv</a>
+      </div>
+    </td><td id="live_videoframe_chat">
+      <iframe frameborder="0" scrolling="no"
+        src="http://twitch.tv/germandota/chat?popout="
 
-       height="501" width="350"></iframe>
-       <!-- Do also change www/default.css -->
-
-  </div>
+         height="502" width="350"></iframe>
+         <!-- Do also change www/default.css -->
+    </td></tr>
+  </table>
 
 <?
 include_once '../../template/content-end.inc.php';

@@ -1,3 +1,5 @@
+<?
+
 /* germandota.de - Sources of the website
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,7 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/* Do also change www/default.css  */
-div#content {
-  height: 520px; /* top: -507px;  */
-}
+include_once '../../template/begin-head.inc.php';
+?>
+
+  <meta http-equiv="refresh" content="0; URL=/">
+  <title>GermanDota.de - Refresh</title>
+
+<?
+include_once '../../template/head-title.inc.php';
+?>
+
+  GermanDota Refresh
+
+<?
+include_once '../../template/title-content.inc.php';
+?>
+
+  Bad Idea O.O
+
+<?
+include_once '../../template/content-end.inc.php';

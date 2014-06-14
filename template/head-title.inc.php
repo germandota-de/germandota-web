@@ -24,6 +24,7 @@
     <span class="topnav">
       <a class="topnav_link" href="/">Home</a>
       | <a class="topnav_link" href="/live/">Live Stream</a>
+      | <a class="topnav_link" href="/pl/dota2/">Dota 2 Playlist</a>
     </span>
   </div>
 
