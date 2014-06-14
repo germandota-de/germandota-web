@@ -132,7 +132,7 @@ II.  Easiest Git workflow
         sandbox/germandota-web$> git log
 
    c) At the end of your hacking session you should upload (push) your
-      changes to your GitHub repository (aka Upstream)
+      changes to your GitHub repository (aka upstream)
 
         sandbox/germandota-web$> git branch
             ...
