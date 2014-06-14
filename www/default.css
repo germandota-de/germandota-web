@@ -35,6 +35,10 @@ a:hover {
   border-bottom: 1px solid;
 }
 
+table {
+  border-spacing: 0px;
+}
+
 .floatright { float: right; }
 .floatleft { float: left; }
 
@@ -53,7 +57,6 @@ table.default_table {
   margin-left: auto;
   margin-right: auto;
   background-color: #a0a0b5;
-  border-spacing: 0px;
 }
 table.default_table td {
   vertical-align: top;
@@ -151,37 +154,66 @@ a#impressum {
 
 /* ***************************************************************  */
 
-div#live_videoframe {
-  display: table;
+table#live_videoframe {
   position: relative;
   left: -140px;
 
   background-color: #202020;
-  padding: 3px;
+}
+table#live_videoframe td {
   text-align: center;
+  padding: 3px;
+}
 
-  font-size: 11px;
+td#live_videoframe_chat {
+  background-color: #808080;
 }
 
 div#live_videoframe_bottom {
   background-color: #404040;
-  padding: 4px;
+  width: 787px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+
+  font-size: 11px;
 }
 div#live_videoframe_bottom a {
   color: #a0a0a0;
 }
 
-div#live_chatframe {
+/* ***************************************************************  */
+
+div#playlist_videoframe {
   display: table;
-  position: relative;
+  margin-left: auto;
+  margin-right: auto;
 
-  /* Do also change www/live/fix.css  */
-  top: -507px;  /* 480 + 2*3 + 2*4 + ~11  */
-
-  left: 653px;  /* 787 + 2*3  */
-
-  background-color: #808080;
+  background-color: #404040;
   padding: 3px;
+}
+
+div#playlist_videoframe_bottom {
+  background-color: #606060;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  height: 25px;
+  text-align: center;
+
+  color: #a0a0a0;
+}
+div#playlist_videoframe_bottom a {
+  color: #500000;
+  font-weight: bold;
+}
+
+table#playlist_videoframe_table {
+  margin-left: auto;
+  margin-right: auto;
+  height: 100%;
+}
+table#playlist_videoframe_table td {
+  padding-left: 2px;
+  padding-right: 2px;
 }
 
 /* ***************************************************************  */
