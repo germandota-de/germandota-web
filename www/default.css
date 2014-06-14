@@ -182,3 +182,38 @@ div#live_videoframe_bottom a {
 }
 
 /* ***************************************************************  */
+
+div#playlist_videoframe {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+
+  background-color: #404040;
+  padding: 3px;
+}
+
+div#playlist_videoframe_bottom {
+  background-color: #606060;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  height: 25px;
+  text-align: center;
+
+  color: #a0a0a0;
+}
+div#playlist_videoframe_bottom a {
+  color: #500000;
+  font-weight: bold;
+}
+
+table#playlist_videoframe_table {
+  margin-left: auto;
+  margin-right: auto;
+  height: 100%;
+}
+table#playlist_videoframe_table td {
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+/* ***************************************************************  */

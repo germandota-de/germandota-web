@@ -41,7 +41,7 @@ include_once '../template/title-content.inc.php';
        <tr><th>Videos gucken :D</th><td>Ist das aller wichtigste!
          Denn nur so wirst<br>du ein ruhiges und sorgenfreies Leben führen
          ;P</td></tr>
-      <tr><th>Bugs / Probleme / Eigene Ideen</th><td><a target="_blank"
+       <tr><th>Probleme, Verbesserungen, Ideen</th><td><a target="_blank"
         href="https://github.com/germandota-de/germandota-web/issues">Kannst
         du hier rein schreiben</a></td></tr>
       <tr><th>Eigene Ideen verwirklichen</th><td><a target="_blank"
@@ -50,9 +50,9 @@ include_once '../template/title-content.inc.php';
     </table>
     <p>Was hoffentlich in den nächsten Tagen noch kommt:</p>
     <ul>
-       <li>Youtube Videos der Playlist <a target="_blank"
-         href="http://www.youtube.com/playlist?list=PLNn2VtDvrJFjyeE1NiSv3uYguvzEnQ_19">Dota 2</a></li>
        <li>Irgend eine Art von Mini-Forum, mal sehen xD ...</li>
+       <li>Twitch Follow Button für <a href="/live/">Live Stream</a></li>
+       <li>YouTube Kommentare für <a href="/pl/dota2">Dota 2 Playlist</a></li>
        <li>Eure Vorschläge ???</li>
     </ul>
   </div>

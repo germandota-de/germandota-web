@@ -16,18 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-?>  <!-- begin of head-title -->
-</head>
-<body onload="init()">
-  <div class="topnav">
-    <img id="topnav_logo" src="/img/logo.32.png" alt="(logo)">
-    <span class="topnav">
-      <a class="topnav_link" href="/">Home</a>
-      | <a class="topnav_link" href="/live/">Live Stream</a>
-      | <a class="topnav_link" href="/pl/dota2/">Dota 2 Playlist</a>
-    </span>
-  </div>
+include_once '../../template/begin-head.inc.php';
+?>
 
-  <div id="main">
-    <div id="title">
-  <!-- end of head-title -->
+  <meta http-equiv="refresh" content="0; URL=/">
+  <title>GermanDota.de - Refresh</title>
+
+<?
+include_once '../../template/head-title.inc.php';
+?>
+
+  GermanDota Refresh
+
+<?
+include_once '../../template/title-content.inc.php';
+?>
+
+  Bad Idea O.O
+
+<?
+include_once '../../template/content-end.inc.php';
