@@ -217,3 +217,19 @@ table#playlist_videoframe_table td {
 }
 
 /* ***************************************************************  */
+
+table#impressum_person {
+  margin-left: auto;
+  vertical-align: top;
+}
+
+table#impressum_person td {
+  color: #606060;
+  font-size: 11px;
+
+  padding-left: 10px;
+  padding-right: 10px;
+  vertical-align: top;
+}
+
+/* ***************************************************************  */

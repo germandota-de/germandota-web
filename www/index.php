@@ -41,10 +41,10 @@ include_once '../template/title-content.inc.php';
        <tr><th>Videos gucken :D</th><td>Ist das aller wichtigste!
          Denn nur so wirst<br>du ein ruhiges und sorgenfreies Leben führen
          ;P</td></tr>
-       <tr><th>Probleme, Verbesserungen, Ideen</th><td><a target="_blank"
+       <tr><th>Bugs, Verbesserungen, Ideen</th><td><a target="_blank"
         href="https://github.com/germandota-de/germandota-web/issues">Kannst
         du hier rein schreiben</a></td></tr>
-      <tr><th>Eigene Ideen verwirklichen</th><td><a target="_blank"
+      <tr><th>Selber coden</th><td><a target="_blank"
         href="https://github.com/germandota-de/germandota-web">Im Code
           herum stöbern und herum probieren</a></td></tr>
     </table>

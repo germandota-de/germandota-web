@@ -16,20 +16,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once dirname(__FILE__). '/../inc/common.inc.php';
+include_once dirname(__FILE__). '/../config.inc.php';
 
-?>  <!-- begin of head-title -->
-</head>
-<body onload="init()">
-  <div class="topnav">
-    <img id="topnav_logo" src="/img/logo.32.png" alt="(logo)">
-    <span class="topnav">
-      <a class="topnav_link" href="/">Home</a>
-      | <a class="topnav_link" href="/live/">Live Stream</a>
-      | <a class="topnav_link" href="/pl/dota2/">Dota 2 Playlist</a>
-    </span>
-  </div>
+/* ***************************************************************  */
 
-  <div id="main">
-    <div id="title">
-  <!-- end of head-title -->
+/* Convert all characters for HTML output and put to output buffer.  */
+function _o($str)
+{
+  echo preg_replace('/\n/si', '<br>',
+                    htmlentities($str, ENT_QUOTES, 'UTF-8'));
+}
+
+/* Convert all characters for HTML output, but leave HTML tags plain  */
+function _o_html($str)
+{
+  echo htmlspecialchars_decode(
+    preg_replace('/\n/si', '<br>', htmlentities($str, ENT_QUOTES, 'UTF-8'))
+    , ENT_QUOTES);
+}
