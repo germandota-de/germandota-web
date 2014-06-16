@@ -26,7 +26,7 @@ include_once dirname(__FILE__). '/../inc/common.inc.php';
     <span class="topnav">
       <a class="topnav_link" href="/">Home</a>
       | <a class="topnav_link" href="/live/">Live Stream</a>
-      | <a class="topnav_link" href="/playlist/dota2/">Dota 2 Playlist</a>
+      | <a class="topnav_link" href="/playlists/dota2/">Dota 2 Playlist</a>
     </span>
   </div>
 
