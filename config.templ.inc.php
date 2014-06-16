@@ -18,6 +18,31 @@
 
 /* ***************************************************************  */
 
+/* Create one at
+ *
+ * https://console.developers.google.com -> projects -> APIs & auth
+ *
+ *   1. APIs -> 'YouTube Data API v3' set to ON
+ *
+ *   2. Credentials -> Public API access -> Server key
+ */
+define('CONFIG_YT_APIKEY', '');
+if (CONFIG_YT_APIKEY == '') die('CONFIG_YT_APIKEY not configured!');
+
+/* Youtube API request:
+ *
+ * https://www.googleapis.com/youtube/v3/channels?key={API_KEY} \
+ *   &forUsername=GermanDotaTV&part=id
+ *
+ * GermanDotaTV: UCeKFc-ydU9pWKa4tqK-vYSw
+ * Gronkh:       UCYJ61XIK64sp6ZFFS8sctxw
+ */
+define('CONFIG_YT_CHANNELID',      'UCeKFc-ydU9pWKa4tqK-vYSw');
+
+define('CONFIG_YT_RECOMM_PLID',    'LLeKFc-ydU9pWKa4tqK-vYSw');
+
+/* ***************************************************************  */
+
 define('CONFIG_IMPRESSUM_ADDRESS_HTML',
 '  <b>Angaben gemäß § 5 TMG</b>
     Dirk Lehmann
