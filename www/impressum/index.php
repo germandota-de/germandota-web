@@ -52,8 +52,12 @@ include_once '../../template/title-content.inc.php';
     <hr>
     <table id="impressum_person">
     <tr>
-      <td><? _o_html(CONFIG_IMPRESSUM_CONTACT_HTML); ?></td>
-      <td><? _o_html(CONFIG_IMPRESSUM_ADDRESS_HTML); ?></td>
+      <td><b>Kontakt</b><br><?
+        _o_html(CONFIG_IMPRESSUM_CONTACT_HTML);
+      ?></td>
+      <td><b>Angaben gem&auml;&szlig; &sect; 5 TMG</b><br><?
+        _o_html(CONFIG_IMPRESSUM_ADDRESS_HTML);
+      ?></td>
     </tr>
     </table>
   </div>

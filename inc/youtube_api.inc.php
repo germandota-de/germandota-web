@@ -21,8 +21,6 @@ include_once dirname(__FILE__). '/common.inc.php';
 define('YT_REQUEST_PREFIX',        'https://www.googleapis.com/youtube/v3/');
 define('YT_PLAYLISTS_MAXRESULTS',  '10');
 
-define('YT_CONNECT_TIMEOUT_S',     '5');
-
 /* ***************************************************************  */
 
 function _yt_api_list($method, $part, $params_nokey='')

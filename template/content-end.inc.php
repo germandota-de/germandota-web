@@ -27,7 +27,9 @@ include_once dirname(__FILE__). '/../inc/common.inc.php';
 
     <span class="floatright"><a id="impressum" href="/impressum/">Impressum</a></span>
   </div>
-  <script type="text/javascript">var _paq = _paq || []; _paq.push(["trackPageView"]); _paq.push(["enableLinkTracking"]); (function() { var u="https://ssl-id.de/dj-l.de/dynamic/"; _paq.push(["setTrackerUrl", u+"piwik.php"]); _paq.push(["setSiteId", "1"]); var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript"; g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s); })();</script>
-  <noscript><img src="https://ssl-id.de/dj-l.de/dynamic/piwik.php?idsite=1&amp;rec=1" style="border:0" alt=""></noscript>
+<?
+  echo CONFIG_TEMPL_ANALYTICS_HTML;
+?>
+
 </body>
 </html>
