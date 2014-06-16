@@ -14,3 +14,5 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 php_value short_open_tag 1
+
+ErrorDocument 404 /errors/e404.php

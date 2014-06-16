@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+include_once '../../inc/common.inc.php';
+
 include_once '../../template/begin-head.inc.php';
 ?>
 
@@ -34,14 +36,26 @@ include_once '../../template/title-content.inc.php';
   <div class="textblock">
     <p>Diese Site ist eine Zusammenarbeit der Community.  Die Inhalte
        werden größten Teils von dieser erstellt.</p>
+    <p>Und so kannst du helfen:</p>
+    <table class="default_table">
+       <tr><th>Videos gucken :D</th><td>Ist das aller wichtigste!
+         Denn nur so wirst<br>du ein ruhiges und sorgenfreies Leben führen
+         ;P</td></tr>
+       <tr><th>Bugs, Verbesserungen, Ideen</th><td><a target="_blank"
+        href="https://github.com/germandota-de/germandota-web/issues">Kannst
+        du hier rein schreiben</a></td></tr>
+      <tr><th>Selber coden</th><td><a target="_blank"
+        href="https://github.com/germandota-de/germandota-web">Im Code
+          herum stöbern und herum probieren</a></td></tr>
+    </table>
+    <br><br>
     <hr>
-    <p>
-      <b>Angaben gemäß &sect; 5 TMG</b><br>
-      Dirk Lehmann<br>Sickingenstr. 58<br>10553 Berlin<br>
-    </p><p>
-      <b>Kontakt</b><br>
-      Email: <a href="mailto:dotadirk@dj-l.de">dotadirk@dj-l.de</a>
-    </p>
+    <table id="impressum_person">
+    <tr>
+      <td><? _o_html(CONFIG_IMPRESSUM_CONTACT_HTML); ?></td>
+      <td><? _o_html(CONFIG_IMPRESSUM_ADDRESS_HTML); ?></td>
+    </tr>
+    </table>
   </div>
 
 <?
