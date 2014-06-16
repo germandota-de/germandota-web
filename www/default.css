@@ -49,6 +49,32 @@ div.textblock {
   padding: 14px;
 }
 
+div.error {
+  margin-left: auto;
+  margin-right: auto;
+
+  background-color: #ffff40;
+  border: 2px solid #cc0000;
+  padding: 14px;
+  width: 80%;
+
+  text-align: center;
+  font-size: 14px;
+}
+
+div.warning {
+  margin-left: auto;
+  margin-right: auto;
+
+  background-color: #d0d0d0;
+  border: 2px solid #505050;
+  padding: 14px;
+  width: 80%;
+
+  text-align: center;
+  font-size: 14px;
+}
+
 li {
   padding: 2px;
 }

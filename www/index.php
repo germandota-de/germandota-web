@@ -52,7 +52,7 @@ include_once '../template/title-content.inc.php';
     <ul>
        <li>Irgend eine Art von Mini-Forum, mal sehen xD ...</li>
        <li>Twitch Follow Button für <a href="/live/">Live Stream</a></li>
-       <li>YouTube Kommentare für <a href="/pl/dota2">Dota 2 Playlist</a></li>
+       <li>YouTube Kommentare für <a href="/playlist/dota2">Dota 2 Playlist</a></li>
        <li>Eure Vorschläge ???</li>
     </ul>
   </div>
