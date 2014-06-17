@@ -17,17 +17,9 @@
  */
 
 include_once '../../template/begin-head.inc.php';
-?>
-
-  <title>GermanDota.de - Video</title>
-
-<?
+common_print_htmltitle('Video');
 include_once '../../template/head-title.inc.php';
-?>
-
-  Video
-
-<?
+common_print_title('Video');
 include_once '../../template/title-content.inc.php';
 ?>
 

@@ -19,17 +19,9 @@
 include_once '../../inc/common.inc.php';
 
 include_once '../../template/begin-head.inc.php';
-?>
-
-  <title>GermanDota.de - Impressum</title>
-
-<?
+common_print_htmltitle('About');
 include_once '../../template/head-title.inc.php';
-?>
-
-  Impressum
-
-<?
+common_print_title('About');
 include_once '../../template/title-content.inc.php';
 ?>
 
@@ -52,11 +44,11 @@ include_once '../../template/title-content.inc.php';
     <hr>
     <table id="impressum_person">
     <tr>
-      <td><b>Kontakt</b><br><?
-        _o_html(CONFIG_IMPRESSUM_CONTACT_HTML);
+      <td><b>Contact</b><br><?
+        _o_html(CONFIG_ABOUT_CONTACT_HTML);
       ?></td>
-      <td><b>Angaben gem&auml;&szlig; &sect; 5 TMG</b><br><?
-        _o_html(CONFIG_IMPRESSUM_ADDRESS_HTML);
+      <td><b>Address</b><br><?
+        _o_html(CONFIG_ABOUT_ADDRESS_HTML);
       ?></td>
     </tr>
     </table>

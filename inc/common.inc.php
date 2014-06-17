@@ -39,3 +39,17 @@ function _o_html($str)
     preg_replace('/\n/si', '<br>', htmlentities($str, ENT_QUOTES, 'UTF-8'))
     , ENT_QUOTES);
 }
+
+function common_print_htmltitle($title)
+{
+  echo "\n  <title>";
+  _o(CONFIG_PROJECT_SITENAME .' - '. $title);
+  echo "</title>\n\n";
+}
+
+function common_print_title($title)
+{
+  echo "\n  ";
+  _o(CONFIG_PROJECT_NAME_SHORT .' '. $title);
+  echo "\n\n";
+}

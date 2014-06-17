@@ -17,17 +17,9 @@
  */
 
 include_once '../template/begin-head.inc.php';
-?>
-
-  <title>GermanDota.de - Community</title>
-
-<?
+common_print_htmltitle(CONFIG_PROJECT_NAME_POST);
 include_once '../template/head-title.inc.php';
-?>
-
-  GermanDota Community
-
-<?
+common_print_title(CONFIG_PROJECT_NAME_POST);
 include_once '../template/title-content.inc.php';
 ?>
 

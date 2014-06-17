@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-GermanDota.de Website
+GermanDota.de website
 *********************
 
 The sources of site www.germandota.de ...  You are welcome to
@@ -22,7 +22,7 @@ contribute :D
 
 Origin sources are online at
 
-  * Webinterface
+  * Web interface
     https://github.com/germandota-de/germandota-web
 
   * Git repository
@@ -31,7 +31,7 @@ Origin sources are online at
   * Bug tracking
     https://github.com/germandota-de/germandota-web/issues
 
-Hacking & Contribution
+Hacking & contribution
 **********************
 
 If you like to contribute to the origin sources then read

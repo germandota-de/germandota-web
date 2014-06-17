@@ -25,7 +25,7 @@ include_once dirname(__FILE__). '/../inc/common.inc.php';
     <span class="floatleft"><? _o_html(CONFIG_TEMPL_FOOTERLEFT_HTML); ?></span>
     <? _o_html(CONFIG_TEMPL_FOOTERCENTER_HTML); ?>
 
-    <span class="floatright"><a id="impressum" href="/impressum/">Impressum</a></span>
+    <span class="floatright"><a id="impressum" href="/about/">About us</a></span>
   </div>
 <?
   echo CONFIG_TEMPL_ANALYTICS_HTML;

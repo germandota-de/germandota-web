@@ -17,17 +17,9 @@
  */
 
 include_once '../../template/begin-head.inc.php';
-?>
-
-  <title>GermanDota.de - Live Stream</title>
-
-<?
+common_print_htmltitle('Live Stream');
 include_once '../../template/head-title.inc.php';
-?>
-
-  Live Stream
-
-<?
+common_print_title('Live Stream');
 include_once '../../template/title-content.inc.php';
 ?>
 

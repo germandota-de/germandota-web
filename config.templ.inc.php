@@ -53,12 +53,25 @@ define('CONFIG_TIME_FORMAT',       'G:i');
 
 /* ***************************************************************  */
 
-define('CONFIG_IMPRESSUM_ADDRESS_HTML',
+/* Only used for displaying on the site  */
+define('CONFIG_PROJECT_SITENAME',       'GermanDota.de');
+define('CONFIG_PROJECT_NAME_SHORT',     'GermanDota');
+
+/* Extends CONFIG_PROJECT_NAME_SHORT.  Full name will be
+ * CONFIG_PROJECT_NAME_SHORT.' '.CONFIG_PROJECT_NAME_POST
+ *
+ * e.g. 'GermanDota Community'
+ */
+define('CONFIG_PROJECT_NAME_POST',      'Community');
+
+define('CONFIG_PROJECT_LOGO_ABS',       '/img/logo.32.png');
+
+define('CONFIG_ABOUT_ADDRESS_HTML',
   'Martin Dota
    Ultra-Tower-Str. 123
    12345 Mixen');
 
-define('CONFIG_IMPRESSUM_CONTACT_HTML',
+define('CONFIG_ABOUT_CONTACT_HTML',
   'Email: <a href="mailto:ulti@germandota.de">ulti@germandota.de</a>');
 
 /* ***************************************************************  */
@@ -79,3 +92,5 @@ define('CONFIG_TEMPL_FOOTERCENTER_HTML',
 define('CONFIG_TEMPL_ANALYTICS_HTML',
 '  <script type="text/javascript">var _paq = _paq || []; _paq.push(["trackPageView"]); _paq.push(["enableLinkTracking"]); (function() { var u="https://ssl-id.de/dj-l.de/dynamic/"; _paq.push(["setTrackerUrl", u+"piwik.php"]); _paq.push(["setSiteId", "1"]); var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript"; g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s); })();</script>
   <noscript><img src="https://ssl-id.de/dj-l.de/dynamic/piwik.php?idsite=1&amp;rec=1" style="border:0" alt=""></noscript>');
+
+/* ***************************************************************  */

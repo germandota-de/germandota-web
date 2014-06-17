@@ -24,25 +24,17 @@ $page_token = isset($_GET['p'])? trim($_GET['p']): '';
 
 $glob_yt_result = yt_get_playlists($page_token);
 
-/* Leave the user unkown what is going wrong.  */
-//if (!$glob_yt_result) die('Error communicating with Youtube :((');
+/* On error we are trying the first page  */
+if (!$glob_yt_result) $glob_yt_result = yt_get_playlists('');
 
 $glob_yt_playlists = $glob_yt_result['items'];
 
 /* ***************************************************************  */
 
 include_once '../../template/begin-head.inc.php';
-?>
-
-  <title>GermanDota.de -  Playlists</title>
-
-<?
+common_print_htmltitle('Playlists');
 include_once '../../template/head-title.inc.php';
-?>
-
-  GermanDota Playlists
-
-<?
+common_print_title('Playlists');
 include_once '../../template/title-content.inc.php';
 ?>
 
@@ -64,6 +56,7 @@ include_once '../../template/title-content.inc.php';
     $cur_id = $glob_yt_playlists[$i]['id'];
     $cur_title = $glob_yt_playlists[$i]['snippet']['title'];
     $cur_published = $glob_yt_playlists[$i]['snippet']['publishedAt'];
+    $cur_description = $glob_yt_playlists[$i]['snippet']['description'];
 ?>
   <tr<? if ($k%2 == 0) echo ' class="lists_table_tr2"'; ?>>
     <td class="lists_table_thumb"><a class="img_link"<?
@@ -83,7 +76,10 @@ include_once '../../template/title-content.inc.php';
     ?>"><img class="icon_large" alt="(video)" src="../img/icon_video.32.png"><?
       _o($cur_title);
     ?></a><div class="lists_table_text_descr"><?
-      _o($glob_yt_playlists[$i]['snippet']['description']);
+      if (!$cur_description)
+        _o('The playlist of '.$cur_title. '.');
+      else
+        _o($cur_description);
     ?></div></td>
   </tr>
 <?

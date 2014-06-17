@@ -28,7 +28,7 @@ Table of Contents
 ======================================================================
 
 I.  Coding Guidelines
-*********************
+    *****************
 
 a) If it possible then prevent that lines of code are longer than 70
    CHARCTERS PER LINE.
@@ -62,7 +62,7 @@ c) If you ADD A NEW FILE to this project THEN ADD THE FOLLOWING
 ======================================================================
 
 II.  Easiest Git workflow
-*************************
+     ********************
 
 1. Setting up a branch at your local machine where you can work and
    commit.
@@ -86,7 +86,7 @@ II.  Easiest Git workflow
          git config remote.upstream.url https://github.com/<ACCOUNT>/germandota-web.git
 
   d) Create a branch for your work from master branch which will be
-     tracked and check it out to your working tree
+     tracked and check it out into your working tree
 
        sandbox/germandota-web$> git branch --track my-contribution
        sandbox/germandota-web$> git checkout my-contribution
@@ -97,9 +97,9 @@ II.  Easiest Git workflow
          sandbox/germandota-web$> git config user.name "Martin Dota"
          sandbox/germandota-web$> git config user.email thats.me@email.org
 
-  x.2) Optionally you can check your config (or edit) with a text
-       editor by opening the file, [$> git help config] for more
-       details
+  x.2) Optionally you can check (or edit) your configuration with a
+       text editor by opening the file.  Use [$> git help config] for
+       more details
 
          sandbox/germandota-web$> emacs .git/config
 
@@ -108,7 +108,7 @@ II.  Easiest Git workflow
 2. This could be the workflow of an hacking session:
 
    a) At the beginning you should check the origin/master branch for
-      updates from other contributors and rebase these to your local
+      updates from other contributors and rebase these into your local
       branch
 
         sandbox/germandota-web$> git checkout master
@@ -118,7 +118,7 @@ II.  Easiest Git workflow
         sandbox/germandota-web$> git pull --rebase
 
    b) Repeatedly make your changes, check your changes and commit
-      these to your local branch
+      these into your local branch
 
         sandbox/germandota-web$> emacs bar/foo.php
         sandbox/germandota-web$> git add bar/foo.php
@@ -132,7 +132,7 @@ II.  Easiest Git workflow
         sandbox/germandota-web$> git log
 
    c) At the end of your hacking session you should upload (push) your
-      changes to your GitHub repository (aka upstream)
+      changes into your GitHub repository (aka upstream)
 
         sandbox/germandota-web$> git branch
             ...
@@ -166,7 +166,7 @@ II.  Easiest Git workflow
 ======================================================================
 
 III.  Installing Apache httpd on a Debian system
-***********************************************
+      ******************************************
 
 1. Install Apache httpd via apt package manager as root
 
@@ -208,7 +208,7 @@ III.  Installing Apache httpd on a Debian system
      * `config.inc.php not found!'
 
 6. Copy germandota-web/config.templ.inc.php to config.inc.php and edit
-   this file
+   this copied file
 
      germandota-web$> cp config.templ.inc.php config.inc.php
      germandota-web$> emacs config.inc.php
