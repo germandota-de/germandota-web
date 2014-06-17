@@ -262,13 +262,18 @@ tr.lists_table_tr2 {
 table#lists_table td {
   padding: 8px;
 }
+table#lists_table th {
+  background-color: #808090;
+  padding: 8px;
+  text-align: center;
+  color: #404040;
+}
 
 td.lists_table_thumb {
   width: 1%;
 }
 img.lists_table_thumb {
   width: 185px;
-  
 }
 
 td.lists_table_videocount {
