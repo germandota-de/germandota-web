@@ -44,6 +44,13 @@ define('CONFIG_YT_CHANNELID',      'UCeKFc-ydU9pWKa4tqK-vYSw');
  */
 define('CONFIG_YT_RECOMM_PLID',    'LLeKFc-ydU9pWKa4tqK-vYSw');
 
+/* Date/Time format to use on the site.  Consider for details:
+ *
+ * http://www.php.net/date
+ */
+define('CONFIG_DATE_FORMAT',       'j. M Y');
+define('CONFIG_TIME_FORMAT',       'G:i');
+
 /* ***************************************************************  */
 
 define('CONFIG_IMPRESSUM_ADDRESS_HTML',

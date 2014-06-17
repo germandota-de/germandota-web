@@ -20,8 +20,7 @@ include_once '../../inc/youtube_api.inc.php';
 
 /* ***************************************************************  */
 
-$page = 1;
-$glob_yt_result = yt_get_playlists($page);
+$glob_yt_result = yt_get_playlists('');
 if (!$glob_yt_result) die('Error communicating with Youtube :((');
 
 $glob_yt_pageinfo = $glob_yt_result['pageInfo'];
@@ -44,17 +43,38 @@ include_once '../../template/head-title.inc.php';
 include_once '../../template/title-content.inc.php';
 ?>
 
-  <table>
+  <table id="lists_table">
 <?
 
-  for ($i=0; $i<count($glob_yt_playlists); $i++) {
+    for ($i=0, $k=0; $i<count($glob_yt_playlists); $i++) {
     if ($glob_yt_playlists[$i]['status']['privacyStatus'] != 'public')
       continue;
+    $k++;
+
+    $cur_id = $glob_yt_playlists[$i]['id'];
+    $cur_title = $glob_yt_playlists[$i]['snippet']['title'];
+    $cur_published = $glob_yt_playlists[$i]['snippet']['publishedAt'];
 ?>
-  <tr>
-    <td><img alt="(icon)" src="<?
+  <tr<? if ($k%2 == 0) echo ' class="lists_table_tr2"'; ?>>
+    <td class="lists_table_thumb"><a class="img_link"<?
+    ?> title="Watch playlist" href="./?list=<?
+      echo $cur_id;
+    ?>"><img class="lists_table_thumb" alt="(icon)" src="<?
       echo $glob_yt_playlists[$i]['snippet']['thumbnails']['medium']['url'];
-    ?>"></td>
+    ?>"></a></td>
+    <td class="lists_table_videocount"><?
+      _o($glob_yt_playlists[$i]['contentDetails']['itemCount']);
+    ?> Videos<p class="lists_table_videocount"><?
+      echo yt_str2date($cur_published) .'<br>'. yt_str2time($cur_published);
+    ?></p></td>
+    <td class="lists_table_text"><a class="playlist_link"<?
+    ?> title="Watch playlist" href="./?list=<?
+      echo $cur_id;
+    ?>"><?
+      _o($cur_title);
+    ?></a><div class="lists_table_text_descr"><?
+      _o($glob_yt_playlists[$i]['snippet']['description']);
+    ?></div></td>
   </tr>
 <?
   } /* for ($i=0; $i<count($glob_yt_playlists); $i++)  */

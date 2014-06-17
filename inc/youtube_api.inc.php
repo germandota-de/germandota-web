@@ -19,7 +19,7 @@
 include_once dirname(__FILE__). '/common.inc.php';
 
 define('YT_REQUEST_PREFIX',        'https://www.googleapis.com/youtube/v3/');
-define('YT_PLAYLISTS_MAXRESULTS',  '10');
+define('YT_PLAYLISTS_MAXRESULTS',  '50');
 
 /* ***************************************************************  */
 
@@ -34,6 +34,13 @@ function _yt_api_list($method, $part, $params_nokey='')
   return $response;
 }
 
+/* Currently not used (to much API requests possible)
+ *
+ * Possible call:
+ *
+ * $page_token = _yt_get_pagetoken($page, 'playlists',
+ *   'channelId=' .CONFIG_YT_CHANNELID. '&maxResults='.YT_PLAYLISTS_MAXRESULTS);
+ *
 function _yt_get_pagetoken(&$page, $method, $params_nokey='')
 {
   $page_token = '';
@@ -53,19 +60,17 @@ function _yt_get_pagetoken(&$page, $method, $params_nokey='')
 
   return $page_token;
 }
+ */
 
 /* ***************************************************************  */
 
-function yt_get_playlists(&$page)
+function yt_get_playlists($page_token)
 {
-  $page_token = _yt_get_pagetoken($page, 'playlists',
-    'channelId=' .CONFIG_YT_CHANNELID. '&maxResults='.YT_PLAYLISTS_MAXRESULTS);
-
   $json = _yt_api_list('playlists', 'status,contentDetails,snippet',
-      'fields=pageInfo,items('
-      .'status/privacyStatus,contentDetails/itemCount'
-      .',id,contentDetails/itemCount,status,player'
-      .',snippet(title,description,thumbnails/medium/url))'
+    'fields=pageInfo,items('
+      .'id,status/privacyStatus,contentDetails/itemCount'
+      .',contentDetails/itemCount,status'
+      .',snippet(publishedAt,title,description,thumbnails/medium/url))'
     .'&channelId=' .CONFIG_YT_CHANNELID. '&maxResults='
     .YT_PLAYLISTS_MAXRESULTS. '&pageToken=' .$page_token);
   if ($json === false) return false;
@@ -74,4 +79,13 @@ function yt_get_playlists(&$page)
   if ($result === false) return false;
 
   return $result;
+}
+
+function yt_str2date($yt_time_str)
+{
+  return date(CONFIG_DATE_FORMAT, strtotime($yt_time_str, 0));
+}
+function yt_str2time($yt_time_str)
+{
+  return date(CONFIG_TIME_FORMAT, strtotime($yt_time_str, 0));
 }
