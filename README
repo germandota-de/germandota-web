@@ -1,0 +1,43 @@
+/* germandota.de - Sources of the website
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+GermanDota.de Website
+*********************
+
+The sources of site www.germandota.de ...  You are welcome to
+contribute :D
+
+Origin sources are online at
+
+  * Webinterface
+    https://github.com/germandota-de/germandota-web
+
+  * Git repository
+    https://github.com/germandota-de/germandota-web.git
+
+  * Bug tracking
+    https://github.com/germandota-de/germandota-web/issues
+
+Hacking & Contribution
+**********************
+
+If you like to contribute to the origin sources then read
+
+  * hacking.utf8
+
+to understand the Git workflow which we are recommend.
+
+Thank you for using this software =D ...
