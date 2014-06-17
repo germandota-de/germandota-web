@@ -32,7 +32,7 @@ include_once '../../template/title-content.inc.php';
 ?>
 
   <div class="warning"><p>
-    What are you doing O.O ...  Do not enter random strings in the
+    What are you doing O.O ...  Do not enter random strings into the
     address bar of your web browser!
   </p></div>
 

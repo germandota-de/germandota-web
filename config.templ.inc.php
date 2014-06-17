@@ -39,29 +39,43 @@ if (CONFIG_YT_APIKEY == '') die('CONFIG_YT_APIKEY not configured!');
  */
 define('CONFIG_YT_CHANNELID',      'UCeKFc-ydU9pWKa4tqK-vYSw');
 
+/* Playlist of recommended videos.
+ * It's seems to be PREG('/^UC(.*)$/LL\1/s', CONFIG_YT_CHANNELID)
+ */
 define('CONFIG_YT_RECOMM_PLID',    'LLeKFc-ydU9pWKa4tqK-vYSw');
+
+/* Date/Time format to use on the site.  Consider for details:
+ *
+ * http://www.php.net/date
+ */
+define('CONFIG_DATE_FORMAT',       'j. M Y');
+define('CONFIG_TIME_FORMAT',       'G:i');
 
 /* ***************************************************************  */
 
 define('CONFIG_IMPRESSUM_ADDRESS_HTML',
-'  <b>Angaben gemäß § 5 TMG</b>
-    Dirk Lehmann
-    Sickingenstr. 58
-    10553 Berlin');
+  'Martin Dota
+   Ultra-Tower-Str. 123
+   12345 Mixen');
 
 define('CONFIG_IMPRESSUM_CONTACT_HTML',
-'  <b>Kontakt</b>
-    Email: <a href="mailto:dotadirk@dj-l.de">dotadirk@dj-l.de</a>');
+  'Email: <a href="mailto:ulti@germandota.de">ulti@germandota.de</a>');
 
 /* ***************************************************************  */
 
 /* We are searching for contributors.  It's nice if here is a link to
  * https://github.com/germandota-de :))
  */
-
 define('CONFIG_TEMPL_FOOTERLEFT_HTML',
-  '<a target="_blank" href="https://github.com/germandota-de">github.com/germandota-de</a>');
+  '<a target="_blank" href="https://github.com/germandota-de">'
+    .'github.com/germandota-de</a>');
 
 define('CONFIG_TEMPL_FOOTERCENTER_HTML',
   'Laufen? Iiieh, Sport! Hier gehts zur <i>Iiieh Sports League</i>: '
-  .'<a target="_blank" href="https://running.aitiba.com/">running.aitiba.com</a>');
+  .'<a target="_blank" href="https://running.aitiba.com/">'
+  .'running.aitiba.com</a>');
+
+
+define('CONFIG_TEMPL_ANALYTICS_HTML',
+'  <script type="text/javascript">var _paq = _paq || []; _paq.push(["trackPageView"]); _paq.push(["enableLinkTracking"]); (function() { var u="https://ssl-id.de/dj-l.de/dynamic/"; _paq.push(["setTrackerUrl", u+"piwik.php"]); _paq.push(["setSiteId", "1"]); var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript"; g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s); })();</script>
+  <noscript><img src="https://ssl-id.de/dj-l.de/dynamic/piwik.php?idsite=1&amp;rec=1" style="border:0" alt=""></noscript>');
