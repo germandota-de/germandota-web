@@ -24,25 +24,17 @@ $page_token = isset($_GET['p'])? trim($_GET['p']): '';
 
 $glob_yt_result = yt_get_playlists($page_token);
 
-/* Leave the user unkown what is going wrong.  */
-//if (!$glob_yt_result) die('Error communicating with Youtube :((');
+/* On error we are trying the first page  */
+if (!$glob_yt_result) $glob_yt_result = yt_get_playlists('');
 
 $glob_yt_playlists = $glob_yt_result['items'];
 
 /* ***************************************************************  */
 
 include_once '../../template/begin-head.inc.php';
-?>
-
-  <title>GermanDota.de -  Playlists</title>
-
-<?
+common_print_htmltitle('Playlists');
 include_once '../../template/head-title.inc.php';
-?>
-
-  GermanDota Playlists
-
-<?
+common_print_title('Playlists');
 include_once '../../template/title-content.inc.php';
 ?>
 

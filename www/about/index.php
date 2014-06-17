@@ -19,17 +19,9 @@
 include_once '../../inc/common.inc.php';
 
 include_once '../../template/begin-head.inc.php';
-?>
-
-  <title>GermanDota.de - Impressum</title>
-
-<?
+common_print_htmltitle('About');
 include_once '../../template/head-title.inc.php';
-?>
-
-  Impressum
-
-<?
+common_print_title('About');
 include_once '../../template/title-content.inc.php';
 ?>
 

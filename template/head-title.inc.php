@@ -22,7 +22,7 @@ include_once dirname(__FILE__). '/../inc/common.inc.php';
 </head>
 <body onload="init()">
   <div class="topnav">
-    <img id="topnav_logo" src="/img/logo.32.png" alt="(logo)">
+    <img id="topnav_logo" src="<? echo CONFIG_PROJECT_LOGO_ABS; ?>" alt="(logo)">
     <span class="topnav">
       <a class="topnav_link" href="/">Home</a>
       | <a class="topnav_link" href="/live/">Live Stream</a>

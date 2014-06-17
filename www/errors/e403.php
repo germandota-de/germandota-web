@@ -17,17 +17,9 @@
  */
 
 include_once '../../template/begin-head.inc.php';
-?>
-
-  <title>GermanDota.de - 403 Forbidden</title>
-
-<?
+common_print_htmltitle('403 Forbidden');
 include_once '../../template/head-title.inc.php';
-?>
-
-  403 Forbidden
-
-<?
+common_print_title('403 Forbidden');
 include_once '../../template/title-content.inc.php';
 ?>
 

@@ -53,6 +53,19 @@ define('CONFIG_TIME_FORMAT',       'G:i');
 
 /* ***************************************************************  */
 
+/* Only used for displaying on the site  */
+define('CONFIG_PROJECT_SITENAME',       'GermanDota.de');
+define('CONFIG_PROJECT_NAME_SHORT',     'GermanDota');
+
+/* Extends CONFIG_PROJECT_NAME_SHORT.  Full name will be
+ * CONFIG_PROJECT_NAME_SHORT.' '.CONFIG_PROJECT_NAME_POST
+ *
+ * e.g. 'GermanDota Community'
+ */
+define('CONFIG_PROJECT_NAME_POST',      'Community');
+
+define('CONFIG_PROJECT_LOGO_ABS',       '/img/logo.32.png');
+
 define('CONFIG_ABOUT_ADDRESS_HTML',
   'Martin Dota
    Ultra-Tower-Str. 123

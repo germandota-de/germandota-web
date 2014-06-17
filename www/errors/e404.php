@@ -17,17 +17,9 @@
  */
 
 include_once '../../template/begin-head.inc.php';
-?>
-
-  <title>GermanDota.de - 404 Not Found</title>
-
-<?
+common_print_htmltitle('404 Not Found');
 include_once '../../template/head-title.inc.php';
-?>
-
-  404 Not Found
-
-<?
+common_print_title('404 Not Found');
 include_once '../../template/title-content.inc.php';
 ?>
 

@@ -126,6 +126,7 @@ span.topnav {
 }
 
 img#topnav_logo {
+  height: 32px;
   margin-top: 4px; /* (40 - 32)/2  */
 }
 
