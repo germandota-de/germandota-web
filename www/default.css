@@ -306,7 +306,9 @@ div.lists_table_text_descr {
   padding: 8px;
   margin-top: 16px;
 
-  height: 40px;
+  height: 50px;
+  overflow: auto;
+  overflow-x: hidden;
 
   font-style: italic;
   text-align: center;
@@ -345,6 +347,17 @@ table#impressum_person td {
   padding-left: 10px;
   padding-right: 10px;
   vertical-align: top;
+}
+
+/* ***************************************************************  */
+
+a.page_nextlink {
+  font-weight: bold;
+  color: #900000;
+}
+a:hover.page_nextlink {
+  border-style: none;
+  color: #b00000;
 }
 
 /* ***************************************************************  */

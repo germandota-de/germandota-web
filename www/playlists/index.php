@@ -18,13 +18,15 @@
 
 include_once '../../inc/youtube_api.inc.php';
 
+$page_token = isset($_GET['p'])? trim($_GET['p']): '';
+
 /* ***************************************************************  */
 
-$page_token = '';
 $glob_yt_result = yt_get_playlists($page_token);
-if (!$glob_yt_result) die('Error communicating with Youtube :((');
 
-$glob_yt_pageinfo = $glob_yt_result['pageInfo'];
+/* Leave the user unkown what is going wrong.  */
+//if (!$glob_yt_result) die('Error communicating with Youtube :((');
+
 $glob_yt_playlists = $glob_yt_result['items'];
 
 /* ***************************************************************  */
@@ -32,7 +34,7 @@ $glob_yt_playlists = $glob_yt_result['items'];
 include_once '../../template/begin-head.inc.php';
 ?>
 
-  <title>GermanDota.de - Refresh</title>
+  <title>GermanDota.de -  Playlists</title>
 
 <?
 include_once '../../template/head-title.inc.php';
@@ -42,14 +44,12 @@ include_once '../../template/head-title.inc.php';
 
 <?
 include_once '../../template/title-content.inc.php';
-var_dump($glob_yt_pageinfo);
 ?>
 
   <table id="lists_table">
-    <tr><th colspan="3"><?
-      if ($page_token === '') echo 'First ';
-      echo count($glob_yt_playlists) .' of '. $glob_yt_pageinfo['totalResults'];
-    ?> playlists</th></tr>
+  <tr><th colspan="3"><?
+    yt_print_pageinfo($page_token, $glob_yt_result, 'playlists', './');
+  ?></th></tr>
 <?
 
     for ($i=0, $k=0; $i<count($glob_yt_playlists); $i++) {
@@ -84,8 +84,10 @@ var_dump($glob_yt_pageinfo);
   </tr>
 <?
   } /* for ($i=0; $i<count($glob_yt_playlists); $i++)  */
-
 ?>
+  <tr><th colspan="3"><?
+    yt_print_pageinfo($page_token, $glob_yt_result, 'playlists', './');
+  ?></th></tr>
   </table>
 
 <?
