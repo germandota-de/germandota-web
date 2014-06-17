@@ -47,10 +47,14 @@ include_once '../../template/title-content.inc.php';
 ?>
 
   <table id="lists_table">
+<?
+    if ($page_token !== '') {
+?>
   <tr><th colspan="3"><?
     yt_print_pageinfo($page_token, $glob_yt_result, 'playlists', './');
   ?></th></tr>
 <?
+    }
 
     for ($i=0, $k=0; $i<count($glob_yt_playlists); $i++) {
     if ($glob_yt_playlists[$i]['status']['privacyStatus'] != 'public')
@@ -76,7 +80,7 @@ include_once '../../template/title-content.inc.php';
     <td class="lists_table_text"><a class="playlist_link"<?
     ?> title="Watch playlist" href="../video/?list=<?
       echo $cur_id;
-    ?>"><?
+    ?>"><img class="icon_large" alt="(video)" src="../img/icon_video.32.png"><?
       _o($cur_title);
     ?></a><div class="lists_table_text_descr"><?
       _o($glob_yt_playlists[$i]['snippet']['description']);

@@ -100,6 +100,11 @@ table.default_table th {
   padding: 8px;
 }
 
+img.icon_large {
+  height: 13px;
+  margin-right: 3px;
+}
+
 /* ***************************************************************  */
 
 div.topnav {
@@ -292,23 +297,24 @@ td.lists_table_text {
 }
 
 a.playlist_link {
-  color: #008000;
+  color: #a02020;
   font-weight: bold;
   font-size: 17px;
 }
 a:hover.playlist_link {
   border-style: none;
-  color: #00b000;
+  color: #e02020;
 }
 
 div.lists_table_text_descr {
-  background-color: #c0c0d0;
+  background-color: #d0d0d0;
   padding: 8px;
-  margin-top: 16px;
+  margin-top: 6px;
 
-  height: 50px;
+  height: 60px;
   overflow: auto;
   overflow-x: hidden;
+  border-radius: 6px;
 
   font-style: italic;
   text-align: center;
