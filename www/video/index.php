@@ -16,20 +16,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once dirname(__FILE__). '/../inc/common.inc.php';
+include_once '../../template/begin-head.inc.php';
+?>
 
-?>  <!-- begin of head-title -->
-</head>
-<body onload="init()">
-  <div class="topnav">
-    <img id="topnav_logo" src="/img/logo.32.png" alt="(logo)">
-    <span class="topnav">
-      <a class="topnav_link" href="/">Home</a>
-      | <a class="topnav_link" href="/live/">Live Stream</a>
-      | <a class="topnav_link" href="/playlists/">Playlists</a>
-    </span>
-  </div>
+  <title>GermanDota.de - Video</title>
 
-  <div id="main">
-    <div id="title">
-  <!-- end of head-title -->
+<?
+include_once '../../template/head-title.inc.php';
+?>
+
+  Video
+
+<?
+include_once '../../template/title-content.inc.php';
+?>
+
+  <div class="warning"><p>
+    Coming soon
+  </p></div>
+
+<?
+include_once '../../template/content-end.inc.php';

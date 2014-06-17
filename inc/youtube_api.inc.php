@@ -19,7 +19,8 @@
 include_once dirname(__FILE__). '/common.inc.php';
 
 define('YT_REQUEST_PREFIX',        'https://www.googleapis.com/youtube/v3/');
-define('YT_PLAYLISTS_MAXRESULTS',  '50');
+define('YT_PLAYLISTS_MAXRESULTS',       '4');
+define('YT_PLAYLISTS_MAXRESULTS_NEXT',  '10');
 
 /* ***************************************************************  */
 
@@ -66,13 +67,16 @@ function _yt_get_pagetoken(&$page, $method, $params_nokey='')
 
 function yt_get_playlists($page_token)
 {
+  $max_result = ($page_token === '')? YT_PLAYLISTS_MAXRESULTS
+    : YT_PLAYLISTS_MAXRESULTS_NEXT;
+
   $json = _yt_api_list('playlists', 'status,contentDetails,snippet',
-    'fields=pageInfo,items('
+    'fields=pageInfo,nextPageToken,prevPageToken,items('
       .'id,status/privacyStatus,contentDetails/itemCount'
       .',contentDetails/itemCount,status'
       .',snippet(publishedAt,title,description,thumbnails/medium/url))'
     .'&channelId=' .CONFIG_YT_CHANNELID. '&maxResults='
-    .YT_PLAYLISTS_MAXRESULTS. '&pageToken=' .$page_token);
+    .$max_result. '&pageToken=' .$page_token);
   if ($json === false) return false;
 
   $result = json_decode($json, true);
@@ -89,3 +93,30 @@ function yt_str2time($yt_time_str)
 {
   return date(CONFIG_TIME_FORMAT, strtotime($yt_time_str, 0));
 }
+
+function yt_print_pageinfo($page_token, $yt_response, $items_str,
+                           $url_pre, $url_post='')
+{
+  if (isset($yt_response['prevPageToken'])) {
+    echo '<a title="Previous ' .YT_PLAYLISTS_MAXRESULTS_NEXT. ' '
+      .$items_str. '" class="page_nextlink" href="' .$url_pre. '?p='
+      .$yt_response['prevPageToken']
+      .($url_post===''? '': '&amp;' .$url_post) .'">&laquo;-'
+      .YT_PLAYLISTS_MAXRESULTS_NEXT.'</a> ';
+  } else {
+    echo 'First ';
+  }
+
+  echo count($yt_response['items']) .' of '
+    .$yt_response['pageInfo']['totalResults'] .' '. $items_str;
+
+  if (isset($yt_response['nextPageToken'])) {
+    echo ' <a title="Next ' .YT_PLAYLISTS_MAXRESULTS_NEXT. ' '
+      .$items_str. '" class="page_nextlink" href="' .$url_pre. '?p='
+      .$yt_response['nextPageToken']
+      .($url_post===''? '': '&amp;' .$url_post) .'">'
+      .YT_PLAYLISTS_MAXRESULTS_NEXT.'+&raquo;</a>';
+  }
+}
+
+/* ***************************************************************  */

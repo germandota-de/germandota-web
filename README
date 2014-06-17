@@ -1,5 +1,3 @@
-<?
-
 /* germandota.de - Sources of the website
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,20 +14,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once dirname(__FILE__). '/../inc/common.inc.php';
+GermanDota.de Website
+*********************
 
-?>  <!-- begin of head-title -->
-</head>
-<body onload="init()">
-  <div class="topnav">
-    <img id="topnav_logo" src="/img/logo.32.png" alt="(logo)">
-    <span class="topnav">
-      <a class="topnav_link" href="/">Home</a>
-      | <a class="topnav_link" href="/live/">Live Stream</a>
-      | <a class="topnav_link" href="/playlists/">Playlists</a>
-    </span>
-  </div>
+The sources of site www.germandota.de ...  You are welcome to
+contribute :D
 
-  <div id="main">
-    <div id="title">
-  <!-- end of head-title -->
+Origin sources are online at
+
+  * Webinterface
+    https://github.com/germandota-de/germandota-web
+
+  * Git repository
+    https://github.com/germandota-de/germandota-web.git
+
+  * Bug tracking
+    https://github.com/germandota-de/germandota-web/issues
+
+Hacking & Contribution
+**********************
+
+If you like to contribute to the origin sources then read
+
+  * hacking.utf8
+
+to understand the Git workflow which we are recommend.
+
+Thank you for using this software =D ...
