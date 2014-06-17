@@ -30,38 +30,10 @@ function _yt_api_list($method, $part, $params_nokey='')
     .'&part=' .$part. ($params_nokey == ''? '': '&' .$params_nokey);
 
   $response = file_get_contents($request);
-  if ($response === false) return false;
+  if (!$response) return false;
 
   return $response;
 }
-
-/* Currently not used (to much API requests possible)
- *
- * Possible call:
- *
- * $page_token = _yt_get_pagetoken($page, 'playlists',
- *   'channelId=' .CONFIG_YT_CHANNELID. '&maxResults='.YT_PLAYLISTS_MAXRESULTS);
- *
-function _yt_get_pagetoken(&$page, $method, $params_nokey='')
-{
-  $page_token = '';
-
-  for ($i=1; $i<$page; $i++) {
-    $json = _yt_api_list($method, 'id', $params_nokey
-      .'&fields=nextPageToken&pageToken=' .$page_token);
-    $tmp = json_decode($json, true);
-
-    if (!isset($tmp['nextPageToken'])) {
-      $page = $i;
-      break;
-    }
-
-    $page_token = json_decode($json, true)['nextPageToken'];
-  }
-
-  return $page_token;
-}
- */
 
 /* ***************************************************************  */
 

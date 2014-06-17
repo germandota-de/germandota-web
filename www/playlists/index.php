@@ -64,6 +64,7 @@ include_once '../../template/title-content.inc.php';
     $cur_id = $glob_yt_playlists[$i]['id'];
     $cur_title = $glob_yt_playlists[$i]['snippet']['title'];
     $cur_published = $glob_yt_playlists[$i]['snippet']['publishedAt'];
+    $cur_description = $glob_yt_playlists[$i]['snippet']['description'];
 ?>
   <tr<? if ($k%2 == 0) echo ' class="lists_table_tr2"'; ?>>
     <td class="lists_table_thumb"><a class="img_link"<?
@@ -83,7 +84,10 @@ include_once '../../template/title-content.inc.php';
     ?>"><img class="icon_large" alt="(video)" src="../img/icon_video.32.png"><?
       _o($cur_title);
     ?></a><div class="lists_table_text_descr"><?
-      _o($glob_yt_playlists[$i]['snippet']['description']);
+      if (!$cur_description)
+        _o('The playlist of '.$cur_title. '.');
+      else
+        _o($cur_description);
     ?></div></td>
   </tr>
 <?
