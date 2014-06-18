@@ -18,6 +18,11 @@
 
 include_once dirname(__FILE__). '/common.inc.php';
 
+/* Youtube Data API v3 Reference:
+ *
+ * https://developers.google.com/youtube/v3/docs/
+ */
+
 define('YT_REQUEST_PREFIX',        'https://www.googleapis.com/youtube/v3/');
 define('YT_PLAYLISTS_MAXRESULTS',       '4');
 define('YT_PLAYLISTS_MAXRESULTS_NEXT',  '10');
@@ -45,7 +50,6 @@ function yt_get_playlists($page_token)
   $json = _yt_api_list('playlists', 'status,contentDetails,snippet',
     'fields=pageInfo,nextPageToken,prevPageToken,items('
       .'id,status/privacyStatus,contentDetails/itemCount'
-      .',contentDetails/itemCount,status'
       .',snippet(publishedAt,title,description,thumbnails/medium/url))'
     .'&channelId=' .CONFIG_YT_CHANNELID. '&maxResults='
     .$max_result. '&pageToken=' .$page_token);
