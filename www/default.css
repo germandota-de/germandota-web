@@ -347,8 +347,8 @@ table#video_thumbs_table {
   margin-right: auto;
 
   background-color: #d0d0d0;
-  padding-left: 16px;
-  padding-right: 16px;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 td.video_thumbs_table {
   background-color: #000000;
@@ -384,6 +384,19 @@ span.video_thumbs_table_time_no {
 
 img.videos_thumbs {
   height: 80px;
+}
+
+td.video_thumbs_table_pagelink {
+  color: #a0a0a0;
+  font-size: 24px;
+  font-weight: bold;
+}
+a.video_thumbs_table_pagelink {
+  color: #900000;
+}
+a:hover.video_thumbs_table_pagelink {
+  border-style: none;
+  color: #b00000;
 }
 
 /* ***************************************************************  */

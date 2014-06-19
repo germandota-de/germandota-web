@@ -23,6 +23,7 @@ $video_id = isset($_GET['v'])? trim($_GET['v']): '';
 
 /* ***************************************************************  */
 
+/* If video_id was given  */
 if ($video_id) {
   $temp = yt_recv_playlist_items_video($list, $video_id);
 
@@ -30,25 +31,63 @@ if ($video_id) {
   $glob_correction = $temp['correction'];
 }
 
-if (!$video_id || !$glob_yt_result) {
-  $glob_yt_result = yt_recv_playlist_items($list);
-
-  /* On error we are trying the recommend page  */
-  if (!$glob_yt_result) {
-    $list = yt_get_recomm_plid();
-    $glob_yt_result = yt_recv_playlist_items($list);
-  }
-
+/* If video_id not given or fail to find  */
+if (!$video_id || !$temp) {
   $glob_correction = -YT_PLVIDEOS_MAXRESULTS_HALF;
+  $glob_yt_result = yt_recv_playlist_items($list);
+}
+
+/* **-------------------------------------------------------------  */
+/* Only videos in playlists of our own channel  */
+
+if ($glob_yt_result && $glob_yt_result['items']
+    [YT_PLVIDEOS_MAXRESULTS_HALF+$glob_correction]['snippet']['channelId']
+    != CONFIG_YT_CHANNELID) {
+  $glob_correction = -YT_PLVIDEOS_MAXRESULTS_HALF;
+  $glob_yt_result = false;
+}
+
+/* ---------------------------------------------------------------  */
+
+/* Otherwise we are trying the recommend playlist  */
+if (!$glob_yt_result) {
+  $list = yt_get_recomm_plid();
+  $glob_yt_result = yt_recv_playlist_items($list);
 }
 
 $glob_yt_plitems = $glob_yt_result['items'];
 
 /* Override if exist ...  */
-$video_id = $glob_yt_plitems[YT_PLVIDEOS_MAXRESULTS_HALF+$glob_correction]
+$video_id
+  = $glob_yt_plitems[YT_PLVIDEOS_MAXRESULTS_HALF+$glob_correction]
   ['contentDetails']['videoId'];
-$glob_video_plposition = $glob_yt_plitems[YT_PLVIDEOS_MAXRESULTS_HALF+$glob_correction]
+$glob_video_plposition
+  = $glob_yt_plitems[YT_PLVIDEOS_MAXRESULTS_HALF+$glob_correction]
   ['snippet']['position'];
+
+/* ***************************************************************  */
+
+function _page_td($token_name, $dir_str, $i_playlist, $text)
+{
+  global $list, $glob_yt_plitems, $glob_yt_result;
+
+  if (isset($glob_yt_result[$token_name])) {
+?>
+    <td class="video_thumbs_table_pagelink"><a <?
+    ?>class="video_thumbs_table_pagelink" title="<?
+      echo $dir_str .' '. YT_PLVIDEOS_MAXRESULTS_HALF;
+    ?> videos" href="./?list=<?
+      echo $list .'&amp;v='. $glob_yt_plitems[$i_playlist]
+        ['contentDetails']['videoId'];
+    ?>"><? echo $text; ?></a></td>
+<?
+  } else { // if (isset($glob_yt_result['nextPageToken']))
+?>
+    <td class="video_thumbs_table_pagelink"><span<?
+      ?> title="No more videos :("><? echo $text; ?></span></td>
+<?
+  } // if (isset($glob_yt_result[$token_name]))
+}
 
 /* ***************************************************************  */
 
@@ -61,13 +100,14 @@ include_once '../../template/title-content.inc.php';
 
   <table id="video_thumbs_table">
   <tr><th class="video_thumbs_table_top" colspan="<?
-    echo count($glob_yt_plitems);
+    echo YT_PLVIDEOS_MAXRESULTS+2;
     ?>"><?
     echo 'Video ' .($glob_video_plposition+1).' of '
       .$glob_yt_result['pageInfo']['totalResults'];
     ?></th></tr>
   <tr>
 <?
+  _page_td('prevPageToken', 'Previous', 0, '&laquo;');
 
   for ($i=0; $i<count($glob_yt_plitems); $i++) {
     if ($glob_yt_plitems[$i]['status']['privacyStatus'] != 'public')
@@ -87,9 +127,19 @@ include_once '../../template/title-content.inc.php';
     ?>"></a></td>
 <?
   } /* for ($i=0, $k=0; $i<count($glob_yt_plitems); $i++)  */
+
+  for (; $i<YT_PLVIDEOS_MAXRESULTS; $i++) {
+?>
+    <td class="video_thumbs_table"><img class="videos_thumbs" <?
+      ?>alt="(thumb)" src="../img/thumb_blackscreen.png"></td>
+<?
+  } // for (; $i<YT_PLVIDEOS_MAXRESULTS; $i++)
+
+  _page_td('nextPageToken', 'Next', YT_PLVIDEOS_MAXRESULTS-1, '&raquo;');
 ?>
   </tr>
   <tr>
+    <td></td>
 <?
 
   for ($i=0; $i<count($glob_yt_plitems); $i++) {
@@ -101,8 +151,8 @@ include_once '../../template/title-content.inc.php';
         echo 'video_thumbs_table_time_selct';
       else
         echo 'video_thumbs_table_time';
-    ?>"><span <?
-    ?>class="video_thumbs_table_time_no"><?
+    ?>"><span<?
+    ?> class="video_thumbs_table_time_no"><?
       echo ($glob_yt_plitems[$i]['snippet']['position']+1) .'.<br>';
     ?></span><?
       $cur_date = $glob_yt_plitems[$i]['snippet']['publishedAt'];
@@ -111,6 +161,7 @@ include_once '../../template/title-content.inc.php';
 <?
   } /* for ($i=0, $k=0; $i<count($glob_yt_plitems); $i++)  */
 ?>
+    <td></td>
   </tr>
   </table>
 
