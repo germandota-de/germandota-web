@@ -22,10 +22,13 @@ $page_token = isset($_GET['p'])? trim($_GET['p']): '';
 
 /* ***************************************************************  */
 
-$glob_yt_result = yt_get_playlists($page_token);
+$glob_yt_result = yt_recv_playlists($page_token);
 
 /* On error we are trying the first page  */
-if (!$glob_yt_result) $glob_yt_result = yt_get_playlists('');
+if (!$glob_yt_result) {
+  $page_token = '';
+  $glob_yt_result = yt_recv_playlists($page_token);
+}
 
 $glob_yt_playlists = $glob_yt_result['items'];
 
@@ -40,15 +43,15 @@ include_once '../../template/title-content.inc.php';
 
   <table id="lists_table">
 <?
-    if ($page_token !== '') {
+  if ($page_token !== '') {
 ?>
   <tr><th colspan="3"><?
     yt_print_pageinfo($page_token, $glob_yt_result, 'playlists', './');
   ?></th></tr>
 <?
-    }
+  }
 
-    for ($i=0, $k=0; $i<count($glob_yt_playlists); $i++) {
+  for ($i=0, $k=0; $i<count($glob_yt_playlists); $i++) {
     if ($glob_yt_playlists[$i]['status']['privacyStatus'] != 'public')
       continue;
     $k++;
@@ -62,7 +65,7 @@ include_once '../../template/title-content.inc.php';
     <td class="lists_table_thumb"><a class="img_link"<?
     ?> title="Watch playlist" href="../video/?list=<?
       echo $cur_id;
-    ?>"><img class="lists_table_thumb" alt="(icon)" src="<?
+    ?>"><img class="lists_table_thumb" alt="(thumb)" src="<?
       echo $glob_yt_playlists[$i]['snippet']['thumbnails']['medium']['url'];
     ?>"></a></td>
     <td class="lists_table_videocount"><?

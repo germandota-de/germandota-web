@@ -342,6 +342,23 @@ a:active.img_link {
 
 /* ***************************************************************  */
 
+table#video_thumbs_table {
+  margin-left: auto;
+  margin-right: auto;
+
+  border: 8px solid #d0d0d0;
+}
+table#video_thumbs_table td {
+  background-color: #000000;
+  padding: 1px;
+}
+
+img.videos_thumbs {
+  height: 80px;
+}
+
+/* ***************************************************************  */
+
 table#impressum_person {
   margin-left: auto;
   vertical-align: top;
