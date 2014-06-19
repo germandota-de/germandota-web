@@ -56,14 +56,12 @@ if (!$glob_yt_result) {
 }
 
 $glob_yt_plitems = $glob_yt_result['items'];
+$glob_yt_videoitem
+  = $glob_yt_plitems[YT_PLVIDEOS_MAXRESULTS_HALF+$glob_correction];
 
 /* Override if exist ...  */
-$video_id
-  = $glob_yt_plitems[YT_PLVIDEOS_MAXRESULTS_HALF+$glob_correction]
-  ['contentDetails']['videoId'];
-$glob_video_plposition
-  = $glob_yt_plitems[YT_PLVIDEOS_MAXRESULTS_HALF+$glob_correction]
-  ['snippet']['position'];
+$video_id = $glob_yt_videoitem['contentDetails']['videoId'];
+$glob_video_plposition = $glob_yt_videoitem['snippet']['position'];
 
 /* ***************************************************************  */
 
@@ -92,11 +90,38 @@ function _page_td($token_name, $dir_str, $i_playlist, $text)
 /* ***************************************************************  */
 
 include_once '../../template/begin-head.inc.php';
-common_print_htmltitle('Video');
+?>
+
+  <script type="text/javascript" src="https://apis.google.com/js/platform.js"></script><?
+common_print_htmltitle($glob_yt_videoitem['snippet']['title']);
 include_once '../../template/head-title.inc.php';
-common_print_title('Video');
+common_print_title($glob_yt_videoitem['snippet']['title']);
 include_once '../../template/title-content.inc.php';
 ?>
+
+  <div id="video_videoframe">
+    <iframe width="853" height="480" src="//www.youtube.com/embed/<?
+      echo $video_id;
+    ?>?rel=0&amp;vq=hd720&amp;autoplay=1<?
+      if (isset($glob_yt_videoitem['contentDetails']['startAt']))
+        echo '&amp;start='
+        .yt_timeat2sec($glob_yt_videoitem['contentDetails']['startAt']);
+      if (isset($glob_yt_videoitem['contentDetails']['endAt']))
+        echo '&amp;end='
+        .yt_timeat2sec($glob_yt_videoitem['contentDetails']['endAt']);
+    ?>" frameborder="0" allowfullscreen></iframe>
+
+    <div id="video_videoframe_bottom">
+      <table id="video_videoframe_table">
+        <tr><td><a target="_blank"
+          href="http://www.youtube.com/user/GermanDotaTV">GermanDota</a>
+            auf Youtube abonnieren
+        </td><td>
+          <div class="g-ytsubscribe" data-channel="GermanDotaTV">Abonnieren</div>
+        </td></tr>
+      </table>
+    </div>
+  </div>
 
   <table id="video_thumbs_table">
   <tr><th class="video_thumbs_table_top" colspan="<?
@@ -107,7 +132,7 @@ include_once '../../template/title-content.inc.php';
     ?></th></tr>
   <tr>
 <?
-  _page_td('prevPageToken', 'Previous', 0, '&laquo;');
+    _page_td('prevPageToken', 'Previous', 0, '&laquo;');
 
   for ($i=0; $i<count($glob_yt_plitems); $i++) {
     if ($glob_yt_plitems[$i]['status']['privacyStatus'] != 'public')
@@ -135,7 +160,7 @@ include_once '../../template/title-content.inc.php';
 <?
   } // for (; $i<YT_PLVIDEOS_MAXRESULTS; $i++)
 
-  _page_td('nextPageToken', 'Next', YT_PLVIDEOS_MAXRESULTS-1, '&raquo;');
+    _page_td('nextPageToken', 'Next', YT_PLVIDEOS_MAXRESULTS-1, '&raquo;');
 ?>
   </tr>
   <tr>

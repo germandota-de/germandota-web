@@ -142,6 +142,15 @@ function yt_get_recomm_plid()
   return preg_replace('/^..(.*)$/', 'LL\1', CONFIG_YT_CHANNELID);
 }
 
+function yt_timeat2sec($str)
+{
+  $h = round(preg_replace('/^.*[PT]([0-9.]*)H.*$/', '\1', $str));
+  $min = round(preg_replace('/^.*[PTH]([0-9.]*)M.*$/', '\1', $str));
+  $sec = round(preg_replace('/^.*[PTHM]([0-9.]*)S$/', '\1', $str));
+
+  return $h*60*60 + $min*60 + $sec;
+}
+
 /* ***************************************************************  */
 
 function yt_print_pageinfo($page_token, $yt_response, $items_str,
