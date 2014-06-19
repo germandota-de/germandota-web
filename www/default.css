@@ -346,11 +346,26 @@ table#video_thumbs_table {
   margin-left: auto;
   margin-right: auto;
 
-  border: 8px solid #d0d0d0;
+  background-color: #d0d0d0;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 table#video_thumbs_table td {
   background-color: #000000;
   padding: 1px;
+}
+table#video_thumbs_table th {
+  padding: 2px;
+  text-align: center;
+}
+th.video_thumbs_table_top {
+  font-weight: bold;
+  font-size: 11px;
+}
+th.video_thumbs_table_time {
+  font-weight: normal;
+  font-size: 10px;
+  font-style: italic;
 }
 
 img.videos_thumbs {
@@ -359,12 +374,12 @@ img.videos_thumbs {
 
 /* ***************************************************************  */
 
-table#impressum_person {
+table#about_person {
   margin-left: auto;
   vertical-align: top;
 }
 
-table#impressum_person td {
+table#about_person td {
   color: #606060;
   font-size: 11px;
 

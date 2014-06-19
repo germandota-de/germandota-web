@@ -42,7 +42,7 @@ include_once '../../template/title-content.inc.php';
     </table>
     <br><br>
     <hr>
-    <table id="impressum_person">
+    <table id="about_person">
     <tr>
       <td><b>Contact</b><br><?
         _o_html(CONFIG_ABOUT_CONTACT_HTML);

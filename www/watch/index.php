@@ -42,6 +42,12 @@ include_once '../../template/title-content.inc.php';
 ?>
 
   <table id="video_thumbs_table">
+  <tr><th class="video_thumbs_table_top" colspan="<?
+    echo count($glob_yt_plitems);
+    ?>"><?
+    echo 'Video TODO (select)' .' of '
+      .$glob_yt_result['pageInfo']['totalResults'];
+    ?></th></tr>
   <tr>
 <?
 
@@ -60,8 +66,23 @@ include_once '../../template/title-content.inc.php';
   } /* for ($i=0, $k=0; $i<count($glob_yt_plitems); $i++)  */
 ?>
   </tr>
+<?
+
+  for ($i=0; $i<count($glob_yt_plitems); $i++) {
+    if ($glob_yt_plitems[$i]['status']['privacyStatus'] != 'public')
+      continue;
+?>
+    <th class="video_thumbs_table_time"><?
+       $cur_date = $glob_yt_plitems[$i]['snippet']['publishedAt'];
+      echo yt_str2date($cur_date) .'<br>'. yt_str2time($cur_date);
+    ?></th>
+<?
+  } /* for ($i=0, $k=0; $i<count($glob_yt_plitems); $i++)  */
+?>
+  <tr>
+  </tr>
   </table>
-  <pre><code><? /* var_dump($glob_yt_plitems); */ ?></code></pre>
+  <pre><code><? var_dump($glob_yt_plitems); ?></code></pre>
 
 <?
 include_once '../../template/content-end.inc.php';
