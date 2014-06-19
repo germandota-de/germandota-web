@@ -26,7 +26,10 @@ include_once dirname(__FILE__). '/common.inc.php';
 define('YT_REQUEST_PREFIX',        'https://www.googleapis.com/youtube/v3/');
 define('YT_PLAYLISTS_MAXRESULTS',       '4');
 define('YT_PLAYLISTS_MAXRESULTS_NEXT',  '10');
+
+/* Must be odd (3, 5, 7, ...) */
 define('YT_PLVIDEOS_MAXRESULTS',        '7');
+define('YT_PLVIDEOS_MAXRESULTS_HALF',   YT_PLVIDEOS_MAXRESULTS >> 1);
 
 /* ***************************************************************  */
 
@@ -62,21 +65,65 @@ function yt_recv_playlists($page_token)
   return $result;
 }
 
-function yt_recv_playlist_items($playlist_id)
+function yt_recv_playlist_items($playlist_id, $page_token='')
 {
   /* The channelId is the ID who owns the list, not the video.  */
 
   $json =  _yt_api_list('playlistItems', 'status,contentDetails,snippet',
     'fields=pageInfo,nextPageToken,prevPageToken,items('
-      .'id,status/privacyStatus,contentDetails(videoId,startAt,endAt)'
-      .',snippet(publishedAt,channelId,title,thumbnails/default/url))'
-    .'&playlistId='.$playlist_id. '&maxResults=' .YT_PLVIDEOS_MAXRESULTS);
+      .'status/privacyStatus,contentDetails(videoId,startAt,endAt)'
+      .',snippet(publishedAt,channelId,title,thumbnails/default/url'
+      .',position))'
+    .'&playlistId=' .$playlist_id. '&maxResults=' .YT_PLVIDEOS_MAXRESULTS
+    .'&pageToken=' .$page_token);
   if (!$json) return false;
 
   $result = json_decode($json, true);
   if (!$result) return false;
 
   return $result;
+}
+
+function yt_recv_playlist_items_video($playlist_id, $video_id)
+{
+  $json =  _yt_api_list('playlistItems', 'snippet',
+    'fields=items/snippet/position'
+    .'&playlistId='.$playlist_id. '&videoId=' .$video_id);
+  if (!$json) return false;
+
+  $result = json_decode($json, true);
+  if (!$result) return false;
+  $position = intval($result['items'][0]['snippet']['position']);
+
+  /* ***  */
+
+  $start = $position - YT_PLVIDEOS_MAXRESULTS_HALF;
+
+  /* Youtube Data API v3 - maxResults:
+   *
+   * Acceptable values are 0 to 50, inclusive.
+   */
+  for ($page_token=''; $start>0; $start-=50) {
+    $json =  _yt_api_list('playlistItems', 'id',
+      'fields=nextPageToken'
+      .'&playlistId=' .$playlist_id. '&maxResults='
+      .($start>50? 50: $start). '&pageToken=' .$page_token);
+    if (!$json) return false;
+
+    $result = json_decode($json, true);
+    if (!$result) return false;
+
+    $page_token = $result['nextPageToken'];
+
+    if ($start <= 50) break;
+  }
+
+  /* ***  */
+
+  return array(
+    'correction' => $start > 0? 0: $start,
+    'result' => yt_recv_playlist_items($playlist_id, $page_token)
+  );
 }
 
 /* ***************************************************************  */

@@ -350,9 +350,13 @@ table#video_thumbs_table {
   padding-left: 16px;
   padding-right: 16px;
 }
-table#video_thumbs_table td {
+td.video_thumbs_table {
   background-color: #000000;
-  padding: 1px;
+  padding: 2px;
+}
+td.video_thumbs_table_select {
+  background-color: #8080a0;
+  padding: 2px;
 }
 table#video_thumbs_table th {
   padding: 2px;
@@ -366,6 +370,16 @@ th.video_thumbs_table_time {
   font-weight: normal;
   font-size: 10px;
   font-style: italic;
+}
+th.video_thumbs_table_time_selct {
+  background-color: #8080a0;
+  font-weight: normal;
+  font-size: 10px;
+  font-style: italic;
+}
+span.video_thumbs_table_time_no {
+  font-weight: bold;
+  font-style: normal;
 }
 
 img.videos_thumbs {
