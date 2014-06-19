@@ -17,17 +17,9 @@
  */
 
 include_once '../../template/begin-head.inc.php';
-?>
-
-  <title>GermanDota.de - Live Stream</title>
-
-<?
+common_print_htmltitle('Live Stream');
 include_once '../../template/head-title.inc.php';
-?>
-
-  Live Stream
-
-<?
+common_print_title('Live Stream');
 include_once '../../template/title-content.inc.php';
 ?>
 
@@ -39,13 +31,13 @@ include_once '../../template/title-content.inc.php';
 
       <object height="480" width="787">
         <param name="movie"
-          value="http://www.twitch.tv/widgets/live_embed_player.swf?hostname=www.twitch.tv&amp;channel=germandota&amp;auto_play=false&amp;start_volume=50">
+          value="http://www.twitch.tv/widgets/live_embed_player.swf?hostname=www.twitch.tv&amp;channel=germandota&amp;auto_play=true&amp;start_volume=50">
         <param name="allowFullScreen" value="true">
         <param name="allowScriptAccess" value="always">
         <param name="allowNetworking" value="all">
         <param name="bgcolor" value="#000000">
         <embed
-          src="http://www.twitch.tv/widgets/live_embed_player.swf?hostname=www.twitch.tv&amp;channel=germandota&amp;auto_play=false&amp;start_volume=50"
+          src="http://www.twitch.tv/widgets/live_embed_player.swf?hostname=www.twitch.tv&amp;channel=germandota&amp;auto_play=true&amp;start_volume=50"
           type="application/x-shockwave-flash"
           height="480" width="787"
           allowfullscreen="true" allowscriptaccess="always"

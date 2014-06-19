@@ -16,18 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once '../template/begin-head.inc.php';
-common_print_htmltitle(CONFIG_PROJECT_NAME_POST);
-include_once '../template/head-title.inc.php';
-common_print_title(CONFIG_PROJECT_NAME_POST);
-include_once '../template/title-content.inc.php';
+include_once '../../inc/common.inc.php';
+
+include_once '../../template/begin-head.inc.php';
+common_print_htmltitle('About');
+include_once '../../template/head-title.inc.php';
+common_print_title('About');
+include_once '../../template/title-content.inc.php';
 ?>
 
   <div class="textblock">
-    <p>Hier ist der Anlaufpunkt für alle, die gerne die Dota 2 Let&rsquo;s
-    Play&rsquo;s von Martin sehen.  Diese Seite ist noch im Aufbau.
-    Und das ist gut, denn so kannst du auch mithelfen diese Webseite
-    zu erweitern und zu verbessern.</p>
+    <p>Diese Site ist eine Zusammenarbeit der Community.  Die Inhalte
+       werden größten Teils von dieser erstellt.</p>
     <p>Und so kannst du helfen:</p>
     <table class="default_table">
        <tr><th>Videos gucken :D</th><td>Ist das aller wichtigste!
@@ -40,14 +40,19 @@ include_once '../template/title-content.inc.php';
         href="https://github.com/germandota-de/germandota-web">Im Code
           herum stöbern und herum probieren</a></td></tr>
     </table>
-    <p>Was hoffentlich in den nächsten Tagen noch kommt:</p>
-    <ul>
-       <li>Irgend eine Art von Mini-Forum, mal sehen xD ...</li>
-       <li>Twitch Follow Button für <a href="/live/">Live Stream</a></li>
-       <li>YouTube Kommentare für <a href="/playlist/dota2">Dota 2 Playlist</a></li>
-       <li>Eure Vorschläge ???</li>
-    </ul>
+    <br><br>
+    <hr>
+    <table id="about_person">
+    <tr>
+      <td><b>Contact</b><br><?
+        _o_html(CONFIG_ABOUT_CONTACT_HTML);
+      ?></td>
+      <td><b>Address</b><br><?
+        _o_html(CONFIG_ABOUT_ADDRESS_HTML);
+      ?></td>
+    </tr>
+    </table>
   </div>
 
 <?
-include_once '../template/content-end.inc.php';
+include_once '../../template/content-end.inc.php';
