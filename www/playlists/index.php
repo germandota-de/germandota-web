@@ -63,7 +63,7 @@ include_once '../../template/title-content.inc.php';
 ?>
   <tr<? if ($k%2 == 0) echo ' class="lists_table_tr2"'; ?>>
     <td class="lists_table_thumb"><a class="img_link"<?
-    ?> title="Watch playlist" href="../video/?list=<?
+    ?> title="Watch playlist" href="../watch/?list=<?
       echo $cur_id;
     ?>"><img class="lists_table_thumb" alt="(thumb)" src="<?
       echo $glob_yt_playlists[$i]['snippet']['thumbnails']['medium']['url'];
@@ -74,7 +74,7 @@ include_once '../../template/title-content.inc.php';
       echo yt_str2date($cur_published) .'<br>'. yt_str2time($cur_published);
     ?></p></td>
     <td class="lists_table_text"><a class="playlist_link"<?
-    ?> title="Watch playlist" href="../video/?list=<?
+    ?> title="Watch playlist" href="../watch/?list=<?
       echo $cur_id;
     ?>"><img class="icon_large" alt="(video)" src="../img/icon_video.32.png"><?
       _o($cur_title);
