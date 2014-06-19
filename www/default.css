@@ -220,41 +220,6 @@ div#live_videoframe_bottom a {
 
 /* ***************************************************************  */
 
-div#playlist_videoframe {
-  display: table;
-  margin-left: auto;
-  margin-right: auto;
-
-  background-color: #404040;
-  padding: 3px;
-}
-
-div#playlist_videoframe_bottom {
-  background-color: #606060;
-  padding-top: 4px;
-  padding-bottom: 4px;
-  height: 25px;
-  text-align: center;
-
-  color: #a0a0a0;
-}
-div#playlist_videoframe_bottom a {
-  color: #500000;
-  font-weight: bold;
-}
-
-table#playlist_videoframe_table {
-  margin-left: auto;
-  margin-right: auto;
-  height: 100%;
-}
-table#playlist_videoframe_table td {
-  padding-left: 2px;
-  padding-right: 2px;
-}
-
-/* ***************************************************************  */
-
 table#lists_table {
   margin-left: auto;
   margin-right: auto;
@@ -342,12 +307,108 @@ a:active.img_link {
 
 /* ***************************************************************  */
 
-table#impressum_person {
+div#video_videoframe {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: -14px;
+  margin-bottom: 4px;
+
+  background-color: #404040;
+  padding: 3px;
+}
+
+div#video_videoframe_bottom {
+  background-color: #606060;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  height: 25px;
+  text-align: center;
+
+  color: #a0a0a0;
+}
+div#video_videoframe_bottom a {
+  color: #500000;
+  font-weight: bold;
+}
+
+table#video_videoframe_table {
+  margin-left: auto;
+  margin-right: auto;
+  height: 100%;
+}
+table#video_videoframe_table td {
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+/* ***************************************************************  */
+
+table#video_thumbs_table {
+  margin-left: auto;
+  margin-right: auto;
+
+  background-color: #d0d0d0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+td.video_thumbs_table {
+  background-color: #000000;
+  padding: 2px;
+}
+td.video_thumbs_table_select {
+  background-color: #8080a0;
+  padding: 2px;
+}
+table#video_thumbs_table th {
+  padding: 2px;
+  text-align: center;
+}
+th.video_thumbs_table_top {
+  font-weight: bold;
+  font-size: 11px;
+}
+th.video_thumbs_table_time {
+  font-weight: normal;
+  font-size: 10px;
+  font-style: italic;
+}
+th.video_thumbs_table_time_selct {
+  background-color: #8080a0;
+  font-weight: normal;
+  font-size: 10px;
+  font-style: italic;
+}
+span.video_thumbs_table_time_no {
+  font-weight: bold;
+  font-style: normal;
+}
+
+img.videos_thumbs {
+  height: 80px;
+}
+
+td.video_thumbs_table_pagelink {
+  color: #a0a0a0;
+  font-size: 24px;
+  font-weight: bold;
+}
+a.video_thumbs_table_pagelink {
+  color: #900000;
+}
+a:hover.video_thumbs_table_pagelink {
+  border-style: none;
+  color: #b00000;
+}
+
+/* ***************************************************************  */
+
+table#about_person {
   margin-left: auto;
   vertical-align: top;
 }
 
-table#impressum_person td {
+table#about_person td {
   color: #606060;
   font-size: 11px;
 

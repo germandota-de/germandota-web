@@ -39,10 +39,6 @@ if (CONFIG_YT_APIKEY == '') die('CONFIG_YT_APIKEY not configured!');
  */
 define('CONFIG_YT_CHANNELID',      'UCeKFc-ydU9pWKa4tqK-vYSw');
 
-/* Playlist of recommended videos.
- * It's seems to be PREG('/^UC(.*)$/LL\1/s', CONFIG_YT_CHANNELID)
- */
-define('CONFIG_YT_RECOMM_PLID',    'LLeKFc-ydU9pWKa4tqK-vYSw');
 
 /* Date/Time format to use on the site.  Consider for details:
  *

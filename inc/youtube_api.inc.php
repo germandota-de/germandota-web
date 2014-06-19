@@ -18,9 +18,18 @@
 
 include_once dirname(__FILE__). '/common.inc.php';
 
+/* Youtube Data API v3 Reference:
+ *
+ * https://developers.google.com/youtube/v3/docs/
+ */
+
 define('YT_REQUEST_PREFIX',        'https://www.googleapis.com/youtube/v3/');
 define('YT_PLAYLISTS_MAXRESULTS',       '4');
 define('YT_PLAYLISTS_MAXRESULTS_NEXT',  '10');
+
+/* Must be odd (3, 5, 7, ...) */
+define('YT_PLVIDEOS_MAXRESULTS',        '7');
+define('YT_PLVIDEOS_MAXRESULTS_HALF',   YT_PLVIDEOS_MAXRESULTS >> 1);
 
 /* ***************************************************************  */
 
@@ -37,7 +46,7 @@ function _yt_api_list($method, $part, $params_nokey='')
 
 /* ***************************************************************  */
 
-function yt_get_playlists($page_token)
+function yt_recv_playlists($page_token)
 {
   $max_result = ($page_token === '')? YT_PLAYLISTS_MAXRESULTS
     : YT_PLAYLISTS_MAXRESULTS_NEXT;
@@ -45,17 +54,79 @@ function yt_get_playlists($page_token)
   $json = _yt_api_list('playlists', 'status,contentDetails,snippet',
     'fields=pageInfo,nextPageToken,prevPageToken,items('
       .'id,status/privacyStatus,contentDetails/itemCount'
-      .',contentDetails/itemCount,status'
       .',snippet(publishedAt,title,description,thumbnails/medium/url))'
-    .'&channelId=' .CONFIG_YT_CHANNELID. '&maxResults='
-    .$max_result. '&pageToken=' .$page_token);
-  if ($json === false) return false;
+    .'&channelId=' .CONFIG_YT_CHANNELID. '&maxResults=' .$max_result
+    .'&pageToken=' .$page_token);
+  if (!$json) return false;
 
   $result = json_decode($json, true);
-  if ($result === false) return false;
+  if (!$result) return false;
 
   return $result;
 }
+
+function yt_recv_playlist_items($playlist_id, $page_token='')
+{
+  /* The channelId is the ID who owns the list, not the video.  */
+
+  $json =  _yt_api_list('playlistItems', 'status,contentDetails,snippet',
+    'fields=pageInfo,nextPageToken,prevPageToken,items('
+      .'status/privacyStatus,contentDetails(videoId,startAt,endAt)'
+      .',snippet(publishedAt,channelId,title,thumbnails/default/url'
+      .',position))'
+    .'&playlistId=' .$playlist_id. '&maxResults=' .YT_PLVIDEOS_MAXRESULTS
+    .'&pageToken=' .$page_token);
+  if (!$json) return false;
+
+  $result = json_decode($json, true);
+  if (!$result) return false;
+
+  return $result;
+}
+
+function yt_recv_playlist_items_video($playlist_id, $video_id)
+{
+  $json =  _yt_api_list('playlistItems', 'snippet',
+    'fields=items/snippet/position'
+    .'&playlistId='.$playlist_id. '&videoId=' .$video_id);
+  if (!$json) return false;
+
+  $result = json_decode($json, true);
+  if (!$result) return false;
+  $position = intval($result['items'][0]['snippet']['position']);
+
+  /* ***  */
+
+  $start = $position - YT_PLVIDEOS_MAXRESULTS_HALF;
+
+  /* Youtube Data API v3 - maxResults:
+   *
+   * Acceptable values are 0 to 50, inclusive.
+   */
+  for ($page_token=''; $start>0; $start-=50) {
+    $json =  _yt_api_list('playlistItems', 'id',
+      'fields=nextPageToken'
+      .'&playlistId=' .$playlist_id. '&maxResults='
+      .($start>50? 50: $start). '&pageToken=' .$page_token);
+    if (!$json) return false;
+
+    $result = json_decode($json, true);
+    if (!$result) return false;
+
+    $page_token = $result['nextPageToken'];
+
+    if ($start <= 50) break;
+  }
+
+  /* ***  */
+
+  return array(
+    'correction' => $start > 0? 0: $start,
+    'result' => yt_recv_playlist_items($playlist_id, $page_token)
+  );
+}
+
+/* ***************************************************************  */
 
 function yt_str2date($yt_time_str)
 {
@@ -66,6 +137,22 @@ function yt_str2time($yt_time_str)
   return date(CONFIG_TIME_FORMAT, strtotime($yt_time_str, 0));
 }
 
+function yt_get_recomm_plid()
+{
+  return preg_replace('/^..(.*)$/', 'LL\1', CONFIG_YT_CHANNELID);
+}
+
+function yt_timeat2sec($str)
+{
+  $h = round(preg_replace('/^.*[PT]([0-9.]*)H.*$/', '\1', $str));
+  $min = round(preg_replace('/^.*[PTH]([0-9.]*)M.*$/', '\1', $str));
+  $sec = round(preg_replace('/^.*[PTHM]([0-9.]*)S$/', '\1', $str));
+
+  return $h*60*60 + $min*60 + $sec;
+}
+
+/* ***************************************************************  */
+
 function yt_print_pageinfo($page_token, $yt_response, $items_str,
                            $url_pre, $url_post='')
 {
@@ -73,7 +160,7 @@ function yt_print_pageinfo($page_token, $yt_response, $items_str,
     echo '<a title="Previous ' .YT_PLAYLISTS_MAXRESULTS_NEXT. ' '
       .$items_str. '" class="page_nextlink" href="' .$url_pre. '?p='
       .$yt_response['prevPageToken']
-      .($url_post===''? '': '&amp;' .$url_post) .'">&laquo;-'
+      .($url_post===''? '': '&amp;' .$url_1post) .'">&laquo;-'
       .YT_PLAYLISTS_MAXRESULTS_NEXT.'</a> ';
   } else {
     echo 'First ';
