@@ -17,22 +17,16 @@
  */
 
 include_once '../../template/begin-head.inc.php';
-?>
-
-  <meta http-equiv="refresh" content="0; URL=/">
-  <title>GermanDota.de - Refresh</title>
-
-<?
+common_print_htmltitle('404 Not Found');
 include_once '../../template/head-title.inc.php';
-?>
-
-  GermanDota Refresh
-
-<?
+common_print_title('404 Not Found');
 include_once '../../template/title-content.inc.php';
 ?>
 
-  Bad Idea O.O
+  <div class="warning"><p>
+    What are you doing O.O ...  Do not enter random strings into the
+    address bar of your web browser!
+  </p></div>
 
 <?
 include_once '../../template/content-end.inc.php';

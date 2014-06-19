@@ -17,32 +17,16 @@
  */
 
 include_once '../../template/begin-head.inc.php';
-?>
-
-  <title>GermanDota.de - Impressum</title>
-
-<?
+common_print_htmltitle('403 Forbidden');
 include_once '../../template/head-title.inc.php';
-?>
-
-  Impressum
-
-<?
+common_print_title('403 Forbidden');
 include_once '../../template/title-content.inc.php';
 ?>
 
-  <div class="textblock">
-    <p>Diese Site ist eine Zusammenarbeit der Community.  Die Inhalte
-       werden größten Teils von dieser erstellt.</p>
-    <hr>
-    <p>
-      <b>Angaben gemäß &sect; 5 TMG</b><br>
-      Dirk Lehmann<br>Sickingenstr. 58<br>10553 Berlin<br>
-    </p><p>
-      <b>Kontakt</b><br>
-      Email: <a href="mailto:dotadirk@dj-l.de">dotadirk@dj-l.de</a>
-    </p>
-  </div>
+  <div class="warning"><p>
+    What are you doing O.O ...  Do not enter random strings into the
+    address bar of your web browser!
+  </p></div>
 
 <?
 include_once '../../template/content-end.inc.php';

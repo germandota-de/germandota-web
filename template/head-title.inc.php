@@ -16,15 +16,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+include_once dirname(__FILE__). '/../inc/common.inc.php';
+
 ?>  <!-- begin of head-title -->
 </head>
 <body onload="init()">
   <div class="topnav">
-    <img id="topnav_logo" src="/img/logo.32.png" alt="(logo)">
+    <img id="topnav_logo" src="<? echo CONFIG_PROJECT_LOGO_ABS; ?>" alt="(logo)">
     <span class="topnav">
       <a class="topnav_link" href="/">Home</a>
       | <a class="topnav_link" href="/live/">Live Stream</a>
-      | <a class="topnav_link" href="/pl/dota2/">Dota 2 Playlist</a>
+      | <a class="topnav_link" href="/playlists/">Playlists</a>
     </span>
   </div>
 
