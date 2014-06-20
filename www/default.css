@@ -105,6 +105,15 @@ img.icon_large {
   margin-right: 3px;
 }
 
+a.yt_channellink {
+  color: #700000;
+  font-weight: bold;
+}
+a:hover.yt_channellink {
+  color: #a00000;
+  border-style: none;
+}
+
 /* ***************************************************************  */
 
 div.topnav {
@@ -312,7 +321,6 @@ div#video_videoframe {
   margin-left: auto;
   margin-right: auto;
   margin-top: -14px;
-  margin-bottom: 4px;
 
   background-color: #404040;
   padding: 3px;
@@ -320,37 +328,49 @@ div#video_videoframe {
 
 div#video_videoframe_bottom {
   background-color: #606060;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  padding-top: 3px;
+  padding-bottom: 3px;
   height: 25px;
-  text-align: center;
 
-  color: #a0a0a0;
-}
-div#video_videoframe_bottom a {
-  color: #500000;
-  font-weight: bold;
+  color: #c0c0c0;
 }
 
 table#video_videoframe_table {
   margin-left: auto;
   margin-right: auto;
   height: 100%;
+  width: 100%;
 }
 table#video_videoframe_table td {
-  padding-left: 2px;
-  padding-right: 2px;
+  padding-left: 3px;
+  padding-right: 3px;
+}
+td.video_videoframe_table_small {
+  width: 1%;
+  white-space: nowrap;
 }
 
+span.video_videoframe_table_stats {
+  font-weight: bold;
+}
+span.video_videoframe_table_date {
+  font-style: italic;
+  font-size: 10px;
+}
+
+img.video_videoframe_table_icon {
+  height: 22px;
+}
 /* ***************************************************************  */
 
 table#video_thumbs_table {
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 4px;
 
   background-color: #d0d0d0;
-  padding-left: 4px;
-  padding-right: 4px;
+  padding-left: 25px;
+  padding-right: 25px;
 }
 td.video_thumbs_table {
   background-color: #000000;
@@ -368,6 +388,11 @@ th.video_thumbs_table_top {
   font-weight: bold;
   font-size: 11px;
 }
+span.video_thumbs_table_top_time {
+  font-weight: normal;
+  font-style: italic;
+}
+
 th.video_thumbs_table_time {
   font-weight: normal;
   font-size: 10px;
@@ -399,6 +424,27 @@ a.video_thumbs_table_pagelink {
 a:hover.video_thumbs_table_pagelink {
   border-style: none;
   color: #b00000;
+}
+
+div#video_description {
+  margin-left: auto;
+  margin-right: auto;
+  width: 60%;
+
+  background-color: #f0f0f0;
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-bottom: 8px;
+
+  height: 90px;
+  overflow: auto;
+  overflow-x: hidden;
+  border-radius: 6px;
+
+}
+span#video_description_title {
+  font-weight: bold;
+  line-height: 26px;
 }
 
 /* ***************************************************************  */

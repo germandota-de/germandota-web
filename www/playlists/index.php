@@ -30,7 +30,13 @@ if (!$glob_yt_result) {
   $glob_yt_result = yt_recv_playlists($page_token);
 }
 
+$state_first_page = $page_token == '';
 $glob_yt_playlists = $glob_yt_result['items'];
+
+if ($state_first_page) {
+  $glob_liked_list
+    = yt_recv_playlists('', yt_get_likedlist_plid())['items'][0];
+}
 
 /* ***************************************************************  */
 
@@ -43,33 +49,47 @@ include_once '../../template/title-content.inc.php';
 
   <table id="lists_table">
 <?
-  if ($page_token !== '') {
+  if ($state_first_page) {
 ?>
   <tr><th colspan="3"><?
-    yt_print_pageinfo($page_token, $glob_yt_result, 'playlists', './');
+    yt_print_pageinfo($glob_yt_result, 'playlists', './');
   ?></th></tr>
 <?
   }
 
-  for ($i=0, $k=0; $i<count($glob_yt_playlists); $i++) {
-    if ($glob_yt_playlists[$i]['status']['privacyStatus'] != 'public')
-      continue;
-    $k++;
+  for ($i=-1, $k=0; $i<count($glob_yt_playlists); $i++) {
+    if ($i<0) {
+      if (!$state_first_page) continue;
 
-    $cur_id = $glob_yt_playlists[$i]['id'];
-    $cur_title = $glob_yt_playlists[$i]['snippet']['title'];
-    $cur_published = $glob_yt_playlists[$i]['snippet']['publishedAt'];
-    $cur_description = $glob_yt_playlists[$i]['snippet']['description'];
+      $cur_privacy = $glob_liked_list['status']['privacyStatus'];
+      $cur_id = $glob_liked_list['id'];
+      $cur_thumb_url = $glob_liked_list['snippet']['thumbnails']['medium']['url'];
+      $cur_videos_count = $glob_liked_list['contentDetails']['itemCount'];
+      $cur_title = $glob_liked_list['snippet']['title'];
+      $cur_published = $glob_liked_list['snippet']['publishedAt'];
+      $cur_description = $glob_liked_list['snippet']['description'];
+    } else {
+      $cur_privacy = $glob_yt_playlists[$i]['status']['privacyStatus'];
+      $cur_id = $glob_yt_playlists[$i]['id'];
+      $cur_thumb_url = $glob_yt_playlists[$i]['snippet']['thumbnails']['medium']['url'];
+      $cur_videos_count = $glob_yt_playlists[$i]['contentDetails']['itemCount'];
+      $cur_title = $glob_yt_playlists[$i]['snippet']['title'];
+      $cur_published = $glob_yt_playlists[$i]['snippet']['publishedAt'];
+      $cur_description = $glob_yt_playlists[$i]['snippet']['description'];
+    }
+
+    if ($cur_privacy != 'public') continue;
+    $k++;
 ?>
   <tr<? if ($k%2 == 0) echo ' class="lists_table_tr2"'; ?>>
     <td class="lists_table_thumb"><a class="img_link"<?
     ?> title="Watch playlist" href="../watch/?list=<?
       echo $cur_id;
     ?>"><img class="lists_table_thumb" alt="(thumb)" src="<?
-      echo $glob_yt_playlists[$i]['snippet']['thumbnails']['medium']['url'];
+      echo $cur_thumb_url;
     ?>"></a></td>
     <td class="lists_table_videocount"><?
-      _o($glob_yt_playlists[$i]['contentDetails']['itemCount']);
+      _o($cur_videos_count);
     ?> Videos<p class="lists_table_videocount"><?
       echo yt_str2date($cur_published) .'<br>'. yt_str2time($cur_published);
     ?></p></td>
@@ -89,7 +109,7 @@ include_once '../../template/title-content.inc.php';
   } /* for ($i=0; $i<count($glob_yt_playlists); $i++)  */
 ?>
   <tr><th colspan="3"><?
-    yt_print_pageinfo($page_token, $glob_yt_result, 'playlists', './');
+    yt_print_pageinfo($glob_yt_result, 'playlists', './');
   ?></th></tr>
   </table>
 

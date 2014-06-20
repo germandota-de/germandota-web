@@ -25,6 +25,10 @@ include_once COMMON_CONF_FILE;
 
 /* ***************************************************************  */
 
+define('COMMON_FIX_YT_LIKELIST',        true);
+
+/* ***************************************************************  */
+
 /* Convert all characters for HTML output and put to output buffer.  */
 function _o($str)
 {
@@ -47,9 +51,10 @@ function common_print_htmltitle($title)
   echo "</title>\n\n";
 }
 
-function common_print_title($title)
+function common_print_title($title, $short=false)
 {
   echo "\n  ";
-  _o(CONFIG_PROJECT_NAME_SHORT .' '. $title);
+  if (!$short) _o(CONFIG_PROJECT_NAME_SHORT .' ');
+  _o($title);
   echo "\n\n";
 }
