@@ -157,6 +157,11 @@ include_once '../../template/title-content.inc.php';
           echo number_format($glob_yt_video['statistics']['commentCount'],
                              0, ',', '.');
         ?></td>
+        <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
+          ?><span class="video_videoframe_table_date"><?
+          _o(yt_str2date($glob_yt_video['snippet']['publishedAt']) .', '
+             .yt_str2time($glob_yt_video['snippet']['publishedAt']));
+        ?></span></td>
         <td></td>
         <td class="video_videoframe_table_small">Subscribe <?
           yt_print_chanlink($glob_yt_video['snippet']['channelTitle'],

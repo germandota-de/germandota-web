@@ -328,8 +328,8 @@ div#video_videoframe {
 
 div#video_videoframe_bottom {
   background-color: #606060;
-  padding-top: 2px;
-  padding-bottom: 2px;
+  padding-top: 3px;
+  padding-bottom: 3px;
   height: 25px;
 
   color: #c0c0c0;
@@ -352,6 +352,10 @@ td.video_videoframe_table_small {
 
 span.video_videoframe_table_stats {
   font-weight: bold;
+}
+span.video_videoframe_table_date {
+  font-style: italic;
+  font-size: 10px;
 }
 
 img.video_videoframe_table_icon {
