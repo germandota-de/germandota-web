@@ -18,42 +18,43 @@
 
 include_once '../../inc/youtube_api.inc.php';
 
-$list = isset($_GET['list'])? trim($_GET['list']): yt_get_recomm_plid();
+$list = isset($_GET['list'])? trim($_GET['list']): yt_get_likedlist_plid();
 $video_id = isset($_GET['v'])? trim($_GET['v']): '';
+
+if (COMMON_FIX_YT_LIKELIST && $list == yt_get_likedlist_plid())
+  $fix_index = isset($_GET['index'])? intval(trim($_GET['index'])): false;
+else
+  $fix_index = false;
 
 /* ***************************************************************  */
 
 /* If video_id was given  */
-if ($video_id) {
-  $temp = yt_recv_playlist_items_video($list, $video_id);
+if ($video_id)
+  $temp_result = yt_recv_playlist_items_video($list, $video_id,
+                                              $fix_index);
 
-  $glob_yt_result = $temp['result'];
-  $glob_correction = $temp['correction'];
-}
+/* If video_id not given or failed to find in playlist  */
+if (!$video_id || !$temp_result)
+  $temp_result = yt_recv_playlist_items($list);
 
-/* If video_id not given or fail to find  */
-if (!$video_id || !$temp) {
-  $glob_correction = -YT_PLVIDEOS_MAXRESULTS_HALF;
-  $glob_yt_result = yt_recv_playlist_items($list);
-}
-
-/* **-------------------------------------------------------------  */
+/* ---------------------------------------------------------------  */
 /* Only videos in playlists of our own channel  */
 
-if ($glob_yt_result && $glob_yt_result['items']
-    [YT_PLVIDEOS_MAXRESULTS_HALF+$glob_correction]['snippet']['channelId']
-    != CONFIG_YT_CHANNELID) {
-  $glob_correction = -YT_PLVIDEOS_MAXRESULTS_HALF;
-  $glob_yt_result = false;
-}
+if ($temp_result && $temp_result['result']['items']
+    [YT_PLVIDEOS_MAXRESULTS_HALF+$temp_result['correction']]
+    ['snippet']['channelId'] != CONFIG_YT_CHANNELID)
+  $temp_result = false;
 
 /* ---------------------------------------------------------------  */
 
-/* Otherwise we are trying the recommend playlist  */
-if (!$glob_yt_result) {
-  $list = yt_get_recomm_plid();
-  $glob_yt_result = yt_recv_playlist_items($list);
+/* Otherwise we are trying the liked playlist  */
+if (!$temp_result) {
+  $list = yt_get_likedlist_plid();
+  $temp_result = yt_recv_playlist_items($list);
 }
+
+$glob_yt_result = $temp_result['result'];
+$glob_correction = $temp_result['correction'];
 
 $glob_yt_plitems = $glob_yt_result['items'];
 $glob_yt_videoitem
@@ -65,9 +66,15 @@ $glob_video_plposition = $glob_yt_videoitem['snippet']['position'];
 
 /* ***************************************************************  */
 
+$glob_yt_list = yt_recv_playlist_short($list)['items'][0];
+$glob_yt_video = yt_recv_video($video_id)['items'][0];
+
+/* ***************************************************************  */
+
 function _page_td($token_name, $dir_str, $i_playlist, $text)
 {
-  global $list, $glob_yt_plitems, $glob_yt_result;
+  global $list, $glob_yt_plitems, $glob_yt_result,
+    $glob_video_plposition, $glob_correction;
 
   if (isset($glob_yt_result[$token_name])) {
 ?>
@@ -77,6 +84,9 @@ function _page_td($token_name, $dir_str, $i_playlist, $text)
     ?> videos" href="./?list=<?
       echo $list .'&amp;v='. $glob_yt_plitems[$i_playlist]
         ['contentDetails']['videoId'];
+      if (COMMON_FIX_YT_LIKELIST && $list == yt_get_likedlist_plid())
+        echo '&amp;index=' .($glob_video_plposition
+          -(YT_PLVIDEOS_MAXRESULTS_HALF+$glob_correction) + $i_playlist+1);
     ?>"><? echo $text; ?></a></td>
 <?
   } else { // if (isset($glob_yt_result['nextPageToken']))
@@ -93,9 +103,12 @@ include_once '../../template/begin-head.inc.php';
 ?>
 
   <script type="text/javascript" src="https://apis.google.com/js/platform.js"></script><?
-common_print_htmltitle($glob_yt_videoitem['snippet']['title']);
+common_print_htmltitle('[' .$glob_yt_list['snippet']['title']
+                       . '] ' .($glob_video_plposition+1). '. '
+                       .$glob_yt_videoitem['snippet']['title']);
 include_once '../../template/head-title.inc.php';
-common_print_title($glob_yt_videoitem['snippet']['title']);
+common_print_title(($glob_video_plposition+1)
+                   .'. '. $glob_yt_videoitem['snippet']['title'], true);
 include_once '../../template/title-content.inc.php';
 ?>
 
@@ -113,12 +126,51 @@ include_once '../../template/title-content.inc.php';
 
     <div id="video_videoframe_bottom">
       <table id="video_videoframe_table">
-        <tr><td><a target="_blank"
-          href="http://www.youtube.com/user/GermanDotaTV">GermanDota</a>
-            auf Youtube abonnieren
-        </td><td>
-          <div class="g-ytsubscribe" data-channel="GermanDotaTV">Abonnieren</div>
-        </td></tr>
+      <tr>
+        <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
+          echo yt_timeat2readable($glob_yt_video['contentDetails']
+                                  ['duration']);
+          ?></td>
+        <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
+          ?><span class="video_videoframe_table_stats"><?
+          echo number_format($glob_yt_video['statistics']['viewCount'],
+                             0, ',', '.');
+          ?> Views</span></td>
+        <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
+          ?><img class="video_videoframe_table_icon" alt="(like)"<?
+          ?> src="../img/icon_like.32.png"></td>
+        <td class="video_videoframe_table_small"><?
+          echo number_format($glob_yt_video['statistics']['likeCount'],
+                             0, ',', '.');
+        ?></td>
+        <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
+          ?><img class="video_videoframe_table_icon" alt="(dislike)"<?
+          ?> src="../img/icon_dislike.32.png"></td>
+        <td class="video_videoframe_table_small"><?
+          echo number_format($glob_yt_video['statistics']['dislikeCount'],
+                             0, ',', '.');
+        ?></td>
+        <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
+          ?><img class="video_videoframe_table_icon" alt="(comment)"<?
+          ?> src="../img/icon_comment.32.png"></td>
+        <td class="video_videoframe_table_small"><?
+          echo number_format($glob_yt_video['statistics']['commentCount'],
+                             0, ',', '.');
+        ?></td>
+        <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
+          ?><span class="video_videoframe_table_date"><?
+          _o(yt_str2date($glob_yt_video['snippet']['publishedAt']) .', '
+             .yt_str2time($glob_yt_video['snippet']['publishedAt']));
+        ?></span></td>
+        <td></td>
+        <td class="video_videoframe_table_small">Subscribe <?
+          yt_print_chanlink($glob_yt_video['snippet']['channelTitle'],
+                            $glob_yt_video['snippet']['channelId']);
+          ?> on
+        </td><td class="video_videoframe_table_small"><?
+          yt_print_subscribe($glob_yt_video['snippet']['channelId']);
+        ?></td>
+      </tr>
       </table>
     </div>
   </div>
@@ -126,10 +178,15 @@ include_once '../../template/title-content.inc.php';
   <table id="video_thumbs_table">
   <tr><th class="video_thumbs_table_top" colspan="<?
     echo YT_PLVIDEOS_MAXRESULTS+2;
-    ?>"><?
-    echo 'Video ' .($glob_video_plposition+1).' of '
+  ?>">Video <?
+    echo ($glob_video_plposition+1).' of '
       .$glob_yt_result['pageInfo']['totalResults'];
-    ?></th></tr>
+    ?> - <span class="video_thumbs_table_top_time"><?
+    _o($glob_yt_list['snippet']['title']
+       .' ('.yt_str2date($glob_yt_list['snippet']['publishedAt'])
+       .', ' .yt_str2time($glob_yt_list['snippet']['publishedAt'])
+       .')');
+    ?></span></th></tr>
   <tr>
 <?
     _page_td('prevPageToken', 'Previous', 0, '&laquo;');
@@ -147,6 +204,9 @@ include_once '../../template/title-content.inc.php';
       _o($glob_yt_plitems[$i]['snippet']['title']);
     ?>" href="./?list=<?
       echo $list .'&amp;v='. $glob_yt_plitems[$i]['contentDetails']['videoId'];
+      if (COMMON_FIX_YT_LIKELIST && $list == yt_get_likedlist_plid())
+        echo '&amp;index=' .($glob_video_plposition
+          -(YT_PLVIDEOS_MAXRESULTS_HALF+$glob_correction) + $i+1);
     ?>"><img class="videos_thumbs" alt="(thumb)" src="<?
       echo $glob_yt_plitems[$i]['snippet']['thumbnails']['default']['url'];
     ?>"></a></td>
@@ -189,6 +249,14 @@ include_once '../../template/title-content.inc.php';
     <td></td>
   </tr>
   </table>
+
+  <div id="video_description">
+    <span id="video_description_title">Published from <?
+      yt_print_chanlink($glob_yt_video['snippet']['channelTitle'],
+                        $glob_yt_video['snippet']['channelId']);
+    ?></span><br>
+    <?_o($glob_yt_video['snippet']['description']); ?>
+  </div>
 
 <?
 include_once '../../template/content-end.inc.php';
