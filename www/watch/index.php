@@ -66,8 +66,8 @@ $glob_video_plposition = $glob_yt_videoitem['snippet']['position'];
 
 /* ***************************************************************  */
 
-$glob_yt_list = yt_recv_playlist_short($list)['items'][0];
-$glob_yt_video = yt_recv_video($video_id)['items'][0];
+$temp = yt_recv_playlist_short($list); $glob_yt_list = $temp['items'][0];
+$temp = yt_recv_video($video_id); $glob_yt_video = $temp['items'][0];
 
 /* ***************************************************************  */
 
