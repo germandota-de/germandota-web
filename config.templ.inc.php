@@ -39,7 +39,6 @@ if (CONFIG_YT_APIKEY == '') die('CONFIG_YT_APIKEY not configured!');
  */
 define('CONFIG_YT_CHANNELID',      'UCeKFc-ydU9pWKa4tqK-vYSw');
 
-
 /* Date/Time format to use on the site.  Consider for details:
  *
  * http://www.php.net/date

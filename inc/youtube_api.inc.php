@@ -24,7 +24,7 @@ include_once dirname(__FILE__). '/common.inc.php';
  */
 
 define('YT_REQUEST_PREFIX',        'https://www.googleapis.com/youtube/v3/');
-define('YT_PLAYLISTS_MAXRESULTS',       '4');
+define('YT_PLAYLISTS_MAXRESULTS',       '3');
 define('YT_PLAYLISTS_MAXRESULTS_NEXT',  '10');
 
 /* Must be odd (3, 5, 7, ...) */
@@ -46,7 +46,7 @@ function _yt_api_list($method, $part, $params_nokey='')
 
 /* ***************************************************************  */
 
-function yt_recv_playlists($page_token)
+function yt_recv_playlists($page_token, $plid='')
 {
   $max_result = ($page_token === '')? YT_PLAYLISTS_MAXRESULTS
     : YT_PLAYLISTS_MAXRESULTS_NEXT;
@@ -55,8 +55,8 @@ function yt_recv_playlists($page_token)
     'fields=pageInfo,nextPageToken,prevPageToken,items('
       .'id,status/privacyStatus,contentDetails/itemCount'
       .',snippet(publishedAt,title,description,thumbnails/medium/url))'
-    .'&channelId=' .CONFIG_YT_CHANNELID. '&maxResults=' .$max_result
-    .'&pageToken=' .$page_token);
+    .($plid? '&id=' .$plid: '&channelId=' .CONFIG_YT_CHANNELID)
+    .'&maxResults=' .$max_result .'&pageToken=' .$page_token);
   if (!$json) return false;
 
   $result = json_decode($json, true);
@@ -163,8 +163,8 @@ function yt_timeat2sec($str)
 
 /* ***************************************************************  */
 
-function yt_print_pageinfo($page_token, $yt_response, $items_str,
-                           $url_pre, $url_post='')
+function yt_print_pageinfo($yt_response, $items_str, $url_pre,
+                           $url_post='')
 {
   if (isset($yt_response['prevPageToken'])) {
     echo '<a title="Previous ' .YT_PLAYLISTS_MAXRESULTS_NEXT. ' '
@@ -173,7 +173,7 @@ function yt_print_pageinfo($page_token, $yt_response, $items_str,
       .($url_post===''? '': '&amp;' .$url_1post) .'">&laquo;-'
       .YT_PLAYLISTS_MAXRESULTS_NEXT.'</a> ';
   } else {
-    echo 'First ';
+    echo 'First 1+';
   }
 
   echo count($yt_response['items']) .' of '
