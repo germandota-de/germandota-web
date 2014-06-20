@@ -81,10 +81,14 @@ function yt_recv_playlist_items($playlist_id, $page_token='')
   $result = json_decode($json, true);
   if (!$result) return false;
 
-  return $result;
+  return array(
+    'correction' => -YT_PLVIDEOS_MAXRESULTS_HALF,
+    'result' => $result
+  );
 }
 
-function yt_recv_playlist_items_video($playlist_id, $video_id)
+function yt_recv_playlist_items_video($playlist_id, $video_id,
+                                      $fix_index=false)
 {
   $json =  _yt_api_list('playlistItems', 'snippet',
     'fields=items/snippet/position'
@@ -94,6 +98,9 @@ function yt_recv_playlist_items_video($playlist_id, $video_id)
   $result = json_decode($json, true);
   if (!$result) return false;
   $position = intval($result['items'][0]['snippet']['position']);
+
+  if (COMMON_FIX_YT_LIKELIST && $fix_index !== false)
+    $position = $fix_index-1;
 
   /* ***  */
 
@@ -120,9 +127,12 @@ function yt_recv_playlist_items_video($playlist_id, $video_id)
 
   /* ***  */
 
+  $result = yt_recv_playlist_items($playlist_id, $page_token);
+  if (!$result) return false;
+
   return array(
     'correction' => $start > 0? 0: $start,
-    'result' => yt_recv_playlist_items($playlist_id, $page_token)
+    'result' => $result['result']
   );
 }
 
@@ -137,7 +147,7 @@ function yt_str2time($yt_time_str)
   return date(CONFIG_TIME_FORMAT, strtotime($yt_time_str, 0));
 }
 
-function yt_get_recomm_plid()
+function yt_get_likedlist_plid()
 {
   return preg_replace('/^..(.*)$/', 'LL\1', CONFIG_YT_CHANNELID);
 }

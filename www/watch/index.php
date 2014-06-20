@@ -18,42 +18,43 @@
 
 include_once '../../inc/youtube_api.inc.php';
 
-$list = isset($_GET['list'])? trim($_GET['list']): yt_get_recomm_plid();
+$list = isset($_GET['list'])? trim($_GET['list']): yt_get_likedlist_plid();
 $video_id = isset($_GET['v'])? trim($_GET['v']): '';
+
+if (COMMON_FIX_YT_LIKELIST && $list == yt_get_likedlist_plid())
+  $fix_index = isset($_GET['index'])? intval(trim($_GET['index'])): false;
+else
+  $fix_index = false;
 
 /* ***************************************************************  */
 
 /* If video_id was given  */
-if ($video_id) {
-  $temp = yt_recv_playlist_items_video($list, $video_id);
+if ($video_id)
+  $temp_result = yt_recv_playlist_items_video($list, $video_id,
+                                              $fix_index);
 
-  $glob_yt_result = $temp['result'];
-  $glob_correction = $temp['correction'];
-}
+/* If video_id not given or failed to find in playlist  */
+if (!$video_id || !$temp_result)
+  $temp_result = yt_recv_playlist_items($list);
 
-/* If video_id not given or fail to find  */
-if (!$video_id || !$temp) {
-  $glob_correction = -YT_PLVIDEOS_MAXRESULTS_HALF;
-  $glob_yt_result = yt_recv_playlist_items($list);
-}
-
-/* **-------------------------------------------------------------  */
+/* ---------------------------------------------------------------  */
 /* Only videos in playlists of our own channel  */
 
-if ($glob_yt_result && $glob_yt_result['items']
-    [YT_PLVIDEOS_MAXRESULTS_HALF+$glob_correction]['snippet']['channelId']
-    != CONFIG_YT_CHANNELID) {
-  $glob_correction = -YT_PLVIDEOS_MAXRESULTS_HALF;
-  $glob_yt_result = false;
-}
+if ($temp_result && $temp_result['result']['items']
+    [YT_PLVIDEOS_MAXRESULTS_HALF+$temp_result['correction']]
+    ['snippet']['channelId'] != CONFIG_YT_CHANNELID)
+  $temp_result = false;
 
 /* ---------------------------------------------------------------  */
 
-/* Otherwise we are trying the recommend playlist  */
-if (!$glob_yt_result) {
-  $list = yt_get_recomm_plid();
-  $glob_yt_result = yt_recv_playlist_items($list);
+/* Otherwise we are trying the liked playlist  */
+if (!$temp_result) {
+  $list = yt_get_likedlist_plid();
+  $temp_result = yt_recv_playlist_items($list);
 }
+
+$glob_yt_result = $temp_result['result'];
+$glob_correction = $temp_result['correction'];
 
 $glob_yt_plitems = $glob_yt_result['items'];
 $glob_yt_videoitem
@@ -95,7 +96,7 @@ include_once '../../template/begin-head.inc.php';
   <script type="text/javascript" src="https://apis.google.com/js/platform.js"></script><?
 common_print_htmltitle($glob_yt_videoitem['snippet']['title']);
 include_once '../../template/head-title.inc.php';
-common_print_title($glob_yt_videoitem['snippet']['title']);
+common_print_title($glob_yt_videoitem['snippet']['title'], true);
 include_once '../../template/title-content.inc.php';
 ?>
 
@@ -147,6 +148,9 @@ include_once '../../template/title-content.inc.php';
       _o($glob_yt_plitems[$i]['snippet']['title']);
     ?>" href="./?list=<?
       echo $list .'&amp;v='. $glob_yt_plitems[$i]['contentDetails']['videoId'];
+      if (COMMON_FIX_YT_LIKELIST && $list == yt_get_likedlist_plid())
+        echo '&amp;index=' .($glob_video_plposition
+          -(YT_PLVIDEOS_MAXRESULTS_HALF+$glob_correction) + $i+1);
     ?>"><img class="videos_thumbs" alt="(thumb)" src="<?
       echo $glob_yt_plitems[$i]['snippet']['thumbnails']['default']['url'];
     ?>"></a></td>
