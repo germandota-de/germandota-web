@@ -34,8 +34,8 @@ $state_first_page = $page_token == '';
 $glob_yt_playlists = $glob_yt_result['items'];
 
 if ($state_first_page) {
-  $glob_liked_list
-    = yt_recv_playlists('', yt_get_likedlist_plid())['items'][0];
+  $temp = yt_recv_playlists('', yt_get_likedlist_plid());
+  $glob_liked_list = $temp['items'][0];
 }
 
 /* ***************************************************************  */
