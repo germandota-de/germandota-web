@@ -64,6 +64,19 @@ function yt_recv_playlists($page_token, $plid='')
 
   return $result;
 }
+function yt_recv_playlist_short($plid)
+{
+  $json = _yt_api_list('playlists', 'snippet',
+    'fields=items(snippet(publishedAt,title))&id=' .$plid);
+  if (!$json) return false;
+
+  $result = json_decode($json, true);
+  if (!$result) return false;
+
+  return $result;
+}
+
+/* ***************************************************************  */
 
 function yt_recv_playlist_items($playlist_id, $page_token='')
 {
@@ -138,13 +151,38 @@ function yt_recv_playlist_items_video($playlist_id, $video_id,
 
 /* ***************************************************************  */
 
+function yt_recv_video($vid)
+{
+  $json = _yt_api_list('videos', 'snippet,contentDetails,statistics',
+    'fields=items('
+      .'snippet(publishedAt,channelId,channelTitle,title,description)'
+      .',contentDetails(duration),statistics(viewCount,likeCount'
+      .',dislikeCount,commentCount))&id=' .$vid);
+  if (!$json) return false;
+
+  $result = json_decode($json, true);
+  if (!$result) return false;
+
+  return $result;
+}
+
+/* ***************************************************************  */
+
 function yt_str2date($yt_time_str)
 {
-  return date(CONFIG_DATE_FORMAT, strtotime($yt_time_str, 0));
+  $stamp = strtotime($yt_time_str, 0);
+
+  if (!$stamp) return '-no date-';
+
+  return date(CONFIG_DATE_FORMAT, $stamp);
 }
 function yt_str2time($yt_time_str)
 {
-  return date(CONFIG_TIME_FORMAT, strtotime($yt_time_str, 0));
+  $stamp = strtotime($yt_time_str, 0);
+
+  if (!$stamp) return '-timeless-';
+
+  return date(CONFIG_TIME_FORMAT, $stamp);
 }
 
 function yt_get_likedlist_plid()
@@ -152,13 +190,55 @@ function yt_get_likedlist_plid()
   return preg_replace('/^..(.*)$/', 'LL\1', CONFIG_YT_CHANNELID);
 }
 
+function _yt_timeat2($str)
+{
+  return array(
+    'h'   => round(preg_replace('/^.*[PT]([0-9.]*)H.*$/', '\1', $str)),
+    'min' => round(preg_replace('/^.*[PTH]([0-9.]*)M.*$/', '\1', $str)),
+    'sec' => round(preg_replace('/^.*[PTHM]([0-9.]*)S$/', '\1', $str))
+  );
+}
 function yt_timeat2sec($str)
 {
-  $h = round(preg_replace('/^.*[PT]([0-9.]*)H.*$/', '\1', $str));
-  $min = round(preg_replace('/^.*[PTH]([0-9.]*)M.*$/', '\1', $str));
-  $sec = round(preg_replace('/^.*[PTHM]([0-9.]*)S$/', '\1', $str));
+  $x = _yt_timeat2($str);
 
-  return $h*60*60 + $min*60 + $sec;
+  return $x['h']*60*60 + $x['min']*60 + $x['sec'];
+}
+function yt_timeat2readable($str)
+{
+  $x = _yt_timeat2($str);
+
+  if ($x['h'] > 0)
+    return $x['h'] .':'. sprintf('%02u', $x['min']) .':'
+      .sprintf('%02u', $x['sec']) .'h';
+
+  return $x['min'] .':'. sprintf('%02u', $x['sec']) .' min';
+}
+
+function yt_print_chanlink($chan_name, $chan_id)
+{
+  ?><a class="yt_channellink" target="_blank"<?
+  ?> href="https://www.youtube.com/channel/<?
+    echo $chan_id;
+  ?>" title="View this channel at youtube.com"><?
+    _o($chan_name);
+  ?></a><?
+}
+
+/* Requires to include
+ *
+ * <script src="https://apis.google.com/js/platform.js"></script>
+ *
+ *   * data-layout="{default,full}"
+ *
+ *   * data-theme="{default,dark}"
+ *
+ *   * data-count="{default,hidden}"
+ */
+function yt_print_subscribe($chan_id)
+{
+  ?><div class="g-ytsubscribe" data-layout="default" data-count="default"<?
+  ?> data-channelid="<? echo $chan_id; ?>"></div><?
 }
 
 /* ***************************************************************  */
