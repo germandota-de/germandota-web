@@ -1,3 +1,5 @@
+<?
+
 /* germandota.de - Sources of the website
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,14 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function init()
-{
-  for (var i=0; i<parent.frames.length; i++) {
-    if (parent.frames[i].location.href == window.location.href)
-      parent.location.href = window.location.href;
-  }
-}
+include_once dirname(__FILE__). '/common.inc.php';
 
-function init_comments()
+/* Youtube Data API !v2! comment reference:
+ *
+ * https://developers.google.com/youtube/2.0/developers_guide_protocol_comments
+ */
+
+define('YT_COMMENTS_PERPAGE',           10);
+define('YT_COMMENTS_PXPERCOMMENT',      30);
+define('YT_COMMENTS_OFFSET_PX',         200);
+
+/* ***************************************************************  */
+
+function yt_comments_iframeheight($comment_count)
 {
+  $cnt = $comment_count>YT_COMMENTS_PXPERCOMMENT
+    ? YT_COMMENTS_PXPERCOMMENT: $comment_count;
+
+  return YT_COMMENTS_OFFSET_PX + (YT_COMMENTS_PXPERCOMMENT*$cnt);
 }

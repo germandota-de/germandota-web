@@ -19,15 +19,15 @@
 Table of Contents
 *****************
 
-    I. Coding Guidelines
+    I. Coding guidelines
 
-   II. Easiest Git workflow
+   II. Recommended Git workflow
 
   III. Installing Apache httpd on a Debian system
 
 ======================================================================
 
-I.  Coding Guidelines
+I.  Coding guidelines
     *****************
 
 a) If it possible then prevent that lines of code are longer than 70
@@ -61,8 +61,8 @@ c) If you ADD A NEW FILE to this project THEN ADD THE FOLLOWING
 
 ======================================================================
 
-II.  Easiest Git workflow
-     ********************
+II.  Recommended Git workflow
+     ************************
 
 1. Setting up a branch at your local machine where you can work and
    commit.

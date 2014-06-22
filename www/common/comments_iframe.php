@@ -1,3 +1,5 @@
+<?
+
 /* germandota.de - Sources of the website
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,14 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function init()
-{
-  for (var i=0; i<parent.frames.length; i++) {
-    if (parent.frames[i].location.href == window.location.href)
-      parent.location.href = window.location.href;
-  }
-}
+/* ***************************************************************  */
 
-function init_comments()
-{
-}
+include_once '../../template/begin-head.inc.php';
+common_print_htmltitle('Comments');
+include_once '../../template/head-title.comments.inc.php';
+common_print_title('Comments', true);
+include_once '../../template/title-content.comments.inc.php';
+for ($i=0; $i<100; $i++) {
+?>
+
+  Hello World!
+  <a href="./">Test</a><br>
+
+<?
+    }
+include_once '../../template/content-end.comments.inc.php';

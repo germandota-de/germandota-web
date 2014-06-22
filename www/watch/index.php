@@ -17,6 +17,7 @@
  */
 
 include_once '../../inc/youtube_api.inc.php';
+include_once '../../inc/youtube_api_comments.inc.php';
 
 $list = isset($_GET['list'])? trim($_GET['list']): yt_get_likedlist_plid();
 $video_id = isset($_GET['v'])? trim($_GET['v']): '';
@@ -257,6 +258,12 @@ include_once '../../template/title-content.inc.php';
     ?></span><br>
     <?_o($glob_yt_video['snippet']['description']); ?>
   </div>
+
+  <iframe class="comments_iframe" src="../common/comments_iframe.php?v=<?
+    echo $video_id;
+  ?>" height="<?
+    echo yt_comments_iframeheight($glob_yt_video['statistics']['commentCount']);
+  ?>"></iframe>
 
 <?
 include_once '../../template/content-end.inc.php';
