@@ -23,7 +23,8 @@ include_once dirname(__FILE__). '/common.inc.php';
  * https://developers.google.com/youtube/v3/docs/
  */
 
-define('YT_REQUEST_PREFIX',        'https://www.googleapis.com/youtube/v3/');
+define('YT_REQUEST_PREFIX',
+       'https://www.googleapis.com/youtube/v3/');
 define('YT_PLAYLISTS_MAXRESULTS',       '3');
 define('YT_PLAYLISTS_MAXRESULTS_NEXT',  '10');
 
@@ -38,10 +39,13 @@ function _yt_api_list($method, $part, $params_nokey='')
   $request = YT_REQUEST_PREFIX .$method. '?key=' .CONFIG_YT_APIKEY
     .'&part=' .$part. ($params_nokey == ''? '': '&' .$params_nokey);
 
-  $response = file_get_contents($request);
-  if (!$response) return false;
+  $json = file_get_contents($request);
+  if (!$json) return false;
 
-  return $response;
+  $result = json_decode($json, true);
+  if (!$result) return false;
+
+  return $result;
 }
 
 /* ***************************************************************  */
@@ -51,26 +55,20 @@ function yt_recv_playlists($page_token, $plid='')
   $max_result = ($page_token === '')? YT_PLAYLISTS_MAXRESULTS
     : YT_PLAYLISTS_MAXRESULTS_NEXT;
 
-  $json = _yt_api_list('playlists', 'status,contentDetails,snippet',
+  $result = _yt_api_list('playlists', 'status,contentDetails,snippet',
     'fields=pageInfo,nextPageToken,prevPageToken,items('
       .'id,status/privacyStatus,contentDetails/itemCount'
       .',snippet(publishedAt,title,description,thumbnails/medium/url))'
     .($plid? '&id=' .$plid: '&channelId=' .CONFIG_YT_CHANNELID)
     .'&maxResults=' .$max_result .'&pageToken=' .$page_token);
-  if (!$json) return false;
-
-  $result = json_decode($json, true);
   if (!$result) return false;
 
   return $result;
 }
 function yt_recv_playlist_short($plid)
 {
-  $json = _yt_api_list('playlists', 'snippet',
+  $result = _yt_api_list('playlists', 'snippet',
     'fields=items(snippet(publishedAt,title))&id=' .$plid);
-  if (!$json) return false;
-
-  $result = json_decode($json, true);
   if (!$result) return false;
 
   return $result;
@@ -82,16 +80,13 @@ function yt_recv_playlist_items($playlist_id, $page_token='')
 {
   /* The channelId is the ID who owns the list, not the video.  */
 
-  $json =  _yt_api_list('playlistItems', 'status,contentDetails,snippet',
+  $result = _yt_api_list('playlistItems', 'status,contentDetails,snippet',
     'fields=pageInfo,nextPageToken,prevPageToken,items('
       .'status/privacyStatus,contentDetails(videoId,startAt,endAt)'
       .',snippet(publishedAt,channelId,title,thumbnails/default/url'
       .',position))'
     .'&playlistId=' .$playlist_id. '&maxResults=' .YT_PLVIDEOS_MAXRESULTS
     .'&pageToken=' .$page_token);
-  if (!$json) return false;
-
-  $result = json_decode($json, true);
   if (!$result) return false;
 
   return array(
@@ -103,13 +98,11 @@ function yt_recv_playlist_items($playlist_id, $page_token='')
 function yt_recv_playlist_items_video($playlist_id, $video_id,
                                       $fix_index=false)
 {
-  $json =  _yt_api_list('playlistItems', 'snippet',
+  $result = _yt_api_list('playlistItems', 'snippet',
     'fields=items/snippet/position'
     .'&playlistId='.$playlist_id. '&videoId=' .$video_id);
-  if (!$json) return false;
-
-  $result = json_decode($json, true);
   if (!$result) return false;
+
   $position = intval($result['items'][0]['snippet']['position']);
 
   if (COMMON_FIX_YT_LIKELIST && $fix_index !== false)
@@ -124,13 +117,10 @@ function yt_recv_playlist_items_video($playlist_id, $video_id,
    * Acceptable values are 0 to 50, inclusive.
    */
   for ($page_token=''; $start>0; $start-=50) {
-    $json =  _yt_api_list('playlistItems', 'id',
+    $result =  _yt_api_list('playlistItems', 'id',
       'fields=nextPageToken'
       .'&playlistId=' .$playlist_id. '&maxResults='
       .($start>50? 50: $start). '&pageToken=' .$page_token);
-    if (!$json) return false;
-
-    $result = json_decode($json, true);
     if (!$result) return false;
 
     $page_token = $result['nextPageToken'];
@@ -153,14 +143,11 @@ function yt_recv_playlist_items_video($playlist_id, $video_id,
 
 function yt_recv_video($vid)
 {
-  $json = _yt_api_list('videos', 'snippet,contentDetails,statistics',
+  $result = _yt_api_list('videos', 'snippet,contentDetails,statistics',
     'fields=items('
       .'snippet(publishedAt,channelId,channelTitle,title,description)'
       .',contentDetails(duration),statistics(viewCount,likeCount'
       .',dislikeCount,commentCount))&id=' .$vid);
-  if (!$json) return false;
-
-  $result = json_decode($json, true);
   if (!$result) return false;
 
   return $result;

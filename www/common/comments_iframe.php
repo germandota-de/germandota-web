@@ -16,19 +16,35 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+include_once '../../inc/youtube_api_comments.inc.php';
+
+$video_id = isset($_GET['v'])? trim($_GET['v']): '';
+
+$glob_comments = yt_comments_recv($video_id, 0);
+$glob_results = $glob_comments['results'];
+
 /* ***************************************************************  */
 
 include_once '../../template/begin-head.inc.php';
-common_print_htmltitle('Comments');
+common_print_htmltitle('Comments (' .$glob_comments['totalResults']. ')');
 include_once '../../template/head-title.comments.inc.php';
-common_print_title('Comments', true);
+common_print_title('Comments (' .$glob_comments['totalResults']. ')', true);
 include_once '../../template/title-content.comments.inc.php';
-for ($i=0; $i<100; $i++) {
 ?>
 
-  Hello World!
-  <a href="./">Test</a><br>
+  <table>
+<?
+  for ($i=0; $i<count($glob_results); $i++) {
+?>
+  <tr>
+    <td><span class="comments_nick"><?
+      _o($glob_results[$i]['author'][0]['name']['$t']);
+    ?></span></td>
+  </tr>
+<?
+  } // for ($i=0; $i<count($glob_comments); $i++)
+?>
+  </table>
 
 <?
-    }
 include_once '../../template/content-end.comments.inc.php';

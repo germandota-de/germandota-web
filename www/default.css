@@ -502,4 +502,8 @@ div#comments_title {
   font-weight: bold;
 }
 
+span.comments_nick {
+  font-weight: bold;
+}
+
 /* ***************************************************************  */

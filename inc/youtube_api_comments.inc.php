@@ -21,11 +21,52 @@ include_once dirname(__FILE__). '/common.inc.php';
 /* Youtube Data API !v2! comment reference:
  *
  * https://developers.google.com/youtube/2.0/developers_guide_protocol_comments
+ * https://developers.google.com/youtube/articles/changes_to_comments
  */
 
 define('YT_COMMENTS_PERPAGE',           10);
 define('YT_COMMENTS_PXPERCOMMENT',      30);
 define('YT_COMMENTS_OFFSET_PX',         200);
+
+/* HTTPS does not work because:
+ *
+ * Peer certificate CN=`*.google.com' did not match expected CN=`gdata.youtube.com'
+ */
+define('YT_COMMENTS_REQUEST_PREFIX', 'http://gdata.youtube.com/feeds/api/');
+
+/* ***************************************************************  */
+
+function _yt_comments_apiv2_list($method, $start_index, $max_results,
+                                 $params_nokey='')
+{
+  /* ?prettyprint=true for debugging ...  */
+  $request = YT_COMMENTS_REQUEST_PREFIX .$method. '?alt=json&start-index='
+    .$start_index. '&max-results=' .$max_results
+    . ($params_nokey == ''? '': '&' .$params_nokey);
+
+  $json = file_get_contents($request);
+  if (!$json) return false;
+
+  $result = json_decode($json, true);
+  if (!$result) return false;
+
+  return $result;
+}
+
+/* ***************************************************************  */
+
+function yt_comments_recv($vid, $page=0)
+{
+  $result = _yt_comments_apiv2_list(
+    sprintf('videos/%s/comments', $vid), 1 + $page*YT_COMMENTS_PERPAGE,
+    YT_COMMENTS_PERPAGE);
+  if (!$result) return false;
+
+  return array(
+    'totalResults' => $result['feed']['openSearch$totalResults']['$t'],
+    'results' => $result['feed']['entry']
+  );
+}
 
 /* ***************************************************************  */
 
@@ -36,3 +77,5 @@ function yt_comments_iframeheight($comment_count)
 
   return YT_COMMENTS_OFFSET_PX + (YT_COMMENTS_PXPERCOMMENT*$cnt);
 }
+
+/* ***************************************************************  */
