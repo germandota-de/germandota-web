@@ -20,6 +20,11 @@ include_once '../../inc/youtube_api_comments.inc.php';
 
 $video_id = isset($_GET['v'])? trim($_GET['v']): '';
 
+/* ---------------------------------------------------------------  */
+/* TODO: Check if $video_id is allowed to view  */
+
+/* ---------------------------------------------------------------  */
+
 $glob_comments = yt_comments_recv($video_id, 0);
 $glob_results = $glob_comments['results'];
 
@@ -32,14 +37,32 @@ common_print_title('Comments (' .$glob_comments['totalResults']. ')', true);
 include_once '../../template/title-content.comments.inc.php';
 ?>
 
-  <table>
+  <table id="comments_author_table">
 <?
   for ($i=0; $i<count($glob_results); $i++) {
 ?>
-  <tr>
-    <td><span class="comments_nick"><?
-      _o($glob_results[$i]['author'][0]['name']['$t']);
-    ?></span></td>
+  <tr<?
+    if($i%2 == 0) echo ' class="comments_author_table_tr2"';
+  ?>>
+    <td><span class="comments_author"><?
+      yt_print_chanlink($glob_results[$i]['author'][0]['name']['$t'],
+                        $glob_results[$i]['yt$channelId']['$t']);
+    ?></span> <span class="comments_date"><?
+      $cur_published = $glob_results[$i]['published']['$t'];
+      $cur_updated = $glob_results[$i]['updated']['$t'];
+
+      _o(yt_str2date($cur_published) .', '. yt_str2time($cur_published));
+
+      if ($cur_published != $cur_updated) echo ' (updated)';
+
+    ?></span><div class="comments_content"><?
+      common_user_output($glob_results[$i]['content']['$t']);
+    ?></div><?
+      $cur_reply_cnt = intval($glob_results[$i]['yt$replyCount']['$t']);
+
+      if ($cur_reply_cnt > 0) echo $cur_reply_cnt. ' replies';
+
+    ?></td>
   </tr>
 <?
   } // for ($i=0; $i<count($glob_comments); $i++)

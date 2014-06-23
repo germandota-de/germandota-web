@@ -29,19 +29,21 @@ define('COMMON_FIX_YT_LIKELIST',        true);
 
 /* ***************************************************************  */
 
-/* Convert all characters for HTML output and put to output buffer.  */
+/* Convert all characters for HTML output and return/put to output buffer.  */
+function _o_get($str)
+{
+  return preg_replace('/\n/si', "\n<br>",
+                      htmlentities($str, ENT_QUOTES, 'UTF-8'));
+}
 function _o($str)
 {
-  echo preg_replace('/\n/si', '<br>',
-                    htmlentities($str, ENT_QUOTES, 'UTF-8'));
+  echo _o_get($str);
 }
 
 /* Convert all characters for HTML output, but leave HTML tags plain  */
 function _o_html($str)
 {
-  echo htmlspecialchars_decode(
-    preg_replace('/\n/si', '<br>', htmlentities($str, ENT_QUOTES, 'UTF-8'))
-    , ENT_QUOTES);
+  echo htmlspecialchars_decode(_o_get($str), ENT_QUOTES);
 }
 
 function common_print_htmltitle($title)
@@ -57,4 +59,19 @@ function common_print_title($title, $short=false)
   if (!$short) _o(CONFIG_PROJECT_NAME_SHORT .' ');
   _o($title);
   echo "\n\n";
+}
+
+function common_user_output($str)
+{
+  $str = _o_get($str);
+
+  $str = preg_replace('@(https?://[\S]+)@isu',
+                      '<a target="_blank" href="\1">\1</a>', $str);
+  $str = preg_replace('@\s(www\.[\S]+)@isu',
+                      '<a target="_blank" href="http://\1">\1</a>', $str);
+  $str = preg_replace('@(^|\W)\*([^<]*?\**)\*@isu', '\1<b>\2</b>', $str);
+  $str = preg_replace('@(^|\W)_([^<]*?_*)_@isu', '\1<i>\2</i>', $str);
+  $str = preg_replace('@(^|\W)-([^<]*?-*)-@isu', '\1<del>\2</del>', $str);
+
+  echo $str;
 }

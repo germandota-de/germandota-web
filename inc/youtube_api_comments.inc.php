@@ -17,6 +17,7 @@
  */
 
 include_once dirname(__FILE__). '/common.inc.php';
+include_once dirname(__FILE__). '/youtube_api.inc.php';
 
 /* Youtube Data API !v2! comment reference:
  *

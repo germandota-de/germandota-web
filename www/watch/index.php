@@ -256,7 +256,7 @@ include_once '../../template/title-content.inc.php';
       yt_print_chanlink($glob_yt_video['snippet']['channelTitle'],
                         $glob_yt_video['snippet']['channelId']);
     ?></span><br>
-    <?_o($glob_yt_video['snippet']['description']); ?>
+    <? common_user_output($glob_yt_video['snippet']['description']); ?>
   </div>
 
   <iframe class="comments_iframe" src="../common/comments_iframe.php?v=<?

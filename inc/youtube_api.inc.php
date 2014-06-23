@@ -155,13 +155,20 @@ function yt_recv_video($vid)
 
 /* ***************************************************************  */
 
+define('_YT_DAY_IN_SECS',               24*3600);
+
 function yt_str2date($yt_time_str)
 {
   $stamp = strtotime($yt_time_str, 0);
 
   if (!$stamp) return '-no date-';
 
-  return date(CONFIG_DATE_FORMAT, $stamp);
+  $result = date(CONFIG_DATE_FORMAT, $stamp);
+  if ($result == date(CONFIG_DATE_FORMAT)) return 'today';
+  if ($result == date(CONFIG_DATE_FORMAT, time()-_YT_DAY_IN_SECS))
+    return 'yesterday';
+
+  return $result;
 }
 function yt_str2time($yt_time_str)
 {
@@ -169,7 +176,13 @@ function yt_str2time($yt_time_str)
 
   if (!$stamp) return '-timeless-';
 
-  return date(CONFIG_TIME_FORMAT, $stamp);
+  $result = date(CONFIG_TIME_FORMAT, $stamp);
+  $diff = time() - $stamp;
+  if ($diff < 60) return floor($diff) .' seconds ago';
+  if ($diff < 3600) return floor($diff/60) .' minutes ago';
+  if ($diff < 24*3600) return floor($diff/3600) .' hours ago';
+
+  return $result;
 }
 
 function yt_get_likedlist_plid()

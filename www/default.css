@@ -502,8 +502,35 @@ div#comments_title {
   font-weight: bold;
 }
 
-span.comments_nick {
-  font-weight: bold;
+table#comments_author_table {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  background-color: #e8e8e8;
+
+  font-size: 12px;
+}
+table#comments_author_table td {
+  padding: 8px;
+}
+tr.comments_author_table_tr2 {
+  background-color: #e0e0e0;
+}
+
+span.comments_author {
+  font-size: 12px;
+}
+
+span.comments_date {
+  font-size: 10px;
+  font-style: italic;
+  color: #606060;
+}
+div.comments_content {
+  background-color: #f0f0f0;
+  margin: 6px;
+  padding: 8px;
+  border-radius: 6px;
 }
 
 /* ***************************************************************  */
