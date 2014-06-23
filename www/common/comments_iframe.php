@@ -19,13 +19,19 @@
 include_once '../../inc/youtube_api_comments.inc.php';
 
 $video_id = isset($_GET['v'])? trim($_GET['v']): '';
+$order = isset($_GET['order'])? trim($_GET['order']): '';
+
+switch ($order) {
+case 'newest': break;
+default: $order = 'best';
+}
 
 /* ---------------------------------------------------------------  */
 /* TODO: Check if $video_id is allowed to view  */
 
 /* ---------------------------------------------------------------  */
 
-$glob_comments = yt_comments_recv($video_id, 0);
+$glob_comments = yt_comments_recv($video_id, 0, $order == 'newest');
 $glob_results = $glob_comments['results'];
 
 /* ***************************************************************  */
@@ -34,6 +40,18 @@ include_once '../../template/begin-head.inc.php';
 common_print_htmltitle('Comments (' .$glob_comments['totalResults']. ')');
 include_once '../../template/head-title.comments.inc.php';
 common_print_title('Comments (' .$glob_comments['totalResults']. ')', true);
+?>
+  <form class="floatright" method="get" action="comments_iframe.php"><?
+    ?><input type="hidden" name="v" value="<? echo $video_id; ?>"><?
+    ?><select onchange="this.form.submit()" name="order" size="1"><?
+    ?><option value="best"<?
+      if ($order == 'best') echo ' selected';
+    ?>>Top comments</option><?
+    ?><option value="newest"<?
+      if ($order == 'newest') echo ' selected';
+    ?>>Newest first</option><?
+  ?></select></form>
+<?
 include_once '../../template/title-content.comments.inc.php';
 ?>
 
@@ -56,7 +74,8 @@ include_once '../../template/title-content.comments.inc.php';
       if ($cur_published != $cur_updated) echo ' (updated)';
 
     ?></span><div class="comments_content"><?
-      common_user_output($glob_results[$i]['content']['$t']);
+      // TODO
+      common_user_output($glob_results[$i]['content']['$t'], 4);
     ?></div><?
       $cur_reply_cnt = intval($glob_results[$i]['yt$replyCount']['$t']);
 

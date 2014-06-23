@@ -26,13 +26,14 @@ include_once COMMON_CONF_FILE;
 /* ***************************************************************  */
 
 define('COMMON_FIX_YT_LIKELIST',        true);
+define('COMMON_USER_NEWLINE',           "\n<br>");
 
 /* ***************************************************************  */
 
 /* Convert all characters for HTML output and return/put to output buffer.  */
 function _o_get($str)
 {
-  return preg_replace('/\n/si', "\n<br>",
+  return preg_replace('/\n/si', COMMON_USER_NEWLINE,
                       htmlentities($str, ENT_QUOTES, 'UTF-8'));
 }
 function _o($str)
@@ -61,7 +62,7 @@ function common_print_title($title, $short=false)
   echo "\n\n";
 }
 
-function common_user_output($str)
+function common_user_output($str, $lines=0)
 {
   $str = _o_get($str);
 
@@ -73,5 +74,17 @@ function common_user_output($str)
   $str = preg_replace('@(^|\W)_([^<]*?_*)_@isu', '\1<i>\2</i>', $str);
   $str = preg_replace('@(^|\W)-([^<]*?-*)-@isu', '\1<del>\2</del>', $str);
 
-  echo $str;
+  if ($lines <= 0) { echo $str; return; }
+
+  for ($i=0, $cur=0; $i<$lines; $i++) {
+    if (!preg_match('@^.*?'.COMMON_USER_NEWLINE.'@su', $str, $matches,
+                    PREG_OFFSET_CAPTURE, $cur)) return;
+
+    // TODO
+    //$cur += $matches[0][0];
+
+    //var_dump($matches[0][0]);
+
+    echo $matches[0][0];
+  }
 }

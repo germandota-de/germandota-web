@@ -26,7 +26,7 @@ include_once dirname(__FILE__). '/youtube_api.inc.php';
  */
 
 define('YT_COMMENTS_PERPAGE',           10);
-define('YT_COMMENTS_PXPERCOMMENT',      30);
+define('YT_COMMENTS_PXPERCOMMENT',      60);
 define('YT_COMMENTS_OFFSET_PX',         200);
 
 /* HTTPS:
@@ -59,12 +59,13 @@ function _yt_comments_apiv2_list($method, $start_index, $max_results,
 
 /* ***************************************************************  */
 
-function yt_comments_recv($vid, $page=0)
+function yt_comments_recv($vid, $page=0, $order_newest)
 {
   /* relevant-to-me=true only with OAuth ...  */
   $result = _yt_comments_apiv2_list(
     sprintf('videos/%s/comments', $vid), 1 + $page*YT_COMMENTS_PERPAGE,
-    YT_COMMENTS_PERPAGE);
+    YT_COMMENTS_PERPAGE,
+    $order_newest? 'orderby=published': '');
   if (!$result) return false;
 
   return array(
