@@ -28,11 +28,12 @@ define('YT_COMMENTS_PERPAGE',           10);
 define('YT_COMMENTS_PXPERCOMMENT',      30);
 define('YT_COMMENTS_OFFSET_PX',         200);
 
-/* HTTPS does not work because:
+/* HTTPS:
  *
  * Peer certificate CN=`*.google.com' did not match expected CN=`gdata.youtube.com'
  */
-define('YT_COMMENTS_REQUEST_PREFIX', 'http://gdata.youtube.com/feeds/api/');
+define('YT_COMMENTS_REQUEST_PREFIX', 'https://gdata.youtube.com/feeds/api/');
+define('YT_COMMENTS_SSL_CNMATCH',    '*.google.com');
 
 /* ***************************************************************  */
 
@@ -44,7 +45,9 @@ function _yt_comments_apiv2_list($method, $start_index, $max_results,
     .$start_index. '&max-results=' .$max_results
     . ($params_nokey == ''? '': '&' .$params_nokey);
 
-  $json = file_get_contents($request);
+  $json = file_get_contents($request, false, stream_context_create(
+    array('ssl' => array('CN_match' => YT_COMMENTS_SSL_CNMATCH))
+  ));
   if (!$json) return false;
 
   $result = json_decode($json, true);
@@ -57,6 +60,7 @@ function _yt_comments_apiv2_list($method, $start_index, $max_results,
 
 function yt_comments_recv($vid, $page=0)
 {
+  /* relevant-to-me=true only with OAuth ...  */
   $result = _yt_comments_apiv2_list(
     sprintf('videos/%s/comments', $vid), 1 + $page*YT_COMMENTS_PERPAGE,
     YT_COMMENTS_PERPAGE);
