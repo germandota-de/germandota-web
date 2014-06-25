@@ -97,3 +97,32 @@ function common_url2hostname($url)
 {
   return preg_replace('@^http[s]?://(.*?)(/.*)?$@', '\1', $url);
 }
+
+/* $menu_array = array(
+ *   'entry1' => array(
+ *     'title' => 'Menu entry',
+ *     'href' => 'xyz.php?...abc=entry1...',
+ *   ),
+ *   ...
+ * );
+ */
+function common_menu_print($menu_array, $class, $entry_selected)
+{
+?>
+  <div class="menu <? echo $class; ?>">
+    <?
+  if (!isset($menu_array[$entry_selected])) _o($menu_array[0]['title']);
+  else _o($menu_array[$entry_selected]['title']);
+    ?>
+
+    <ul><?
+
+  foreach ($menu_array as $k => $v) {
+    ?><li><a href="<? echo $v['href']; ?>"><? _o($v['title']); ?></a></li><?
+  } /* foreach ($menu_array as $k => $v)  */
+
+    ?></ul>
+  </div>
+
+<?
+}

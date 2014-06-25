@@ -28,6 +28,8 @@ default: $order = 'best';
 }
 $more_id = isset($_GET['more'])? trim($_GET['more']): '';
 
+/* ***************************************************************  */
+
 function _comments_link_self($video_id, $order, $more_id)
 {
   $result = $_SERVER['PHP_SELF'] .'?v='. $video_id;
@@ -43,9 +45,9 @@ function _comments_link_self($video_id, $order, $more_id)
 /* Allow only if referred from our self  */
 
 $glob_servername = $_SERVER['SERVER_NAME'];
-if ($glob_servername == common_url2hostname($_SERVER['HTTP_REFERER'])
-    || $glob_servername == '127.0.0.1'  /* For development purposes  */
-    || $glob_servername == 'localhost') {
+if ($glob_servername == '127.0.0.1'  /* For development purposes  */
+    || $glob_servername == 'localhost'
+    || $glob_servername == common_url2hostname($_SERVER['HTTP_REFERER'])) {
   $glob_comments = yt_comments_recv($video_id, 0, $order == 'newest');
   $glob_results = $glob_comments['results'];
 } else {
@@ -55,26 +57,26 @@ if ($glob_servername == common_url2hostname($_SERVER['HTTP_REFERER'])
 
 /* ---------------------------------------------------------------  */
 
+$_glob_comments_order_href_pre = $_SERVER['PHP_SELF']. '?v='
+  .$video_id. '&amp;order=';
+$glob_comments_order = array(
+  'best' => array(
+    'title' => 'Top comments',
+    'href' => $_glob_comments_order_href_pre. 'best',
+  ),
+  'newest' => array(
+    'title' => 'Newest first',
+    'href' => $_glob_comments_order_href_pre. 'newest',
+  ),
+);
+
 /* ***************************************************************  */
 
 include_once '../../template/begin-head.inc.php';
 common_print_htmltitle('Comments (' .$glob_comments['totalResults']. ')');
 include_once '../../template/head-title.comments.inc.php';
 common_print_title('Comments (' .$glob_comments['totalResults']. ')', true);
-?>
-  <form class="floatright" method="get" action="<?
-      echo $_SERVER['PHP_SELF'];
-    ?>"><?
-    ?><input type="hidden" name="v" value="<? echo $video_id; ?>"><?
-    ?><select id="comments_order" onchange="this.form.submit()"<?
-    ?> name="order" size="1"><option value="best"<?
-      if ($order == 'best') echo ' selected';
-    ?>>Top comments</option><?
-    ?><option value="newest"<?
-      if ($order == 'newest') echo ' selected';
-    ?>>Newest first</option><?
-  ?></select></form>
-<?
+common_menu_print($glob_comments_order, 'comments_order', $order);
 include_once '../../template/title-content.comments.inc.php';
 ?>
 
