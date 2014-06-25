@@ -62,7 +62,7 @@ function common_print_title($title, $short=false)
   echo "\n\n";
 }
 
-function common_user_output($str, $lines=0)
+function common_user_output($str, $more_link='', $lines=0)
 {
   $str = _o_get($str);
 
@@ -76,15 +76,19 @@ function common_user_output($str, $lines=0)
 
   if ($lines <= 0) { echo $str; return; }
 
-  for ($i=0, $cur=0; $i<$lines; $i++) {
-    if (!preg_match('@^.*?'.COMMON_USER_NEWLINE.'@su', $str, $matches,
-                    PREG_OFFSET_CAPTURE, $cur)) return;
+  for ($i=0, $cur=0; $i<$lines+1; $i++) {
+    if (!preg_match('@^.*?($|' .COMMON_USER_NEWLINE. ')@su',
+                    substr($str, $cur), $matches)) return;
+    if (strlen($matches[0]) == 0) return;
 
-    // TODO
-    //$cur += $matches[0][0];
+    if ($i == $lines) {
+      echo '<a class="comments_more" href="' .$more_link
+        . '"> ... (more)</a>';
+      return;
+    }
 
-    //var_dump($matches[0][0]);
+    $cur += strlen($matches[0]);
 
-    echo $matches[0][0];
+    echo $matches[0];
   }
 }

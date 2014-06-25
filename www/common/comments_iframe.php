@@ -18,12 +18,25 @@
 
 include_once '../../inc/youtube_api_comments.inc.php';
 
+define('COMMENTS_LINES_COUNT',          4);
+
 $video_id = isset($_GET['v'])? trim($_GET['v']): '';
 $order = isset($_GET['order'])? trim($_GET['order']): '';
-
 switch ($order) {
 case 'newest': break;
 default: $order = 'best';
+}
+$more_id = isset($_GET['more'])? trim($_GET['more']): '';
+
+function _comments_link_self($video_id, $order, $more_id)
+{
+  $result = $_SERVER['PHP_SELF'] .'?v='. $video_id;
+
+  $result .= $order? '&amp;order='. $order: '';
+  $result .= $more_id? '&amp;more='. $more_id: '';
+
+  $result .= $more_id? '#'. $more_id: '';
+  return $result;
 }
 
 /* ---------------------------------------------------------------  */
@@ -41,7 +54,9 @@ common_print_htmltitle('Comments (' .$glob_comments['totalResults']. ')');
 include_once '../../template/head-title.comments.inc.php';
 common_print_title('Comments (' .$glob_comments['totalResults']. ')', true);
 ?>
-  <form class="floatright" method="get" action="comments_iframe.php"><?
+  <form class="floatright" method="get" action="<?
+      echo $_SERVER['PHP_SELF'];
+    ?>"><?
     ?><input type="hidden" name="v" value="<? echo $video_id; ?>"><?
     ?><select onchange="this.form.submit()" name="order" size="1"><?
     ?><option value="best"<?
@@ -58,24 +73,27 @@ include_once '../../template/title-content.comments.inc.php';
   <table id="comments_author_table">
 <?
   for ($i=0; $i<count($glob_results); $i++) {
+    $cur_published = $glob_results[$i]['published']['$t'];
+    $cur_updated = $glob_results[$i]['updated']['$t'];
+    $cur_cid = yt_comments_2cid($glob_results[$i]['id']['$t']);
 ?>
   <tr<?
     if($i%2 == 0) echo ' class="comments_author_table_tr2"';
   ?>>
-    <td><span class="comments_author"><?
+    <td><a name="<?
+      echo $cur_cid;
+    ?>"></a><span class="comments_author"><?
       yt_print_chanlink($glob_results[$i]['author'][0]['name']['$t'],
                         $glob_results[$i]['yt$channelId']['$t']);
     ?></span> <span class="comments_date"><?
-      $cur_published = $glob_results[$i]['published']['$t'];
-      $cur_updated = $glob_results[$i]['updated']['$t'];
-
       _o(yt_str2date($cur_published) .', '. yt_str2time($cur_published));
 
       if ($cur_published != $cur_updated) echo ' (updated)';
 
     ?></span><div class="comments_content"><?
-      // TODO
-      common_user_output($glob_results[$i]['content']['$t'], 4);
+      common_user_output($glob_results[$i]['content']['$t'],
+        _comments_link_self($video_id, $order, $cur_cid),
+        $more_id == $cur_cid? 0: COMMENTS_LINES_COUNT);
     ?></div><?
       $cur_reply_cnt = intval($glob_results[$i]['yt$replyCount']['$t']);
 

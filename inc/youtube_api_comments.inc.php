@@ -84,4 +84,9 @@ function yt_comments_iframeheight($comment_count)
   return YT_COMMENTS_OFFSET_PX + (YT_COMMENTS_PXPERCOMMENT*$cnt);
 }
 
+function yt_comments_2cid($rcv_str)
+{
+  return preg_replace('@^.*/([^/]+)$@', '\1', $rcv_str);
+}
+
 /* ***************************************************************  */
