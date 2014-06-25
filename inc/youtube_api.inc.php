@@ -103,10 +103,10 @@ function yt_recv_playlist_items_video($playlist_id, $video_id,
     .'&playlistId='.$playlist_id. '&videoId=' .$video_id);
   if (!$result) return false;
 
-  $position = intval($result['items'][0]['snippet']['position']);
-
   if (COMMON_FIX_YT_LIKELIST && $fix_index !== false)
     $position = $fix_index-1;
+  else
+    $position = intval($result['items'][0]['snippet']['position']);
 
   /* ***  */
 
