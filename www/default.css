@@ -114,6 +114,26 @@ a:hover.yt_channellink {
   border-style: none;
 }
 
+iframe.comments_iframe {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 8px;
+
+  border-style: none;
+  width: 80%;
+  /* HEIGHT will be calculated via HTML attribute ... */
+}
+
+a.useroutput_more {
+  line-height: 200%;
+  color: #909090;
+}
+
+.menu {
+  /* TODO  */
+}
+
 /* ***************************************************************  */
 
 div.topnav {
@@ -431,7 +451,7 @@ div#video_description {
   margin-right: auto;
   width: 60%;
 
-  background-color: #f0f0f0;
+  background-color: #d0d0d0;
   padding-left: 8px;
   padding-right: 8px;
   padding-bottom: 8px;
@@ -472,6 +492,62 @@ a.page_nextlink {
 a:hover.page_nextlink {
   border-style: none;
   color: #b00000;
+}
+
+/* ***************************************************************  */
+
+body#comments_body {
+  background-color: #f0f0f0;
+  padding: 12px;
+}
+
+div#comments_title {
+  background-color: #d0d0d0;
+  margin-bottom: 12px;
+  padding: 4px;
+
+  color: #606060;
+  text-align: center;
+  font-weight: bold;
+}
+
+.comments_order {
+  /* TODO  */
+  /* border: 1px solid #808080;
+  background-color: #e0e0e0;
+
+  padding: 4px; */
+}
+
+table#comments_author_table {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  background-color: #e8e8e8;
+
+  font-size: 12px;
+}
+table#comments_author_table td {
+  padding: 8px;
+}
+tr.comments_author_table_tr2 {
+  background-color: #e0e0e0;
+}
+
+span.comments_author {
+  font-size: 12px;
+}
+
+span.comments_date {
+  font-size: 10px;
+  font-style: italic;
+  color: #606060;
+}
+div.comments_content {
+  background-color: #f0f0f0;
+  margin: 6px;
+  padding: 8px;
+  border-radius: 6px;
 }
 
 /* ***************************************************************  */

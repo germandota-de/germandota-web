@@ -26,22 +26,25 @@ include_once COMMON_CONF_FILE;
 /* ***************************************************************  */
 
 define('COMMON_FIX_YT_LIKELIST',        true);
+define('COMMON_USER_NEWLINE',           "\n<br>");
 
 /* ***************************************************************  */
 
-/* Convert all characters for HTML output and put to output buffer.  */
+/* Convert all characters for HTML output and return/put to output buffer.  */
+function _o_get($str)
+{
+  return preg_replace('/\n/si', COMMON_USER_NEWLINE,
+                      htmlentities($str, ENT_QUOTES, 'UTF-8'));
+}
 function _o($str)
 {
-  echo preg_replace('/\n/si', '<br>',
-                    htmlentities($str, ENT_QUOTES, 'UTF-8'));
+  echo _o_get($str);
 }
 
 /* Convert all characters for HTML output, but leave HTML tags plain  */
 function _o_html($str)
 {
-  echo htmlspecialchars_decode(
-    preg_replace('/\n/si', '<br>', htmlentities($str, ENT_QUOTES, 'UTF-8'))
-    , ENT_QUOTES);
+  echo htmlspecialchars_decode(_o_get($str), ENT_QUOTES);
 }
 
 function common_print_htmltitle($title)
@@ -57,4 +60,69 @@ function common_print_title($title, $short=false)
   if (!$short) _o(CONFIG_PROJECT_NAME_SHORT .' ');
   _o($title);
   echo "\n\n";
+}
+
+function common_user_output($str, $more_link='', $lines=0)
+{
+  $str = _o_get($str);
+
+  $str = preg_replace('@(https?://[\S]+)@isu',
+                      '<a target="_blank" href="\1">\1</a>', $str);
+  $str = preg_replace('@\s(www\.[\S]+)@isu',
+                      '<a target="_blank" href="http://\1">\1</a>', $str);
+  $str = preg_replace('@(^|\W)\*([^<]*?\**)\*@isu', '\1<b>\2</b>', $str);
+  $str = preg_replace('@(^|\W)_([^<]*?_*)_@isu', '\1<i>\2</i>', $str);
+  $str = preg_replace('@(^|\W)-([^<]*?-*)-@isu', '\1<del>\2</del>', $str);
+
+  if ($lines <= 0) { echo $str; return; }
+
+  for ($i=0, $cur=0; $i<$lines+1; $i++) {
+    if (!preg_match('@^.*?($|' .COMMON_USER_NEWLINE. ')@su',
+                    substr($str, $cur), $matches)) return;
+    if (strlen($matches[0]) == 0) return;
+
+    if ($i == $lines) {
+      echo '<a class="useroutput_more" title="Show full text" href="'
+        .$more_link. '"> ... (more)</a>';
+      return;
+    }
+
+    $cur += strlen($matches[0]);
+
+    echo $matches[0];
+  }
+}
+
+function common_url2hostname($url)
+{
+  return preg_replace('@^http[s]?://(.*?)(/.*)?$@', '\1', $url);
+}
+
+/* $menu_array = array(
+ *   'entry1' => array(
+ *     'title' => 'Menu entry',
+ *     'href' => 'xyz.php?...abc=entry1...',
+ *   ),
+ *   ...
+ * );
+ */
+function common_menu_print($menu_array, $class, $entry_selected)
+{
+?>
+  <div class="menu <? echo $class; ?>">
+    <?
+  if (!isset($menu_array[$entry_selected])) _o($menu_array[0]['title']);
+  else _o($menu_array[$entry_selected]['title']);
+    ?>
+
+    <ul><?
+
+  foreach ($menu_array as $k => $v) {
+    ?><li><a href="<? echo $v['href']; ?>"><? _o($v['title']); ?></a></li><?
+  } /* foreach ($menu_array as $k => $v)  */
+
+    ?></ul>
+  </div>
+
+<?
 }

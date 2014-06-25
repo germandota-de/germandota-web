@@ -24,7 +24,9 @@
  *
  *   1. APIs -> 'YouTube Data API v3' set to ON
  *
- *   2. Credentials -> Public API access -> Server key
+ *   2. APIs -> 'Google+ API' set to ON
+ *
+ *   3. Credentials -> Public API access -> Server key
  */
 define('CONFIG_YT_APIKEY', '');
 if (CONFIG_YT_APIKEY == '') die('CONFIG_YT_APIKEY not configured!');
