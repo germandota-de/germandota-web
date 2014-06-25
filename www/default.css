@@ -124,6 +124,10 @@ iframe.comments_iframe {
   width: 80%;
   /* HEIGHT will be calculated via HTML attribute ... */
 }
+a.useroutput_more {
+  line-height: 200%;
+  color: #909090;
+}
 
 /* ***************************************************************  */
 
@@ -500,6 +504,13 @@ div#comments_title {
   color: #606060;
   text-align: center;
   font-weight: bold;
+}
+
+select#comments_order {
+  border: 1px solid #808080;
+  background-color: #e0e0e0;
+
+  padding: 4px;
 }
 
 table#comments_author_table {

@@ -40,12 +40,20 @@ function _comments_link_self($video_id, $order, $more_id)
 }
 
 /* ---------------------------------------------------------------  */
-/* TODO: Check if $video_id is allowed to view  */
+/* Allow only if referred from our self  */
+
+$glob_servername = $_SERVER['SERVER_NAME'];
+if ($glob_servername == common_url2hostname($_SERVER['HTTP_REFERER'])
+    || $glob_servername == '127.0.0.1'  /* For development purposes  */
+    || $glob_servername == 'localhost') {
+  $glob_comments = yt_comments_recv($video_id, 0, $order == 'newest');
+  $glob_results = $glob_comments['results'];
+} else {
+  $glob_comments = false;
+  $glob_results = false;
+}
 
 /* ---------------------------------------------------------------  */
-
-$glob_comments = yt_comments_recv($video_id, 0, $order == 'newest');
-$glob_results = $glob_comments['results'];
 
 /* ***************************************************************  */
 
@@ -58,8 +66,8 @@ common_print_title('Comments (' .$glob_comments['totalResults']. ')', true);
       echo $_SERVER['PHP_SELF'];
     ?>"><?
     ?><input type="hidden" name="v" value="<? echo $video_id; ?>"><?
-    ?><select onchange="this.form.submit()" name="order" size="1"><?
-    ?><option value="best"<?
+    ?><select id="comments_order" onchange="this.form.submit()"<?
+    ?> name="order" size="1"><option value="best"<?
       if ($order == 'best') echo ' selected';
     ?>>Top comments</option><?
     ?><option value="newest"<?

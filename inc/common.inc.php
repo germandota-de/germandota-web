@@ -82,8 +82,8 @@ function common_user_output($str, $more_link='', $lines=0)
     if (strlen($matches[0]) == 0) return;
 
     if ($i == $lines) {
-      echo '<a class="comments_more" href="' .$more_link
-        . '"> ... (more)</a>';
+      echo '<a class="useroutput_more" title="Show full text" href="'
+        .$more_link. '"> ... (more)</a>';
       return;
     }
 
@@ -91,4 +91,9 @@ function common_user_output($str, $more_link='', $lines=0)
 
     echo $matches[0];
   }
+}
+
+function common_url2hostname($url)
+{
+  return preg_replace('@^http[s]?://(.*?)(/.*)?$@', '\1', $url);
 }
