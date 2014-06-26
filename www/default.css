@@ -130,7 +130,32 @@ a.useroutput_more {
   color: #909090;
 }
 
-.menu {
+div.menu {
+  position: absolute;
+  display: inline-block;
+  z-index: 500;
+  background-color: #ffffff;
+  text-align: left;
+  outline: 0;
+  cursor: default;
+}
+div.menu ul {
+  visibility: hidden;
+  height: 0px;
+
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+div.menu li {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+div.menu:focus > ul {
+  visibility: visible;
+  height: auto;
+}
+li.menu_selected {
   /* TODO  */
 }
 
