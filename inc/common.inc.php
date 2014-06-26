@@ -70,9 +70,12 @@ function common_user_output($str, $more_link='', $lines=0)
                       '<a target="_blank" href="\1">\1</a>', $str);
   $str = preg_replace('@\s(www\.[\S]+)@isu',
                       '<a target="_blank" href="http://\1">\1</a>', $str);
-  $str = preg_replace('@(^|\W)\*([^<]*?\**)\*@isu', '\1<b>\2</b>', $str);
-  $str = preg_replace('@(^|\W)_([^<]*?_*)_@isu', '\1<i>\2</i>', $str);
-  $str = preg_replace('@(^|\W)-([^<]*?-*)-@isu', '\1<del>\2</del>', $str);
+  $str = preg_replace('@(^|[\s,.:;?!])\*([^<>]*?)\*($|[\s,.:;?!])@isu',
+                      '\1<b>\2</b>\3', $str);
+  $str = preg_replace('@(^|[\s,.:;?!])_([^<>]*?)_($|[\s,.:;?!])@isu',
+                      '\1<i>\2</i>\3', $str);
+  $str = preg_replace('@(^|[\s,.:;?!])-([^<>]*?)-($|[\s,.:;?!])@isu',
+                      '\1<del>\2</del>\3', $str);
 
   if ($lines <= 0) { echo $str; return; }
 
@@ -95,7 +98,7 @@ function common_user_output($str, $more_link='', $lines=0)
 
 function common_url2hostname($url)
 {
-  return preg_replace('@^http[s]?://(.*?)(/.*)?$@', '\1', $url);
+  return preg_replace('@^http[s]?://(.*?)(/.*)?$@i', '\1', $url);
 }
 
 /* $menu_array = array(
