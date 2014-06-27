@@ -266,7 +266,7 @@ include_once '../../template/title-content.inc.php';
     echo $video_id;
   ?>" height="<?
     echo yt_comments_iframeheight($glob_yt_video['statistics']['commentCount']);
-  ?>"></iframe>
+  ?>" onload="iframe_resize(this)"></iframe>
 
 <?
 include_once '../../template/content-end.inc.php';

@@ -26,7 +26,7 @@ include_once dirname(__FILE__). '/youtube_api.inc.php';
  */
 
 define('YT_COMMENTS_PERPAGE',           10);
-define('YT_COMMENTS_PXPERCOMMENT',      60);
+define('YT_COMMENTS_PXPERCOMMENT',      100);
 define('YT_COMMENTS_OFFSET_PX',         200);
 
 /* HTTPS:
@@ -78,8 +78,8 @@ function yt_comments_recv($vid, $page=0, $order_newest)
 
 function yt_comments_iframeheight($comment_count)
 {
-  $cnt = $comment_count>YT_COMMENTS_PXPERCOMMENT
-    ? YT_COMMENTS_PXPERCOMMENT: $comment_count;
+  $cnt = $comment_count>YT_COMMENTS_PERPAGE
+    ? YT_COMMENTS_PERPAGE: $comment_count;
 
   return YT_COMMENTS_OFFSET_PX + (YT_COMMENTS_PXPERCOMMENT*$cnt);
 }

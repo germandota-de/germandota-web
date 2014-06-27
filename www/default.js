@@ -26,6 +26,8 @@ function init_comments()
 {
 }
 
+/* ***************************************************************  */
+
 var menu_toggle_doblur = false;
 function menu_toggle_check(id)
 {
@@ -42,4 +44,12 @@ function menu_toggle_do(id)
   if (menu_toggle_doblur) menu_dev.blur();
 
   return true;
+}
+
+/* ***************************************************************  */
+
+function iframe_resize(iframe)
+{
+  iframe.style.height
+    = iframe.contentWindow.document.body.scrollHeight + 'px';
 }
