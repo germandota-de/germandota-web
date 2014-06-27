@@ -177,7 +177,7 @@ III.  Installing Apache httpd on a Debian system
      root$> emacs /etc/apache2/sites-available/000-default.conf
 
    to the www directory of your contribution branch (see section
-   `Easiest Git workflow')
+   `Recommended Git workflow')
 
      DocumentRoot <path-to>/germandota-web/www
 

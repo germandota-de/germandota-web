@@ -147,17 +147,17 @@ include_once '../../template/title-content.inc.php';
                              0, ',', '.');
         ?></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
-          ?><img class="video_videoframe_table_icon" alt="(dislike)"<?
-          ?> src="../img/icon_dislike.32.png"></td>
-        <td class="video_videoframe_table_small"><?
-          echo number_format($glob_yt_video['statistics']['dislikeCount'],
-                             0, ',', '.');
-        ?></td>
-        <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
           ?><img class="video_videoframe_table_icon" alt="(comment)"<?
           ?> src="../img/icon_comment.32.png"></td>
         <td class="video_videoframe_table_small"><?
           echo number_format($glob_yt_video['statistics']['commentCount'],
+                             0, ',', '.');
+        ?></td>
+        <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
+          ?><img class="video_videoframe_table_icon" alt="(dislike)"<?
+          ?> src="../img/icon_dislike.32.png"></td>
+        <td class="video_videoframe_table_small"><?
+          echo number_format($glob_yt_video['statistics']['dislikeCount'],
                              0, ',', '.');
         ?></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?

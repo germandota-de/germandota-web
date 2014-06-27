@@ -25,3 +25,21 @@ function init()
 function init_comments()
 {
 }
+
+var menu_toggle_doblur = false;
+function menu_toggle_check(id)
+{
+  var menu_dev = document.getElementById(id);
+
+  menu_toggle_doblur = document.activeElement == menu_dev;
+
+  return true;
+}
+function menu_toggle_do(id)
+{
+  var menu_dev = document.getElementById(id);
+
+  if (menu_toggle_doblur) menu_dev.blur();
+
+  return true;
+}

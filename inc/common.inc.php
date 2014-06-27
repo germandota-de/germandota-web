@@ -33,8 +33,13 @@ define('COMMON_USER_NEWLINE',           "\n<br>");
 /* Convert all characters for HTML output and return/put to output buffer.  */
 function _o_get($str)
 {
-  return preg_replace('/\n/si', COMMON_USER_NEWLINE,
-                      htmlentities($str, ENT_QUOTES, 'UTF-8'));
+  $result = preg_replace('/\n/isu', COMMON_USER_NEWLINE,
+                         htmlentities($str, ENT_QUOTES, 'UTF-8'));
+
+  /* Remove UTF-8 Byte Order Marks EF BB BF (sent by ex. Youtube API)  */
+  $result = preg_replace("@\xef\xbb\xbf@", '', $result);
+
+  return $result;
 }
 function _o($str)
 {
@@ -70,9 +75,12 @@ function common_user_output($str, $more_link='', $lines=0)
                       '<a target="_blank" href="\1">\1</a>', $str);
   $str = preg_replace('@\s(www\.[\S]+)@isu',
                       '<a target="_blank" href="http://\1">\1</a>', $str);
-  $str = preg_replace('@(^|\W)\*([^<]*?\**)\*@isu', '\1<b>\2</b>', $str);
-  $str = preg_replace('@(^|\W)_([^<]*?_*)_@isu', '\1<i>\2</i>', $str);
-  $str = preg_replace('@(^|\W)-([^<]*?-*)-@isu', '\1<del>\2</del>', $str);
+  $str = preg_replace('@(^|[\s,.:;?!\n])\*(\w[^<>]*?)\*([\s,.:;?!]|$)@isu',
+                      '\1<b>\2</b>\3', $str);
+  $str = preg_replace('@(^|[\s,.:;?!])_(\w[^<>]*?)_([\s,.:;?!]|$)@isu',
+                      '\1<i>\2</i>\3', $str);
+  $str = preg_replace('@(^|[\s,.:;?!])-(\w[^<>]*?)-([\s,.:;?!]|$)@isu',
+                      '\1<del>\2</del>\3', $str);
 
   if ($lines <= 0) { echo $str; return; }
 
@@ -95,7 +103,7 @@ function common_user_output($str, $more_link='', $lines=0)
 
 function common_url2hostname($url)
 {
-  return preg_replace('@^http[s]?://(.*?)(/.*)?$@', '\1', $url);
+  return preg_replace('@^http[s]?://(.*?)(/.*)?$@i', '\1', $url);
 }
 
 /* $menu_array = array(
@@ -106,23 +114,30 @@ function common_url2hostname($url)
  *   ...
  * );
  */
-function common_menu_print($menu_array, $class, $entry_selected)
+function common_menu_print($menu_array, $id, $entry_selected)
 {
 ?>
-  <div class="menu <? echo $class; ?>">
+  <div id="<? echo $id; ?>_position" class="menu_position"><div tabindex="0"<?
+    ?> onmousedown="return menu_toggle_check('<? echo $id; ?>');"<?
+    ?> onclick="return menu_toggle_do('<? echo $id; ?>');"<?
+    ?> id="<? echo $id; ?>" class="menu">
     <?
-  if (!isset($menu_array[$entry_selected])) _o($menu_array[0]['title']);
-  else _o($menu_array[$entry_selected]['title']);
-    ?>
+      if (!isset($menu_array[$entry_selected])) _o($menu_array[0]['title']);
+      else _o($menu_array[$entry_selected]['title']);
+    ?> <img id="<? echo $id; ?>_dropdown" class="menu_dropdown"<?
+    ?> alt="(dropdown)" src="/img/icon_dropdown.22.png">
 
     <ul><?
 
-  foreach ($menu_array as $k => $v) {
-    ?><li><a href="<? echo $v['href']; ?>"><? _o($v['title']); ?></a></li><?
-  } /* foreach ($menu_array as $k => $v)  */
+      foreach ($menu_array as $k => $v) {
+      ?><li<?
+        if ($entry_selected == $k)
+          echo ' id="' .$id. '_selected" class="menu_selected"';
+      ?>><a href="<? echo $v['href']; ?>"><? _o($v['title']); ?></a></li><?
+      } /* foreach ($menu_array as $k => $v)  */
 
     ?></ul>
-  </div>
+  </div></div>
 
 <?
 }

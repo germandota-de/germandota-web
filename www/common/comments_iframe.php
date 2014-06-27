@@ -75,8 +75,8 @@ $glob_comments_order = array(
 include_once '../../template/begin-head.inc.php';
 common_print_htmltitle('Comments (' .$glob_comments['totalResults']. ')');
 include_once '../../template/head-title.comments.inc.php';
-common_print_title('Comments (' .$glob_comments['totalResults']. ')', true);
 common_menu_print($glob_comments_order, 'comments_order', $order);
+common_print_title('Comments (' .$glob_comments['totalResults']. ')', true);
 include_once '../../template/title-content.comments.inc.php';
 ?>
 
