@@ -17,11 +17,13 @@
  */
 
 include_once '../../inc/youtube_api.inc.php';
+include_once '../../inc/youtube_api_comments.inc.php';
 
 $list = isset($_GET['list'])? trim($_GET['list']): yt_get_likedlist_plid();
 $video_id = isset($_GET['v'])? trim($_GET['v']): '';
 
-if (COMMON_FIX_YT_LIKELIST && $list == yt_get_likedlist_plid())
+//if (COMMON_FIX_YT_LIKELIST && $list == yt_get_likedlist_plid())
+if (COMMON_FIX_YT_LIKELIST)
   $fix_index = isset($_GET['index'])? intval(trim($_GET['index'])): false;
 else
   $fix_index = false;
@@ -84,7 +86,8 @@ function _page_td($token_name, $dir_str, $i_playlist, $text)
     ?> videos" href="./?list=<?
       echo $list .'&amp;v='. $glob_yt_plitems[$i_playlist]
         ['contentDetails']['videoId'];
-      if (COMMON_FIX_YT_LIKELIST && $list == yt_get_likedlist_plid())
+      //if (COMMON_FIX_YT_LIKELIST && $list == yt_get_likedlist_plid())
+      if (COMMON_FIX_YT_LIKELIST)
         echo '&amp;index=' .($glob_video_plposition
           -(YT_PLVIDEOS_MAXRESULTS_HALF+$glob_correction) + $i_playlist+1);
     ?>"><? echo $text; ?></a></td>
@@ -144,17 +147,17 @@ include_once '../../template/title-content.inc.php';
                              0, ',', '.');
         ?></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
-          ?><img class="video_videoframe_table_icon" alt="(dislike)"<?
-          ?> src="../img/icon_dislike.32.png"></td>
-        <td class="video_videoframe_table_small"><?
-          echo number_format($glob_yt_video['statistics']['dislikeCount'],
-                             0, ',', '.');
-        ?></td>
-        <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
           ?><img class="video_videoframe_table_icon" alt="(comment)"<?
           ?> src="../img/icon_comment.32.png"></td>
         <td class="video_videoframe_table_small"><?
           echo number_format($glob_yt_video['statistics']['commentCount'],
+                             0, ',', '.');
+        ?></td>
+        <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
+          ?><img class="video_videoframe_table_icon" alt="(dislike)"<?
+          ?> src="../img/icon_dislike.32.png"></td>
+        <td class="video_videoframe_table_small"><?
+          echo number_format($glob_yt_video['statistics']['dislikeCount'],
                              0, ',', '.');
         ?></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
@@ -204,7 +207,8 @@ include_once '../../template/title-content.inc.php';
       _o($glob_yt_plitems[$i]['snippet']['title']);
     ?>" href="./?list=<?
       echo $list .'&amp;v='. $glob_yt_plitems[$i]['contentDetails']['videoId'];
-      if (COMMON_FIX_YT_LIKELIST && $list == yt_get_likedlist_plid())
+      //if (COMMON_FIX_YT_LIKELIST && $list == yt_get_likedlist_plid())
+      if (COMMON_FIX_YT_LIKELIST)
         echo '&amp;index=' .($glob_video_plposition
           -(YT_PLVIDEOS_MAXRESULTS_HALF+$glob_correction) + $i+1);
     ?>"><img class="videos_thumbs" alt="(thumb)" src="<?
@@ -255,8 +259,14 @@ include_once '../../template/title-content.inc.php';
       yt_print_chanlink($glob_yt_video['snippet']['channelTitle'],
                         $glob_yt_video['snippet']['channelId']);
     ?></span><br>
-    <?_o($glob_yt_video['snippet']['description']); ?>
+    <? common_user_output($glob_yt_video['snippet']['description']); ?>
   </div>
+
+  <iframe class="comments_iframe" src="../common/comments_iframe.php?v=<?
+    echo $video_id;
+  ?>" height="<?
+    echo yt_comments_iframeheight($glob_yt_video['statistics']['commentCount']);
+  ?>"></iframe>
 
 <?
 include_once '../../template/content-end.inc.php';

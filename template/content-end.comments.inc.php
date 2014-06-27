@@ -1,3 +1,5 @@
+<?
+
 /* germandota.de - Sources of the website
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,32 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-function init()
-{
-  for (var i=0; i<parent.frames.length; i++) {
-    if (parent.frames[i].location.href == window.location.href)
-      parent.location.href = window.location.href;
-  }
-}
+include_once dirname(__FILE__). '/../inc/common.inc.php';
 
-function init_comments()
-{
-}
-
-var menu_toggle_doblur = false;
-function menu_toggle_check(id)
-{
-  var menu_dev = document.getElementById(id);
-
-  menu_toggle_doblur = document.activeElement == menu_dev;
-
-  return true;
-}
-function menu_toggle_do(id)
-{
-  var menu_dev = document.getElementById(id);
-
-  if (menu_toggle_doblur) menu_dev.blur();
-
-  return true;
-}
+?>  <!-- begin of content-end-comments -->
+</body>
+</html>
