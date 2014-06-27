@@ -37,6 +37,7 @@ if (CONFIG_YT_APIKEY == '') die('CONFIG_YT_APIKEY not configured!');
  *   &forUsername=GermanDotaTV&part=id
  *
  * GermanDotaTV: UCeKFc-ydU9pWKa4tqK-vYSw
+ * GameTube:     UC4exMFDKv2U6TGgi9pLQxPg
  * Gronkh:       UCYJ61XIK64sp6ZFFS8sctxw
  */
 define('CONFIG_YT_CHANNELID',      'UCeKFc-ydU9pWKa4tqK-vYSw');
