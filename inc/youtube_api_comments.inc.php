@@ -59,17 +59,25 @@ function _yt_comments_apiv2_list($method, $start_index, $max_results,
 
 /* ***************************************************************  */
 
-function yt_comments_recv($vid, $page=0, $order_newest)
+function yt_comments_recv($vid, $order_newest, $page)
 {
   /* relevant-to-me=true only with OAuth ...  */
   $result = _yt_comments_apiv2_list(
-    sprintf('videos/%s/comments', $vid), 1 + $page*YT_COMMENTS_PERPAGE,
+    sprintf('videos/%s/comments', $vid), 1 + ($page-1)*YT_COMMENTS_PERPAGE,
     YT_COMMENTS_PERPAGE,
     $order_newest? 'orderby=published': '');
   if (!$result) return false;
 
+  $next_exist = false; $prev_exist = false;
+  foreach ($result['feed']['link'] as $link) {
+    if ($link['rel'] == 'next') $next_exist = true;
+    if ($link['rel'] == 'previous') $prev_exist = true;
+  }
+
   return array(
     'totalResults' => $result['feed']['openSearch$totalResults']['$t'],
+    'nextExist' => $next_exist,
+    'prevExist' => $prev_exist,
     'results' => $result['feed']['entry']
   );
 }
@@ -87,6 +95,38 @@ function yt_comments_iframeheight($comment_count)
 function yt_comments_2cid($rcv_str)
 {
   return preg_replace('@^.*/([^/]+)$@', '\1', $rcv_str);
+}
+
+/* ***************************************************************  */
+
+function yt_comments_print_pageinfo($yt_response, $items_str, $url_pre,
+                                    $url_post='')
+{
+  // TODO
+  echo 'Hello World!';
+
+  /*
+  if (isset($yt_response['prevPageToken'])) {
+    echo '<a title="Previous ' .YT_PLAYLISTS_MAXRESULTS_NEXT. ' '
+      .$items_str. '" class="page_nextlink" href="' .$url_pre. '?p='
+      .$yt_response['prevPageToken']
+      .($url_post===''? '': '&amp;' .$url_1post) .'">&laquo;-'
+      .YT_PLAYLISTS_MAXRESULTS_NEXT.'</a> ';
+  } else {
+    echo 'First ';
+  }
+
+  echo count($yt_response['items']) .' of '
+    .$yt_response['pageInfo']['totalResults'] .' '. $items_str;
+
+  if (isset($yt_response['nextPageToken'])) {
+    echo ' <a title="Next ' .YT_PLAYLISTS_MAXRESULTS_NEXT. ' '
+      .$items_str. '" class="page_nextlink" href="' .$url_pre. '?p='
+      .$yt_response['nextPageToken']
+      .($url_post===''? '': '&amp;' .$url_post) .'">'
+      .YT_PLAYLISTS_MAXRESULTS_NEXT.'+&raquo;</a>';
+  }
+  */
 }
 
 /* ***************************************************************  */

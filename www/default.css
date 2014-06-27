@@ -587,7 +587,7 @@ li#comments_order_selected a:hover {
 
 /* ---  */
 
-table#comments_author_table {
+table#comments_table {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
@@ -595,12 +595,15 @@ table#comments_author_table {
 
   font-size: 12px;
 }
-table#comments_author_table td {
+table#comments_table td {
   padding: 8px;
 }
-tr.comments_author_table_tr2 {
+table#comments_table th {
   background-color: #e0e0e0;
+  text-align: center;
+  padding: 4px;
 }
+tr.comments_table_tr2 { }
 
 span.comments_author {
   font-size: 12px;
