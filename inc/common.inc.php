@@ -75,11 +75,11 @@ function common_user_output($str, $more_link='', $lines=0)
                       '<a target="_blank" href="\1">\1</a>', $str);
   $str = preg_replace('@\s(www\.[\S]+)@isu',
                       '<a target="_blank" href="http://\1">\1</a>', $str);
-  $str = preg_replace('@(^|[\s,.:;?!\n])\*([^<>]*?)\*([\s,.:;?!]|$)@isu',
+  $str = preg_replace('@(^|[\s,.:;?!\n])\*(\w[^<>]*?)\*([\s,.:;?!]|$)@isu',
                       '\1<b>\2</b>\3', $str);
-  $str = preg_replace('@(^|[\s,.:;?!])_([^<>]*?)_([\s,.:;?!]|$)@isu',
+  $str = preg_replace('@(^|[\s,.:;?!])_(\w[^<>]*?)_([\s,.:;?!]|$)@isu',
                       '\1<i>\2</i>\3', $str);
-  $str = preg_replace('@(^|[\s,.:;?!])-([^<>]*?)-([\s,.:;?!]|$)@isu',
+  $str = preg_replace('@(^|[\s,.:;?!])-(\w[^<>]*?)-([\s,.:;?!]|$)@isu',
                       '\1<del>\2</del>\3', $str);
 
   if ($lines <= 0) { echo $str; return; }
@@ -117,14 +117,15 @@ function common_url2hostname($url)
 function common_menu_print($menu_array, $id, $entry_selected)
 {
 ?>
-  <div tabindex="0"<?
+  <div id="<? echo $id; ?>_position" class="menu_position"><div tabindex="0"<?
     ?> onmousedown="return menu_toggle_check('<? echo $id; ?>');"<?
     ?> onclick="return menu_toggle_do('<? echo $id; ?>');"<?
     ?> id="<? echo $id; ?>" class="menu">
     <?
       if (!isset($menu_array[$entry_selected])) _o($menu_array[0]['title']);
       else _o($menu_array[$entry_selected]['title']);
-    ?>
+    ?> <img id="<? echo $id; ?>_dropdown" class="menu_dropdown"<?
+    ?> alt="(dropdown)" src="/img/icon_dropdown.22.png">
 
     <ul><?
 
@@ -136,7 +137,7 @@ function common_menu_print($menu_array, $id, $entry_selected)
       } /* foreach ($menu_array as $k => $v)  */
 
     ?></ul>
-  </div>
+  </div></div>
 
 <?
 }
