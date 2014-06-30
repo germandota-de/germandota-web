@@ -26,7 +26,8 @@ include_once dirname(__FILE__). '/youtube_api.inc.php';
  */
 
 define('YT_COMMENTS_PERPAGE',           10);
-define('YT_COMMENTS_PXPERCOMMENT',      60);
+define('YT_COMMENTS_PERPAGE_NEXT',      20);
+define('YT_COMMENTS_PXPERCOMMENT',      100);
 define('YT_COMMENTS_OFFSET_PX',         200);
 
 /* HTTPS:
@@ -59,17 +60,26 @@ function _yt_comments_apiv2_list($method, $start_index, $max_results,
 
 /* ***************************************************************  */
 
-function yt_comments_recv($vid, $page=0, $order_newest)
+function yt_comments_recv($vid, $order_newest, $page)
 {
   /* relevant-to-me=true only with OAuth ...  */
   $result = _yt_comments_apiv2_list(
-    sprintf('videos/%s/comments', $vid), 1 + $page*YT_COMMENTS_PERPAGE,
-    YT_COMMENTS_PERPAGE,
+    sprintf('videos/%s/comments', $vid), 1 + ($page-1)*YT_COMMENTS_PERPAGE,
+    $page == 1? YT_COMMENTS_PERPAGE: (YT_COMMENTS_PERPAGE_NEXT+1),
     $order_newest? 'orderby=published': '');
   if (!$result) return false;
 
+  $next_exist = false; $prev_exist = false;
+  foreach ($result['feed']['link'] as $link) {
+    if ($link['rel'] == 'next') $next_exist = true;
+    if ($link['rel'] == 'previous') $prev_exist = true;
+  }
+
   return array(
     'totalResults' => $result['feed']['openSearch$totalResults']['$t'],
+    'nextExist' => $next_exist,
+    'prevExist' => $prev_exist,
+    'page' => $page,
     'results' => $result['feed']['entry']
   );
 }
@@ -78,8 +88,8 @@ function yt_comments_recv($vid, $page=0, $order_newest)
 
 function yt_comments_iframeheight($comment_count)
 {
-  $cnt = $comment_count>YT_COMMENTS_PXPERCOMMENT
-    ? YT_COMMENTS_PXPERCOMMENT: $comment_count;
+  $cnt = $comment_count>YT_COMMENTS_PERPAGE
+    ? YT_COMMENTS_PERPAGE: $comment_count;
 
   return YT_COMMENTS_OFFSET_PX + (YT_COMMENTS_PXPERCOMMENT*$cnt);
 }
@@ -87,6 +97,34 @@ function yt_comments_iframeheight($comment_count)
 function yt_comments_2cid($rcv_str)
 {
   return preg_replace('@^.*/([^/]+)$@', '\1', $rcv_str);
+}
+
+/* ***************************************************************  */
+
+function yt_comments_print_pageinfo($yt_response, $items_str, $url_pre,
+                                    $url_post='')
+{
+  if ($yt_response['prevExist']) {
+    echo '<a title="Previous ' .YT_COMMENTS_PERPAGE_NEXT. ' '
+      .$items_str. '" class="page_nextlink" onclick="return'
+      .' iframe_scroll_top();" href="' .$url_pre .($yt_response['page']-1)
+      .($url_post===''? '': '&amp;' .$url_post) .'">&laquo;-'
+      .YT_COMMENTS_PERPAGE_NEXT.'</a> ';
+  } else {
+    echo 'First ';
+  }
+
+  echo count($yt_response['results']) .' of '
+    .$yt_response['totalResults'] .' '. $items_str;
+
+  if ($yt_response['nextExist']) {
+    echo ' <a title="Next ' .YT_COMMENTS_PERPAGE_NEXT. ' '
+      .$items_str. '" class="page_nextlink" onclick="return'
+      .' iframe_scroll_top();" href="' .$url_pre
+      .($yt_response['page']+1)
+      .($url_post===''? '': '&amp;' .$url_post) .'">'
+      .YT_COMMENTS_PERPAGE_NEXT.'+&raquo;</a>';
+  }
 }
 
 /* ***************************************************************  */

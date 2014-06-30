@@ -16,14 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once dirname(__FILE__). '/../inc/common.inc.php';
+?>  <!-- begin of head-title -->
+</head>
+<body onload="init()">
+  <div class="topnav">
+    <img id="topnav_logo" src="<? echo CONFIG_PROJECT_LOGO_ABS; ?>" alt="(logo)">
+    <span class="topnav">
+      <a class="topnav_link" href="/">Home</a>
+      | <a class="topnav_link" href="/live/">Live Stream</a>
+      | <a class="topnav_link" href="/playlists/">Playlists</a>
+    </span>
+  </div>
 
-?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-          "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
-  <link rel="stylesheet" type="text/css" href="/default.css">
-  <script type="text/javascript" src="/default.js"></script>
-  <!-- end of begin-head -->
+  <div id="main">
+    <div id="title">
+  <!-- end of head-title -->

@@ -16,8 +16,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once dirname(__FILE__). '/../inc/common.inc.php';
+?>  <!-- begin of content-end -->
+    </div>
+  </div>
+  <div id="footer">
+    <span class="floatleft"><? _o_html(CONFIG_TEMPL_FOOTERLEFT_HTML); ?></span>
+    <? _o_html(CONFIG_TEMPL_FOOTERCENTER_HTML); ?>
 
-?>  <!-- begin of content-end-comments -->
+    <span class="floatright"><a id="impressum" href="/about/">About us</a></span>
+  </div>
+<?
+  echo CONFIG_TEMPL_ANALYTICS_HTML;
+?>
+
 </body>
 </html>

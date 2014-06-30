@@ -64,6 +64,10 @@ define('CONFIG_PROJECT_NAME_POST',      'Community');
 
 define('CONFIG_PROJECT_LOGO_ABS',       '/img/logo.32.png');
 
+/* Choose a directory name from /www/themes/
+ */
+define('CONFIG_THEME',                  'default');
+
 define('CONFIG_ABOUT_ADDRESS_HTML',
   'Martin Dota
    Ultra-Tower-Str. 123

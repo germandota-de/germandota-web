@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+include_once '../../inc/common.inc.php';
+
 include_once '../../inc/youtube_api.inc.php';
 
 $page_token = isset($_GET['p'])? trim($_GET['p']): '';
@@ -30,7 +32,7 @@ if (!$glob_yt_result) {
   $glob_yt_result = yt_recv_playlists($page_token);
 }
 
-$state_first_page = $page_token == '';
+$state_first_page = !isset($glob_yt_result['prevPageToken']);
 $glob_yt_playlists = $glob_yt_result['items'];
 
 if ($state_first_page) {
@@ -40,16 +42,16 @@ if ($state_first_page) {
 
 /* ***************************************************************  */
 
-include_once '../../template/begin-head.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
 common_print_htmltitle('Playlists');
-include_once '../../template/head-title.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/head-title.inc.php';
 common_print_title('Playlists');
-include_once '../../template/title-content.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
 ?>
 
   <table id="lists_table">
 <?
-  if ($state_first_page) {
+  if (!$state_first_page) {
 ?>
   <tr><th colspan="3"><?
     yt_print_pageinfo($glob_yt_result, 'playlists', './');
@@ -114,4 +116,4 @@ include_once '../../template/title-content.inc.php';
   </table>
 
 <?
-include_once '../../template/content-end.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/content-end.inc.php';
