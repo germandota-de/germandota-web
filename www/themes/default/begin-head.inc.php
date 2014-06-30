@@ -24,4 +24,8 @@
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
   <link rel="stylesheet" type="text/css" href="/default.css">
   <script type="text/javascript" src="/default.js"></script>
+
+  <link rel="stylesheet" type="text/css" href="/themes/<?
+    echo CONFIG_THEME;
+  ?>/theme.css">
   <!-- end of begin-head -->
