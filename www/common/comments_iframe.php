@@ -38,7 +38,8 @@ function _comments_link_self($video_id, $order=false, $page=false,
   $result .= $page !== false? '&amp;p='. $page: '';
   $result .= $more_id !== false? '&amp;more='. $more_id: '';
 
-  $result .= $more_id !== false? '#'. $more_id: '';
+  /* Does not work in IFrames with Google Chrome  */
+  //$result .= $more_id !== false? '#'. $more_id: '';
   return $result;
 }
 
