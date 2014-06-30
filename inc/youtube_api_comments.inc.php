@@ -106,8 +106,8 @@ function yt_comments_print_pageinfo($yt_response, $items_str, $url_pre,
 {
   if ($yt_response['prevExist']) {
     echo '<a title="Previous ' .YT_COMMENTS_PERPAGE_NEXT. ' '
-      .$items_str. '" class="page_nextlink" href="' .$url_pre
-      .($yt_response['page']-1)
+      .$items_str. '" class="page_nextlink" onclick="return'
+      .' iframe_scroll_top();" href="' .$url_pre .($yt_response['page']-1)
       .($url_post===''? '': '&amp;' .$url_post) .'">&laquo;-'
       .YT_COMMENTS_PERPAGE_NEXT.'</a> ';
   } else {
@@ -119,7 +119,8 @@ function yt_comments_print_pageinfo($yt_response, $items_str, $url_pre,
 
   if ($yt_response['nextExist']) {
     echo ' <a title="Next ' .YT_COMMENTS_PERPAGE_NEXT. ' '
-      .$items_str. '" class="page_nextlink" href="' .$url_pre
+      .$items_str. '" class="page_nextlink" onclick="return'
+      .' iframe_scroll_top();" href="' .$url_pre
       .($yt_response['page']+1)
       .($url_post===''? '': '&amp;' .$url_post) .'">'
       .YT_COMMENTS_PERPAGE_NEXT.'+&raquo;</a>';

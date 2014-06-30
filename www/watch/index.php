@@ -262,6 +262,7 @@ include_once '../../template/title-content.inc.php';
     <? common_user_output($glob_yt_video['snippet']['description']); ?>
   </div>
 
+  <a name="iframe_top"></a>
   <iframe class="comments_iframe" src="../common/comments_iframe.php?v=<?
     echo $video_id;
   ?>" height="<?

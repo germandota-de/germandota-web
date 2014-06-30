@@ -53,3 +53,35 @@ function iframe_resize(iframe)
   iframe.style.height
     = iframe.contentWindow.document.body.scrollHeight + 'px';
 }
+
+var _iframe_scroll_top_timeout_ms = 16; /* 40 => 25 FPS, 16 => 60 FPS  */
+var _iframe_scroll_top_delta      = 50; /* px/frame  */
+var _iframe_scroll_top_parent     = parent;
+function _iframe_scroll_top_exec()
+{
+  var diff = _iframe_scroll_top_parent.timer_anchor.offsetTop
+    - _iframe_scroll_top_parent.pageYOffset
+    - 2*_iframe_scroll_top_delta;
+
+  if (Math.abs(diff) < 2*_iframe_scroll_top_delta) {
+    _iframe_scroll_top_parent
+      .clearInterval(_iframe_scroll_top_parent.timer_id);
+    return;
+  }
+
+  _iframe_scroll_top_parent.scrollBy(0,
+    diff>0? _iframe_scroll_top_delta: -_iframe_scroll_top_delta);
+}
+function iframe_scroll_top()
+{
+  _iframe_scroll_top_parent.timer_anchor
+    = parent.document.anchors['iframe_top'];
+
+  _iframe_scroll_top_parent.timer_id
+    = _iframe_scroll_top_parent.setInterval('_iframe_scroll_top_exec()',
+                                            _iframe_scroll_top_timeout_ms);
+
+  return true;
+}
+
+/* ***************************************************************  */
