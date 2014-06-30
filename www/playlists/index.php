@@ -30,7 +30,7 @@ if (!$glob_yt_result) {
   $glob_yt_result = yt_recv_playlists($page_token);
 }
 
-$state_first_page = $page_token == '';
+$state_first_page = !isset($glob_yt_result['prevPageToken']);
 $glob_yt_playlists = $glob_yt_result['items'];
 
 if ($state_first_page) {
@@ -49,7 +49,7 @@ include_once '../../template/title-content.inc.php';
 
   <table id="lists_table">
 <?
-  if ($state_first_page) {
+  if (!$state_first_page) {
 ?>
   <tr><th colspan="3"><?
     yt_print_pageinfo($glob_yt_result, 'playlists', './');
