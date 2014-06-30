@@ -16,9 +16,4 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once dirname(__FILE__). '/../inc/common.inc.php';
-
-?>  <!-- begin of title-content -->
-    </div>
-    <div id="content">
-  <!-- end of title-content -->
+include_once '../../errors/e404.php';

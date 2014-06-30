@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+include_once '../../inc/common.inc.php';
+
 include_once '../../inc/youtube_api_comments.inc.php';
 
 define('COMMENTS_LINES_COUNT',          4);
@@ -26,20 +28,24 @@ switch ($order) {
 case 'newest': break;
 default: $order = 'best';
 }
+$page = isset($_GET['p'])? intval(trim($_GET['p'])): 1;
 $more_id = isset($_GET['more'])? trim($_GET['more']): '';
 
-/* ***************************************************************  */
-
-function _comments_link_self($video_id, $order, $more_id)
+function _comments_link_self($video_id, $order=false, $page=false,
+                             $more_id=false)
 {
   $result = $_SERVER['PHP_SELF'] .'?v='. $video_id;
 
-  $result .= $order? '&amp;order='. $order: '';
-  $result .= $more_id? '&amp;more='. $more_id: '';
+  $result .= $order !== false? '&amp;order='. $order: '';
+  $result .= $page !== false? '&amp;p='. $page: '';
+  $result .= $more_id !== false? '&amp;more='. $more_id: '';
 
-  $result .= $more_id? '#'. $more_id: '';
+  /* Does not work in IFrames with Google Chrome  */
+  //$result .= $more_id !== false? '#'. $more_id: '';
   return $result;
 }
+
+/* ***************************************************************  */
 
 /* ---------------------------------------------------------------  */
 /* Allow only if referred from our self  */
@@ -48,7 +54,8 @@ $glob_servername = $_SERVER['SERVER_NAME'];
 if ($glob_servername == '127.0.0.1'  /* For development purposes  */
     || $glob_servername == 'localhost'
     || $glob_servername == common_url2hostname($_SERVER['HTTP_REFERER'])) {
-  $glob_comments = yt_comments_recv($video_id, 0, $order == 'newest');
+  $glob_comments = yt_comments_recv($video_id, $order == 'newest',
+                                    $page);
   $glob_results = $glob_comments['results'];
 } else {
   $glob_comments = false;
@@ -57,8 +64,7 @@ if ($glob_servername == '127.0.0.1'  /* For development purposes  */
 
 /* ---------------------------------------------------------------  */
 
-$_glob_comments_order_href_pre = $_SERVER['PHP_SELF']. '?v='
-  .$video_id. '&amp;order=';
+$_glob_comments_order_href_pre = _comments_link_self($video_id, '');
 $glob_comments_order = array(
   'best' => array(
     'title' => 'Top comments',
@@ -72,23 +78,35 @@ $glob_comments_order = array(
 
 /* ***************************************************************  */
 
-include_once '../../template/begin-head.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
 common_print_htmltitle('Comments (' .$glob_comments['totalResults']. ')');
-include_once '../../template/head-title.comments.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/head-title.comments.inc.php';
 common_menu_print($glob_comments_order, 'comments_order', $order);
 common_print_title('Comments (' .$glob_comments['totalResults']. ')', true);
-include_once '../../template/title-content.comments.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
 ?>
 
-  <table id="comments_author_table">
+  <table id="comments_table">
 <?
+
+  if ($page != 1) {
+?>
+  <tr>
+    <th colspan="1"><?
+      yt_comments_print_pageinfo($glob_comments, 'comments',
+        _comments_link_self($video_id, $order, ''));
+    ?></th>
+  </tr>
+<?
+  } // if ($page != 1)
+
   for ($i=0; $i<count($glob_results); $i++) {
     $cur_published = $glob_results[$i]['published']['$t'];
     $cur_updated = $glob_results[$i]['updated']['$t'];
     $cur_cid = yt_comments_2cid($glob_results[$i]['id']['$t']);
 ?>
   <tr<?
-    if($i%2 == 0) echo ' class="comments_author_table_tr2"';
+    if($i%2 == 0) echo ' class="comments_table_tr2"';
   ?>>
     <td><a name="<?
       echo $cur_cid;
@@ -102,7 +120,7 @@ include_once '../../template/title-content.comments.inc.php';
 
     ?></span><div class="comments_content"><?
       common_user_output($glob_results[$i]['content']['$t'],
-        _comments_link_self($video_id, $order, $cur_cid),
+        _comments_link_self($video_id, $order, $page, $cur_cid),
         $more_id == $cur_cid? 0: COMMENTS_LINES_COUNT);
     ?></div><?
       $cur_reply_cnt = intval($glob_results[$i]['yt$replyCount']['$t']);
@@ -113,8 +131,15 @@ include_once '../../template/title-content.comments.inc.php';
   </tr>
 <?
   } // for ($i=0; $i<count($glob_comments); $i++)
+
 ?>
+  <tr>
+    <th colspan="1"><?
+      yt_comments_print_pageinfo($glob_comments, 'comments',
+        _comments_link_self($video_id, $order, ''));
+    ?></th>
+  </tr>
   </table>
 
 <?
-include_once '../../template/content-end.comments.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/content-end.comments.inc.php';

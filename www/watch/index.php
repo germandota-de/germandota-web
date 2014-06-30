@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+include_once '../../inc/common.inc.php';
+
 include_once '../../inc/youtube_api.inc.php';
 include_once '../../inc/youtube_api_comments.inc.php';
 
@@ -102,17 +104,17 @@ function _page_td($token_name, $dir_str, $i_playlist, $text)
 
 /* ***************************************************************  */
 
-include_once '../../template/begin-head.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
 ?>
 
   <script type="text/javascript" src="https://apis.google.com/js/platform.js"></script><?
 common_print_htmltitle('[' .$glob_yt_list['snippet']['title']
                        . '] ' .($glob_video_plposition+1). '. '
                        .$glob_yt_videoitem['snippet']['title']);
-include_once '../../template/head-title.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/head-title.inc.php';
 common_print_title(($glob_video_plposition+1)
                    .'. '. $glob_yt_videoitem['snippet']['title'], true);
-include_once '../../template/title-content.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
 ?>
 
   <div id="video_videoframe">
@@ -262,11 +264,12 @@ include_once '../../template/title-content.inc.php';
     <? common_user_output($glob_yt_video['snippet']['description']); ?>
   </div>
 
+  <a name="iframe_top"></a>
   <iframe class="comments_iframe" src="../common/comments_iframe.php?v=<?
     echo $video_id;
   ?>" height="<?
     echo yt_comments_iframeheight($glob_yt_video['statistics']['commentCount']);
-  ?>"></iframe>
+  ?>" onload="iframe_resize(this)"></iframe>
 
 <?
-include_once '../../template/content-end.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/content-end.inc.php';

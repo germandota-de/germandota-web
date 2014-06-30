@@ -16,20 +16,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once dirname(__FILE__). '/../inc/common.inc.php';
+?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+          "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="stylesheet" type="text/css" href="/default.css">
+  <script type="text/javascript" src="/default.js"></script>
 
-?>  <!-- begin of content-end -->
-    </div>
-  </div>
-  <div id="footer">
-    <span class="floatleft"><? _o_html(CONFIG_TEMPL_FOOTERLEFT_HTML); ?></span>
-    <? _o_html(CONFIG_TEMPL_FOOTERCENTER_HTML); ?>
-
-    <span class="floatright"><a id="impressum" href="/about/">About us</a></span>
-  </div>
-<?
-  echo CONFIG_TEMPL_ANALYTICS_HTML;
-?>
-
-</body>
-</html>
+  <link rel="stylesheet" type="text/css" href="/themes/<?
+    echo CONFIG_THEME;
+  ?>/theme.css">
+  <!-- end of begin-head -->

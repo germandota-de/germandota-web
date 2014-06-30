@@ -16,8 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once dirname(__FILE__). '/../inc/common.inc.php';
-
-?>  <!-- begin of title-content-comments -->
-  </div>
-  <!-- end of title-content-comments -->
+?>  <!-- begin of content-end-comments -->
+</body>
+</html>

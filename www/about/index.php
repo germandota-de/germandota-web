@@ -18,11 +18,11 @@
 
 include_once '../../inc/common.inc.php';
 
-include_once '../../template/begin-head.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
 common_print_htmltitle('About');
-include_once '../../template/head-title.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/head-title.inc.php';
 common_print_title('About');
-include_once '../../template/title-content.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
 ?>
 
   <div class="textblock">
@@ -55,4 +55,4 @@ include_once '../../template/title-content.inc.php';
   </div>
 
 <?
-include_once '../../template/content-end.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/content-end.inc.php';
