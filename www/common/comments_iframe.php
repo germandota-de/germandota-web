@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+include_once '../../inc/common.inc.php';
+
 include_once '../../inc/youtube_api_comments.inc.php';
 
 define('COMMENTS_LINES_COUNT',          4);
@@ -76,12 +78,12 @@ $glob_comments_order = array(
 
 /* ***************************************************************  */
 
-include_once '../../template/begin-head.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
 common_print_htmltitle('Comments (' .$glob_comments['totalResults']. ')');
-include_once '../../template/head-title.comments.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/head-title.comments.inc.php';
 common_menu_print($glob_comments_order, 'comments_order', $order);
 common_print_title('Comments (' .$glob_comments['totalResults']. ')', true);
-include_once '../../template/title-content.comments.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
 ?>
 
   <table id="comments_table">
@@ -140,4 +142,4 @@ include_once '../../template/title-content.comments.inc.php';
   </table>
 
 <?
-include_once '../../template/content-end.comments.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/content-end.comments.inc.php';

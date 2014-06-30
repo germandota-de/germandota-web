@@ -16,4 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once '../errors/e404.php';
+?>  <!-- begin of head-title-comments -->
+</head>
+<body id="comments_body" onload="init_comments()">
+  <div id="comments_title">
+  <!-- end of head-title-comments -->

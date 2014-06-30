@@ -16,11 +16,19 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once '../../template/begin-head.inc.php';
+/* Error files may be included by other files.  So we need to prefix
+ * DIRNAME(__FILE__).
+ */
+include_once dirname(__FILE__). '/../../inc/common.inc.php';
+
+include_once dirname(__FILE__)
+  .'/../themes/' .CONFIG_THEME. '/begin-head.inc.php';
 common_print_htmltitle('404 Not Found');
-include_once '../../template/head-title.inc.php';
+include_once dirname(__FILE__)
+  .'/../themes/' .CONFIG_THEME. '/head-title.inc.php';
 common_print_title('404 Not Found');
-include_once '../../template/title-content.inc.php';
+include_once dirname(__FILE__)
+  .'/../themes/' .CONFIG_THEME. '/title-content.inc.php';
 ?>
 
   <div class="warning"><p>
@@ -29,4 +37,5 @@ include_once '../../template/title-content.inc.php';
   </p></div>
 
 <?
-include_once '../../template/content-end.inc.php';
+include_once dirname(__FILE__)
+  .'/../themes/' .CONFIG_THEME. '/content-end.inc.php';
