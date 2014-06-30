@@ -85,15 +85,19 @@ include_once '../../template/title-content.comments.inc.php';
 ?>
 
   <table id="comments_table">
+<?
+
+  if ($page != 1) {
+?>
   <tr>
     <th colspan="1"><?
       yt_comments_print_pageinfo($glob_comments, 'comments',
         _comments_link_self($video_id, $order, ''));
-      // TODO
     ?></th>
   </tr>
-  </tr>
 <?
+  } // if ($page != 1)
+
   for ($i=0; $i<count($glob_results); $i++) {
     $cur_published = $glob_results[$i]['published']['$t'];
     $cur_updated = $glob_results[$i]['updated']['$t'];
@@ -125,7 +129,14 @@ include_once '../../template/title-content.comments.inc.php';
   </tr>
 <?
   } // for ($i=0; $i<count($glob_comments); $i++)
+
 ?>
+  <tr>
+    <th colspan="1"><?
+      yt_comments_print_pageinfo($glob_comments, 'comments',
+        _comments_link_self($video_id, $order, ''));
+    ?></th>
+  </tr>
   </table>
 
 <?

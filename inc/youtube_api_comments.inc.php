@@ -26,6 +26,7 @@ include_once dirname(__FILE__). '/youtube_api.inc.php';
  */
 
 define('YT_COMMENTS_PERPAGE',           10);
+define('YT_COMMENTS_PERPAGE_NEXT',      20);
 define('YT_COMMENTS_PXPERCOMMENT',      100);
 define('YT_COMMENTS_OFFSET_PX',         200);
 
@@ -64,7 +65,7 @@ function yt_comments_recv($vid, $order_newest, $page)
   /* relevant-to-me=true only with OAuth ...  */
   $result = _yt_comments_apiv2_list(
     sprintf('videos/%s/comments', $vid), 1 + ($page-1)*YT_COMMENTS_PERPAGE,
-    YT_COMMENTS_PERPAGE,
+    $page == 1? YT_COMMENTS_PERPAGE: (YT_COMMENTS_PERPAGE_NEXT+1),
     $order_newest? 'orderby=published': '');
   if (!$result) return false;
 
@@ -78,6 +79,7 @@ function yt_comments_recv($vid, $order_newest, $page)
     'totalResults' => $result['feed']['openSearch$totalResults']['$t'],
     'nextExist' => $next_exist,
     'prevExist' => $prev_exist,
+    'page' => $page,
     'results' => $result['feed']['entry']
   );
 }
@@ -102,31 +104,26 @@ function yt_comments_2cid($rcv_str)
 function yt_comments_print_pageinfo($yt_response, $items_str, $url_pre,
                                     $url_post='')
 {
-  // TODO
-  echo 'Hello World!';
-
-  /*
-  if (isset($yt_response['prevPageToken'])) {
-    echo '<a title="Previous ' .YT_PLAYLISTS_MAXRESULTS_NEXT. ' '
-      .$items_str. '" class="page_nextlink" href="' .$url_pre. '?p='
-      .$yt_response['prevPageToken']
-      .($url_post===''? '': '&amp;' .$url_1post) .'">&laquo;-'
-      .YT_PLAYLISTS_MAXRESULTS_NEXT.'</a> ';
+  if ($yt_response['prevExist']) {
+    echo '<a title="Previous ' .YT_COMMENTS_PERPAGE_NEXT. ' '
+      .$items_str. '" class="page_nextlink" href="' .$url_pre
+      .($yt_response['page']-1)
+      .($url_post===''? '': '&amp;' .$url_post) .'">&laquo;-'
+      .YT_COMMENTS_PERPAGE_NEXT.'</a> ';
   } else {
     echo 'First ';
   }
 
-  echo count($yt_response['items']) .' of '
-    .$yt_response['pageInfo']['totalResults'] .' '. $items_str;
+  echo count($yt_response['results']) .' of '
+    .$yt_response['totalResults'] .' '. $items_str;
 
-  if (isset($yt_response['nextPageToken'])) {
-    echo ' <a title="Next ' .YT_PLAYLISTS_MAXRESULTS_NEXT. ' '
-      .$items_str. '" class="page_nextlink" href="' .$url_pre. '?p='
-      .$yt_response['nextPageToken']
+  if ($yt_response['nextExist']) {
+    echo ' <a title="Next ' .YT_COMMENTS_PERPAGE_NEXT. ' '
+      .$items_str. '" class="page_nextlink" href="' .$url_pre
+      .($yt_response['page']+1)
       .($url_post===''? '': '&amp;' .$url_post) .'">'
-      .YT_PLAYLISTS_MAXRESULTS_NEXT.'+&raquo;</a>';
+      .YT_COMMENTS_PERPAGE_NEXT.'+&raquo;</a>';
   }
-  */
 }
 
 /* ***************************************************************  */
