@@ -457,6 +457,8 @@ div#video_description {
   overflow-x: hidden;
   border-radius: 6px;
 
+  text-align: left;
+
 }
 span#video_description_title {
   font-weight: bold;
@@ -588,6 +590,8 @@ div.comments_content {
   margin: 6px;
   padding: 8px;
   border-radius: 6px;
+
+  text-align: left;
 }
 
 /* ***************************************************************  */
