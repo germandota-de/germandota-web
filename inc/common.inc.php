@@ -106,7 +106,7 @@ function common_user_output($str, $more_link='', $lines=0,
 
   if ($time_link) {
     $str = preg_replace('@(^|[\s,.;?!])([0-9]{1,2}):([0-9]{2,2})([\s,.;?!]|$)@isu',
-      '\1<a target="' .$time_target. '" href="' .$time_link
+      '\1<a target="' .$time_target. '" href="' .preg_replace('@&@', '&amp;', $time_link)
       .'&amp;t=PT\2M\3S">\2:\3</a>\4', $str);
   }
 
