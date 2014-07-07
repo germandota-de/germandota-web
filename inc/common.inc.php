@@ -88,7 +88,8 @@ function common_time2url($s=0, $min=0, $h=0)
 
 /* ***************************************************************  */
 
-function common_user_output($str, $more_link='', $lines=0)
+function common_user_output($str, $more_link='', $lines=0,
+                            $time_link='', $time_target='_self')
 {
   $str = _o_get($str);
 
@@ -102,8 +103,12 @@ function common_user_output($str, $more_link='', $lines=0)
                       '\1<i>\2</i>\3', $str);
   $str = preg_replace('@(^|[\s,.:;?!])-(\w[^<>]*?)-([\s,.:;?!]|$)@isu',
                       '\1<del>\2</del>\3', $str);
-  $str = preg_replace('@(^|[\s,.;?!])([0-9]{1,2}):([0-9]{2,2})([\s,.;?!]|$)@isu',
-                      '\1<a href="&amp;t=PT\2M\3S">\2:\3</a>\4', $str);
+
+  if ($time_link) {
+    $str = preg_replace('@(^|[\s,.;?!])([0-9]{1,2}):([0-9]{2,2})([\s,.;?!]|$)@isu',
+      '\1<a target="' .$time_target. '" href="' .$time_link
+      .'&amp;t=PT\2M\3S">\2:\3</a>\4', $str);
+  }
 
   if ($lines <= 0) { echo $str; return; }
 

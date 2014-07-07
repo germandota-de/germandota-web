@@ -37,7 +37,7 @@ else
  *
  * 2. Video without playlist
  *
- * 3. First video on playlist
+ * 3. First video in playlist
  *
  * 4. check permissions
  *
@@ -319,13 +319,16 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
       yt_print_chanlink($glob_yt_video['snippet']['channelTitle'],
                         $glob_yt_video['snippet']['channelId']);
     ?></span><br>
-    <? common_user_output($glob_yt_video['snippet']['description']); ?>
+    <?
+      common_user_output($glob_yt_video['snippet']['description'], '',
+                         0, $_SERVER['REQUEST_URI'], '_self');
+    ?>
   </div>
 
   <a name="iframe_top"></a>
   <iframe class="comments_iframe" src="../common/comments_iframe.php?v=<?
     echo $video_id;
-  ?>" height="<?
+  ?>&amp;q_time=<? echo urlencode($_SERVER['REQUEST_URI']); ?>" height="<?
     echo yt_comments_iframeheight($glob_yt_video['statistics']['commentCount']);
   ?>" onload="iframe_resize(this)"></iframe>
 
