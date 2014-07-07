@@ -69,6 +69,25 @@ function common_print_title($title, $short=false)
   echo "\n\n";
 }
 
+/* ***************************************************************  */
+
+/* Format: PThhHmmMssS (example: PT25M2S)  */
+function common_time2url($s=0, $min=0, $h=0)
+{
+  $result = 'PT';
+
+  if ($h > 0) {
+    $result .= $h. 'H' .sprintf('%02u', $min). 'M'
+      .sprintf('%02u', $s). 'S';
+  } else {
+    $result .= $min. 'M' .sprintf('%02u', $s). 'S';
+  }
+
+  return $result;
+}
+
+/* ***************************************************************  */
+
 function common_user_output($str, $more_link='', $lines=0)
 {
   $str = _o_get($str);
@@ -83,6 +102,8 @@ function common_user_output($str, $more_link='', $lines=0)
                       '\1<i>\2</i>\3', $str);
   $str = preg_replace('@(^|[\s,.:;?!])-(\w[^<>]*?)-([\s,.:;?!]|$)@isu',
                       '\1<del>\2</del>\3', $str);
+  $str = preg_replace('@(^|[\s,.;?!])([0-9]{1,2}):([0-9]{2,2})([\s,.;?!]|$)@isu',
+                      '\1<a href="&amp;t=PT\2M\3S">\2:\3</a>\4', $str);
 
   if ($lines <= 0) { echo $str; return; }
 

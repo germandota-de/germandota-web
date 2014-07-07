@@ -190,6 +190,14 @@ function yt_get_likedlist_plid()
   return preg_replace('/^..(.*)$/', 'LL\1', CONFIG_YT_CHANNELID);
 }
 
+/* ***************************************************************  */
+
+/* Format: PThhHmmMssS (example: PT25M2S)  */
+function yt_time2timeat($s=0, $min=0, $h=0)
+{
+  return common_time2url($s, $min, $h);
+}
+
 function _yt_timeat2($str)
 {
   return array(
@@ -214,6 +222,8 @@ function yt_timeat2readable($str)
 
   return $x['min'] .':'. sprintf('%02u', $x['sec']) .' min';
 }
+
+/* ***************************************************************  */
 
 function yt_print_chanlink($chan_name, $chan_id)
 {

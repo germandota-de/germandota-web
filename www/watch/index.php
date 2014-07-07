@@ -21,7 +21,7 @@ include_once '../../inc/common.inc.php';
 include_once '../../inc/youtube_api.inc.php';
 include_once '../../inc/youtube_api_comments.inc.php';
 
-$list = isset($_GET['list'])? trim($_GET['list']): yt_get_likedlist_plid();
+$list = isset($_GET['list'])? trim($_GET['list']): '';
 $video_id = isset($_GET['v'])? trim($_GET['v']): '';
 
 //if (COMMON_FIX_YT_LIKELIST && $list == yt_get_likedlist_plid())
@@ -31,47 +31,92 @@ else
   $fix_index = false;
 
 /* ***************************************************************  */
+/* Try:
+ *
+ * 1. Video in playlist
+ *
+ * 2. Video without playlist
+ *
+ * 3. First video on playlist
+ *
+ * 4. check permissions
+ *
+ * 5. First in Liked playlist
+ */
+
+$temp_plist = false;
+$temp_video = false;
 
 /* If video_id was given  */
-if ($video_id)
-  $temp_result = yt_recv_playlist_items_video($list, $video_id,
-                                              $fix_index);
+if ($video_id) {
+  if ($list)
+    $temp_plist = yt_recv_playlist_items_video($list, $video_id,
+                                               $fix_index);
 
-/* If video_id not given or failed to find in playlist  */
-if (!$video_id || !$temp_result)
-  $temp_result = yt_recv_playlist_items($list);
-
-/* ---------------------------------------------------------------  */
-/* Only videos in playlists of our own channel  */
-
-if ($temp_result && $temp_result['result']['items']
-    [YT_PLVIDEOS_MAXRESULTS_HALF+$temp_result['correction']]
-    ['snippet']['channelId'] != CONFIG_YT_CHANNELID)
-  $temp_result = false;
-
-/* ---------------------------------------------------------------  */
-
-/* Otherwise we are trying the liked playlist  */
-if (!$temp_result) {
-  $list = yt_get_likedlist_plid();
-  $temp_result = yt_recv_playlist_items($list);
+  /* If video not in playlist, load without playlist  */
+  if (!$temp_plist) $temp_video = yt_recv_video($video_id);
 }
 
-$glob_yt_result = $temp_result['result'];
-$glob_correction = $temp_result['correction'];
+/* If video_id not given or failed to find in playlist  */
+if (!$temp_plist && !$temp_video) {
+  if (!$list) $list = yt_get_likedlist_plid();
+  $temp_plist = yt_recv_playlist_items($list);
+  $temp_video = false;
+}
+
+/* ---------------------------------------------------------------  */
+/* Only videos in playlists of our own channel || or our own videos  */
+
+if (($temp_plist && $temp_plist['result']['items']
+     [YT_PLVIDEOS_MAXRESULTS_HALF+$temp_plist['correction']]
+     ['snippet']['channelId'] != CONFIG_YT_CHANNELID)
+    || ($temp_video && $temp_video['items'][0]['snippet']['channelId']
+        != CONFIG_YT_CHANNELID)
+    ) {
+  $temp_plist = false;
+  $temp_video = false;
+}
+
+/* ---------------------------------------------------------------  */
+/* If either no playlist or no video then we are falling back to liked
+ * list
+ */
+
+if (!$temp_plist && !$temp_video) {
+  $list = yt_get_likedlist_plid();
+  $temp_plist = yt_recv_playlist_items($list);
+  $temp_video = false;
+}
+
+/* $temp_plist (logical)-OR $temp_video is set now  */
+/* ***************************************************************  */
+
+$glob_yt_result = $temp_plist['result'];
+$glob_correction = $temp_plist['correction'];
 
 $glob_yt_plitems = $glob_yt_result['items'];
 $glob_yt_videoitem
   = $glob_yt_plitems[YT_PLVIDEOS_MAXRESULTS_HALF+$glob_correction];
 
-/* Override if exist ...  */
-$video_id = $glob_yt_videoitem['contentDetails']['videoId'];
+if (!$temp_video) {
+  /* $temp_plist is set  */
+  $video_id = $glob_yt_videoitem['contentDetails']['videoId'];
+}
 $glob_video_plposition = $glob_yt_videoitem['snippet']['position'];
 
 /* ***************************************************************  */
 
-$temp = yt_recv_playlist_short($list); $glob_yt_list = $temp['items'][0];
-$temp = yt_recv_video($video_id); $glob_yt_video = $temp['items'][0];
+if ($temp_plist) {
+  $temp = yt_recv_playlist_short($list); $glob_yt_list = $temp['items'][0];
+} else {
+  $glob_yt_list = false;
+}
+
+if ($temp_video) {
+  $glob_yt_video = $temp_video['items'][0];
+} else {
+  $temp = yt_recv_video($video_id); $glob_yt_video = $temp['items'][0];
+}
 
 /* ***************************************************************  */
 
@@ -108,12 +153,13 @@ include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
 ?>
 
   <script type="text/javascript" src="https://apis.google.com/js/platform.js"></script><?
-common_print_htmltitle('[' .$glob_yt_list['snippet']['title']
-                       . '] ' .($glob_video_plposition+1). '. '
-                       .$glob_yt_videoitem['snippet']['title']);
+common_print_htmltitle(
+  ($glob_yt_list? '[' .$glob_yt_list['snippet']['title']. '] '
+   .($glob_video_plposition+1). '. ': '')
+  .$glob_yt_video['snippet']['title']);
 include_once '../themes/' .CONFIG_THEME. '/head-title.inc.php';
 common_print_title(($glob_video_plposition+1)
-                   .'. '. $glob_yt_videoitem['snippet']['title'], true);
+                   .'. '. $glob_yt_video['snippet']['title'], true);
 include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
 ?>
 
@@ -180,6 +226,12 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
     </div>
   </div>
 
+<?
+
+  /* *************************************************************  */
+
+  if ($glob_yt_list) {
+?>
   <table id="video_thumbs_table">
   <tr><th class="video_thumbs_table_top" colspan="<?
     echo YT_PLVIDEOS_MAXRESULTS+2;
@@ -255,6 +307,12 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
     <td></td>
   </tr>
   </table>
+<?
+  } // if ($glob_yt_list)
+
+  /* *************************************************************  */
+
+?>
 
   <div id="video_description">
     <span id="video_description_title">Published from <?
