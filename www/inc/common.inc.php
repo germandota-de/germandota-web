@@ -18,7 +18,7 @@
 
 define('COMMON_EXIST',                  true);
 
-define('COMMON_CONF_FILE', dirname(__FILE__). '/../www/config.inc.php');
+define('COMMON_CONF_FILE', dirname(__FILE__). '/../config.inc.php');
 if (!file_exists(COMMON_CONF_FILE)) {
   die('<font color="#ff0000">config.inc.php not found! Copy it from'
       .' config.template.inc.php and make necessary changes on the'

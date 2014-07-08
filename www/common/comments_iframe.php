@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once '../../inc/common.inc.php';
+include_once '../inc/common.inc.php';
 
-include_once '../../inc/youtube_api_comments.inc.php';
+include_once '../inc/youtube_api_comments.inc.php';
 
 define('COMMENTS_LINES_COUNT',          4);
 
