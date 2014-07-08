@@ -18,20 +18,51 @@
 
 define('COMMON_EXIST',                  true);
 
-define('COMMON_CONF_FILE', dirname(__FILE__). '/../config.inc.php');
-if (!file_exists(COMMON_CONF_FILE)) {
+/* ***************************************************************  */
+/* Formats:
+ *
+ *  * *ROOT: '/var/www/.../'
+ *
+ *  * *ABS: 'inc/xyz/abc/'
+ */
+
+define('COMMON_DIR_INC',      'inc');
+define('COMMON_DIR_THEMES',   'themes');
+
+define('COMMON_DIR_DOCROOT',  $_SERVER['DOCUMENT_ROOT']);
+define('COMMON_DIR_INSTROOT', realpath(dirname(__FILE__) .'/..'). '/');
+
+define('COMMON_DIR_INST_ABS',
+  preg_replace('@^' .COMMON_DIR_DOCROOT. '(.*)$@', '\1',
+	       COMMON_DIR_INSTROOT));
+
+define('COMMON_CONF_FILE',     'config.inc.php');
+define('COMMON_CONF_FILEROOT', COMMON_DIR_INSTROOT.COMMON_CONF_FILE);
+
+/* ***************************************************************  */
+
+if (!file_exists(COMMON_CONF_FILEROOT)) {
   die('<font color="#ff0000">config.inc.php not found! Copy it from'
       .' config.template.inc.php and make necessary changes on the'
       .' copy</font>');
 }
+$_common_files = scandir(dirname(COMMON_CONF_FILEROOT));
+foreach ($_common_files as $v) {
+  if (preg_match('@^' .COMMON_CONF_FILE. '.+@', $v)) {
+    die('<font color="#ff0000">config.inc.php backup file `' .$v
+	. '\' found!  Delete it, it could be a security issue.</font>');
+  }
+}
+
 include_once COMMON_CONF_FILE;
 
 /* ***************************************************************  */
 
+define('COMMON_DIR_THEMECUR_ABS',
+  COMMON_DIR_INST_ABS.COMMON_DIR_THEMES .'/'. CONFIG_THEME .'/');
+
 define('COMMON_FIX_YT_LIKELIST',        true);
 define('COMMON_USER_NEWLINE',           "\n<br>");
-// TODO define('COMMON_PATH_PREFIX', '');
-//echo $_SERVER['DOCUMENT_ROOT'] .'<br>'. dirname(__FILE__);
 
 /* ***************************************************************  */
 

@@ -23,11 +23,14 @@ if (!defined('COMMON_EXIST')) exit();
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
-  <link rel="stylesheet" type="text/css" href="/default.css">
-  <script type="text/javascript" src="/default.js"></script>
+  <link rel="shortcut icon" type="image/x-icon" href="/<?
+        echo COMMON_DIR_INST_ABS; ?>favicon.ico">
+  <link rel="stylesheet" type="text/css" href="/<?
+        echo COMMON_DIR_INST_ABS; ?>default.css">
+  <script type="text/javascript" src="/<?
+        echo COMMON_DIR_INST_ABS; ?>default.js"></script>
 
-  <link rel="stylesheet" type="text/css" href="/themes/<?
-    echo CONFIG_THEME;
-  ?>/theme.css">
+  <link rel="stylesheet" type="text/css" href="/<?
+    echo COMMON_DIR_THEMECUR_ABS;
+  ?>theme.css">
   <!-- end of begin-head -->
