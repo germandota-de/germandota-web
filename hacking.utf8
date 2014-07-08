@@ -207,10 +207,10 @@ III.  Installing Apache httpd on a Debian system
 
      * `config.inc.php not found!'
 
-6. Copy germandota-web/config.templ.inc.php to config.inc.php and edit
-   this copied file
+6. Copy germandota-web/config.templ.inc.php to
+   germandota-web/www/config.inc.php and edit this copied file
 
-     germandota-web$> cp config.templ.inc.php config.inc.php
-     germandota-web$> emacs config.inc.php
+     germandota-web$> cp config.templ.inc.php www/config.inc.php
+     germandota-web$> emacs www/config.inc.php
 
 ======================================================================
