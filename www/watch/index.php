@@ -16,12 +16,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once '../../inc/common.inc.php';
+include_once '../inc/common.inc.php';
 
-include_once '../../inc/youtube_api.inc.php';
-include_once '../../inc/youtube_api_comments.inc.php';
+include_once '../inc/youtube_api.inc.php';
+include_once '../inc/youtube_api_comments.inc.php';
 
-$list = isset($_GET['list'])? trim($_GET['list']): yt_get_likedlist_plid();
+$list = isset($_GET['list'])? trim($_GET['list']): '';
 $video_id = isset($_GET['v'])? trim($_GET['v']): '';
 
 //if (COMMON_FIX_YT_LIKELIST && $list == yt_get_likedlist_plid())
@@ -30,48 +30,95 @@ if (COMMON_FIX_YT_LIKELIST)
 else
   $fix_index = false;
 
+$video_start = isset($_GET['t'])? trim($_GET['t']): '';
+
 /* ***************************************************************  */
+/* Try:
+ *
+ * 1. Video in playlist
+ *
+ * 2. Video without playlist
+ *
+ * 3. First video in playlist
+ *
+ * 4. check permissions
+ *
+ * 5. First in Liked playlist
+ */
+
+$temp_plist = false;
+$temp_video = false;
 
 /* If video_id was given  */
-if ($video_id)
-  $temp_result = yt_recv_playlist_items_video($list, $video_id,
-                                              $fix_index);
+if ($video_id) {
+  if ($list)
+    $temp_plist = yt_recv_playlist_items_video($list, $video_id,
+                                               $fix_index);
 
-/* If video_id not given or failed to find in playlist  */
-if (!$video_id || !$temp_result)
-  $temp_result = yt_recv_playlist_items($list);
-
-/* ---------------------------------------------------------------  */
-/* Only videos in playlists of our own channel  */
-
-if ($temp_result && $temp_result['result']['items']
-    [YT_PLVIDEOS_MAXRESULTS_HALF+$temp_result['correction']]
-    ['snippet']['channelId'] != CONFIG_YT_CHANNELID)
-  $temp_result = false;
-
-/* ---------------------------------------------------------------  */
-
-/* Otherwise we are trying the liked playlist  */
-if (!$temp_result) {
-  $list = yt_get_likedlist_plid();
-  $temp_result = yt_recv_playlist_items($list);
+  /* If video not in playlist, load without playlist  */
+  if (!$temp_plist) $temp_video = yt_recv_video($video_id);
 }
 
-$glob_yt_result = $temp_result['result'];
-$glob_correction = $temp_result['correction'];
+/* If video_id not given or failed to find in playlist  */
+if (!$temp_plist && !$temp_video) {
+  if (!$list) $list = yt_get_likedlist_plid();
+  $temp_plist = yt_recv_playlist_items($list);
+  $temp_video = false;
+}
+
+/* ---------------------------------------------------------------  */
+/* Only videos in playlists of our own channel || or our own videos  */
+
+if (($temp_plist && $temp_plist['result']['items']
+     [YT_PLVIDEOS_MAXRESULTS_HALF+$temp_plist['correction']]
+     ['snippet']['channelId'] != CONFIG_YT_CHANNELID)
+    || ($temp_video && $temp_video['items'][0]['snippet']['channelId']
+        != CONFIG_YT_CHANNELID)
+    ) {
+  $temp_plist = false;
+  $temp_video = false;
+}
+
+/* ---------------------------------------------------------------  */
+/* If either no playlist or no video then we are falling back to liked
+ * list
+ */
+
+if (!$temp_plist && !$temp_video) {
+  $list = yt_get_likedlist_plid();
+  $temp_plist = yt_recv_playlist_items($list);
+  $temp_video = false;
+}
+
+/* $temp_plist (logical)-OR $temp_video is set now  */
+/* ***************************************************************  */
+
+$glob_yt_result = $temp_plist['result'];
+$glob_correction = $temp_plist['correction'];
 
 $glob_yt_plitems = $glob_yt_result['items'];
 $glob_yt_videoitem
   = $glob_yt_plitems[YT_PLVIDEOS_MAXRESULTS_HALF+$glob_correction];
 
-/* Override if exist ...  */
-$video_id = $glob_yt_videoitem['contentDetails']['videoId'];
+if (!$temp_video) {
+  /* $temp_plist is set  */
+  $video_id = $glob_yt_videoitem['contentDetails']['videoId'];
+}
 $glob_video_plposition = $glob_yt_videoitem['snippet']['position'];
 
 /* ***************************************************************  */
 
-$temp = yt_recv_playlist_short($list); $glob_yt_list = $temp['items'][0];
-$temp = yt_recv_video($video_id); $glob_yt_video = $temp['items'][0];
+if ($temp_plist) {
+  $temp = yt_recv_playlist_short($list); $glob_yt_list = $temp['items'][0];
+} else {
+  $glob_yt_list = false;
+}
+
+if ($temp_video) {
+  $glob_yt_video = $temp_video['items'][0];
+} else {
+  $temp = yt_recv_video($video_id); $glob_yt_video = $temp['items'][0];
+}
 
 /* ***************************************************************  */
 
@@ -82,8 +129,8 @@ function _page_td($token_name, $dir_str, $i_playlist, $text)
 
   if (isset($glob_yt_result[$token_name])) {
 ?>
-    <td class="video_thumbs_table_pagelink"><a <?
-    ?>class="video_thumbs_table_pagelink" title="<?
+    <td class="video_thumbs_table_pagelink"><a<?
+    ?> class="video_thumbs_table_pagelink" title="<?
       echo $dir_str .' '. YT_PLVIDEOS_MAXRESULTS_HALF;
     ?> videos" href="./?list=<?
       echo $list .'&amp;v='. $glob_yt_plitems[$i_playlist]
@@ -108,12 +155,13 @@ include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
 ?>
 
   <script type="text/javascript" src="https://apis.google.com/js/platform.js"></script><?
-common_print_htmltitle('[' .$glob_yt_list['snippet']['title']
-                       . '] ' .($glob_video_plposition+1). '. '
-                       .$glob_yt_videoitem['snippet']['title']);
+common_print_htmltitle(
+  ($glob_yt_list? '[' .$glob_yt_list['snippet']['title']. '] '
+   .($glob_video_plposition+1). '. ': '')
+  .$glob_yt_video['snippet']['title']);
 include_once '../themes/' .CONFIG_THEME. '/head-title.inc.php';
 common_print_title(($glob_video_plposition+1)
-                   .'. '. $glob_yt_videoitem['snippet']['title'], true);
+                   .'. '. $glob_yt_video['snippet']['title'], true);
 include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
 ?>
 
@@ -121,9 +169,14 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
     <iframe width="853" height="480" src="//www.youtube.com/embed/<?
       echo $video_id;
     ?>?rel=0&amp;vq=hd720&amp;autoplay=1<?
-      if (isset($glob_yt_videoitem['contentDetails']['startAt']))
+      if ($video_start) {
+        echo '&amp;start='
+        .yt_timeat2sec($video_start);
+      } else if (isset($glob_yt_videoitem['contentDetails']['startAt'])) {
         echo '&amp;start='
         .yt_timeat2sec($glob_yt_videoitem['contentDetails']['startAt']);
+      }
+
       if (isset($glob_yt_videoitem['contentDetails']['endAt']))
         echo '&amp;end='
         .yt_timeat2sec($glob_yt_videoitem['contentDetails']['endAt']);
@@ -142,22 +195,25 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
                              0, ',', '.');
           ?> Views</span></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
-          ?><img class="video_videoframe_table_icon" alt="(like)"<?
-          ?> src="../img/icon_like.32.png"></td>
+          ?><img class="video_videoframe_table_icon" alt="(likes)"<?
+          ?> src="/<?
+            echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_like.32.png"></td>
         <td class="video_videoframe_table_small"><?
           echo number_format($glob_yt_video['statistics']['likeCount'],
                              0, ',', '.');
         ?></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
-          ?><img class="video_videoframe_table_icon" alt="(comment)"<?
-          ?> src="../img/icon_comment.32.png"></td>
+          ?><img class="video_videoframe_table_icon" alt="(comments)"<?
+          ?> src="/<?
+            echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_comment.32.png"></td>
         <td class="video_videoframe_table_small"><?
           echo number_format($glob_yt_video['statistics']['commentCount'],
                              0, ',', '.');
         ?></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
-          ?><img class="video_videoframe_table_icon" alt="(dislike)"<?
-          ?> src="../img/icon_dislike.32.png"></td>
+          ?><img class="video_videoframe_table_icon" alt="(dislikes)"<?
+          ?> src="/<?
+            echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_dislike.32.png"></td>
         <td class="video_videoframe_table_small"><?
           echo number_format($glob_yt_video['statistics']['dislikeCount'],
                              0, ',', '.');
@@ -180,6 +236,12 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
     </div>
   </div>
 
+<?
+
+  /* *************************************************************  */
+
+  if ($glob_yt_list) {
+?>
   <table id="video_thumbs_table">
   <tr><th class="video_thumbs_table_top" colspan="<?
     echo YT_PLVIDEOS_MAXRESULTS+2;
@@ -222,7 +284,8 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
   for (; $i<YT_PLVIDEOS_MAXRESULTS; $i++) {
 ?>
     <td class="video_thumbs_table"><img class="videos_thumbs" <?
-      ?>alt="(thumb)" src="../img/thumb_blackscreen.png"></td>
+      ?>alt="(thumb)" src="/<?
+        echo COMMON_DIR_THEMECUR_IMG_ABS; ?>thumb_blackscreen.120.90.png"></td>
 <?
   } // for (; $i<YT_PLVIDEOS_MAXRESULTS; $i++)
 
@@ -255,19 +318,28 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
     <td></td>
   </tr>
   </table>
+<?
+  } // if ($glob_yt_list)
+
+  /* *************************************************************  */
+
+?>
 
   <div id="video_description">
     <span id="video_description_title">Published from <?
       yt_print_chanlink($glob_yt_video['snippet']['channelTitle'],
                         $glob_yt_video['snippet']['channelId']);
     ?></span><br>
-    <? common_user_output($glob_yt_video['snippet']['description']); ?>
+    <?
+      common_user_output($glob_yt_video['snippet']['description'], '',
+                         0, $_SERVER['REQUEST_URI'], '_self');
+    ?>
   </div>
 
   <a name="iframe_top"></a>
   <iframe class="comments_iframe" src="../common/comments_iframe.php?v=<?
     echo $video_id;
-  ?>" height="<?
+  ?>&amp;q_time=<? echo urlencode($_SERVER['REQUEST_URI']); ?>" height="<?
     echo yt_comments_iframeheight($glob_yt_video['statistics']['commentCount']);
   ?>" onload="iframe_resize(this)"></iframe>
 

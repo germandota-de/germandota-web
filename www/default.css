@@ -39,7 +39,7 @@ div.menu li {
   padding-left: 12px;
   padding-right: 12px;
 }
-div.menu:focus > ul {
+div.menu a:focus, div.menu:focus > ul {
   visibility: visible;
   height: auto;
 }

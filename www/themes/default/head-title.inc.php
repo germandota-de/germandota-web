@@ -16,15 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+if (!defined('COMMON_EXIST')) exit();
+
 ?>  <!-- begin of head-title -->
 </head>
 <body onload="init()">
   <div class="topnav">
     <img id="topnav_logo" src="<? echo CONFIG_PROJECT_LOGO_ABS; ?>" alt="(logo)">
     <span class="topnav">
-      <a class="topnav_link" href="/">Home</a>
-      | <a class="topnav_link" href="/live/">Live Stream</a>
-      | <a class="topnav_link" href="/playlists/">Playlists</a>
+      <a class="topnav_link" href="/<?
+        echo COMMON_DIR_INST_ABS; ?>">Home</a>
+      | <a class="topnav_link" href="/<?
+        echo COMMON_DIR_INST_ABS; ?>live/">Live Stream</a>
+      | <a class="topnav_link" href="/<?
+        echo COMMON_DIR_INST_ABS; ?>playlists/">Playlists</a>
     </span>
   </div>
 

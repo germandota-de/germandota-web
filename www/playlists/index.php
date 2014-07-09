@@ -16,9 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once '../../inc/common.inc.php';
+include_once '../inc/common.inc.php';
 
-include_once '../../inc/youtube_api.inc.php';
+include_once '../inc/youtube_api.inc.php';
 
 $page_token = isset($_GET['p'])? trim($_GET['p']): '';
 
@@ -98,7 +98,8 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
     <td class="lists_table_text"><a class="playlist_link"<?
     ?> title="Watch playlist" href="../watch/?list=<?
       echo $cur_id;
-    ?>"><img class="icon_large" alt="(video)" src="../img/icon_video.32.png"><?
+    ?>"><img class="icon_large" alt="(video)" src="/<?
+            echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_video.32.png"><?
       _o($cur_title);
     ?></a><div class="lists_table_text_descr"><?
       if (!$cur_description)
