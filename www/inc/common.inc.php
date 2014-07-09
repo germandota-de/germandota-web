@@ -28,6 +28,7 @@ define('COMMON_EXIST',                  true);
 
 define('COMMON_DIR_INC',      'inc');
 define('COMMON_DIR_THEMES',   'themes');
+define('COMMON_DIR_IMG',      'img');
 
 define('COMMON_DIR_DOCROOT',  $_SERVER['DOCUMENT_ROOT']);
 define('COMMON_DIR_INSTROOT', realpath(dirname(__FILE__) .'/..'). '/');
@@ -54,12 +55,14 @@ foreach ($_common_files as $v) {
   }
 }
 
-include_once COMMON_CONF_FILE;
+include_once COMMON_CONF_FILEROOT;
 
 /* ***************************************************************  */
 
 define('COMMON_DIR_THEMECUR_ABS',
   COMMON_DIR_INST_ABS.COMMON_DIR_THEMES .'/'. CONFIG_THEME .'/');
+define('COMMON_DIR_IMG_ABS',
+  COMMON_DIR_INST_ABS.'/'. COMMON_DIR_IMG .'/');
 
 define('COMMON_FIX_YT_LIKELIST',        true);
 define('COMMON_USER_NEWLINE',           "\n<br>");
@@ -187,7 +190,8 @@ function common_menu_print($menu_array, $id, $entry_selected)
       if (!isset($menu_array[$entry_selected])) _o($menu_array[0]['title']);
       else _o($menu_array[$entry_selected]['title']);
     ?> <img id="<? echo $id; ?>_dropdown" class="menu_dropdown"<?
-    ?> alt="(dropdown)" src="/img/icon_dropdown.22.png">
+    ?> alt="(dropdown)" src="/<? echo COMMON_DIR_IMG_ABS;
+    ?>icon_dropdown.22.png">
 
     <ul><?
 

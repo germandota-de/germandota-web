@@ -213,4 +213,9 @@ III.  Installing Apache httpd on a Debian system
      germandota-web$> cp config.templ.inc.php www/config.inc.php
      germandota-web$> emacs www/config.inc.php
 
+x.1 Optionally, if DocumentRoot was not set to germandota-web/www then
+    adapt www/.htaccess
+
+      germandota-web$> emacs www/.htaccess
+
 ======================================================================
