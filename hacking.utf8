@@ -191,6 +191,10 @@ III.  Installing Apache httpd on a Debian system
      <Directory <path-to>/germandota-web/www/>
          ...
        AllowOverride All
+
+       Order deny,allow
+       Deny from all
+       Allow from ::1 127.0.0.1
        Require ip ::1 127.0.0.1
          ...
      </Directory>

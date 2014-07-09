@@ -30,7 +30,11 @@ define('COMMON_DIR_INC',      'inc');
 define('COMMON_DIR_THEMES',   'themes');
 define('COMMON_DIR_IMG',      'img');
 
-define('COMMON_DIR_DOCROOT',  $_SERVER['DOCUMENT_ROOT']);
+/* Is depending on apache config directive DocumentRoot if there is a
+ * tailing `/'
+ */
+define('COMMON_DIR_DOCROOT',  preg_replace('@/?$@', '/',
+                                           $_SERVER['DOCUMENT_ROOT']));
 define('COMMON_DIR_INSTROOT', realpath(dirname(__FILE__) .'/..'). '/');
 
 define('COMMON_DIR_INST_ABS',
@@ -62,7 +66,7 @@ include_once COMMON_CONF_FILEROOT;
 define('COMMON_DIR_THEMECUR_ABS',
   COMMON_DIR_INST_ABS.COMMON_DIR_THEMES .'/'. CONFIG_THEME .'/');
 define('COMMON_DIR_IMG_ABS',
-  COMMON_DIR_INST_ABS.'/'. COMMON_DIR_IMG .'/');
+  COMMON_DIR_INST_ABS.COMMON_DIR_IMG .'/');
 
 define('COMMON_FIX_YT_LIKELIST',        true);
 define('COMMON_USER_NEWLINE',           "\n<br>");
