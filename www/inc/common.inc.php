@@ -33,8 +33,10 @@ define('COMMON_DIR_IMG',      'img');
 /* Is depending on apache config directive DocumentRoot if there is a
  * tailing `/'
  */
-define('COMMON_DIR_DOCROOT',  preg_replace('@/?$@', '/',
-                                           $_SERVER['DOCUMENT_ROOT']));
+define('COMMON_DIR_DOCROOT', $_SERVER['DOCUMENT_ROOT']
+       .(preg_match('@/$@', $_SERVER['DOCUMENT_ROOT'])
+	 ? '': '/')
+       );
 define('COMMON_DIR_INSTROOT', realpath(dirname(__FILE__) .'/..'). '/');
 
 define('COMMON_DIR_INST_ABS',
