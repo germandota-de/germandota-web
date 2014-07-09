@@ -67,6 +67,8 @@ include_once COMMON_CONF_FILEROOT;
 
 define('COMMON_DIR_THEMECUR_ABS',
   COMMON_DIR_INST_ABS.COMMON_DIR_THEMES .'/'. CONFIG_THEME .'/');
+define('COMMON_DIR_THEMECUR_IMG_ABS',
+  COMMON_DIR_THEMECUR_ABS.COMMON_DIR_IMG. '/');
 define('COMMON_DIR_IMG_ABS',
   COMMON_DIR_INST_ABS.COMMON_DIR_IMG .'/');
 
@@ -206,7 +208,7 @@ function common_menu_print($menu_array, $id, $entry_selected)
       if (!isset($menu_array[$entry_selected])) _o($menu_array[0]['title']);
       else _o($menu_array[$entry_selected]['title']);
     ?> <img id="<? echo $id; ?>_dropdown" class="menu_dropdown"<?
-    ?> alt="(dropdown)" src="/<? echo COMMON_DIR_IMG_ABS;
+    ?> alt="(dropdown)" src="/<? echo COMMON_DIR_THEMECUR_IMG_ABS;
     ?>icon_dropdown.22.png">
 
     <ul><?

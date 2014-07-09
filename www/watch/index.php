@@ -195,22 +195,25 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
                              0, ',', '.');
           ?> Views</span></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
-          ?><img class="video_videoframe_table_icon" alt="(like)"<?
-          ?> src="../img/icon_like.32.png"></td>
+          ?><img class="video_videoframe_table_icon" alt="(likes)"<?
+          ?> src="/<?
+            echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_like.32.png"></td>
         <td class="video_videoframe_table_small"><?
           echo number_format($glob_yt_video['statistics']['likeCount'],
                              0, ',', '.');
         ?></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
-          ?><img class="video_videoframe_table_icon" alt="(comment)"<?
-          ?> src="../img/icon_comment.32.png"></td>
+          ?><img class="video_videoframe_table_icon" alt="(comments)"<?
+          ?> src="/<?
+            echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_comment.32.png"></td>
         <td class="video_videoframe_table_small"><?
           echo number_format($glob_yt_video['statistics']['commentCount'],
                              0, ',', '.');
         ?></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
-          ?><img class="video_videoframe_table_icon" alt="(dislike)"<?
-          ?> src="../img/icon_dislike.32.png"></td>
+          ?><img class="video_videoframe_table_icon" alt="(dislikes)"<?
+          ?> src="/<?
+            echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_dislike.32.png"></td>
         <td class="video_videoframe_table_small"><?
           echo number_format($glob_yt_video['statistics']['dislikeCount'],
                              0, ',', '.');
@@ -281,7 +284,8 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
   for (; $i<YT_PLVIDEOS_MAXRESULTS; $i++) {
 ?>
     <td class="video_thumbs_table"><img class="videos_thumbs" <?
-      ?>alt="(thumb)" src="../img/thumb_blackscreen.png"></td>
+      ?>alt="(thumb)" src="/<?
+        echo COMMON_DIR_THEMECUR_IMG_ABS; ?>thumb_blackscreen.120.90.png"></td>
 <?
   } // for (; $i<YT_PLVIDEOS_MAXRESULTS; $i++)
 
