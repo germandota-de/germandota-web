@@ -201,9 +201,9 @@ function yt_time2timeat($s=0, $min=0, $h=0)
 function _yt_timeat2($str)
 {
   return array(
-    'h'   => round(preg_replace('/^.*[PT]([0-9.]*)H.*$/', '\1', $str)),
-    'min' => round(preg_replace('/^.*[PTH]([0-9.]*)M.*$/', '\1', $str)),
-    'sec' => round(preg_replace('/^.*[PTHM]([0-9.]*)S$/', '\1', $str))
+    'h'   => round(preg_replace('/^PT([0-9.]*)H.*$/', '\1', $str)),
+    'min' => round(preg_replace('/^P.*[TH]([0-9.]*)M.*$/', '\1', $str)),
+    'sec' => round(preg_replace('/^P.*[THM]([0-9.]*)S$/', '\1', $str))
   );
 }
 function yt_timeat2sec($str)
