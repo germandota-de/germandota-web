@@ -142,10 +142,20 @@ function common_user_output($str, $more_link='', $lines=0,
                       '\1<del>\2</del>\3', $str);
 
   if ($time_link) {
-    $str = preg_replace('@(^|[\s,.;?!])([0-9]{1,2}):([0-9]{2,2})([\s,.;?!]|$)@isu',
-      '\1<a target="' .$time_target. '" href="' .preg_replace('@&@', '&amp;', $time_link)
+    $time_link_strip = preg_replace('@&t=PT[HMS0-9:]+@', '',
+				    $time_link);
+
+    $str = preg_replace('@(^|[\s,.;?!])'
+      .'([0-9]{1,2}):([0-9]{2,2})([\s,.;?!]|$)@isu',
+      '\1<a target="' .$time_target. '" href="' .preg_replace('@&@',
+        '&amp;', $time_link_strip)
       .'&amp;t=PT\2M\3S">\2:\3</a>\4', $str);
-  }
+    $str = preg_replace('@(^|[\s,.;?!])'
+      .'([0-9]{1,2}):([0-9]{2,2}):([0-9]{2,2})([\s,.;?!]|$)@isu',
+      '\1<a target="' .$time_target. '" href="' .preg_replace('@&@',
+        '&amp;', $time_link_strip)
+      .'&amp;t=PT\2H\3M\4S">\2:\3:\4</a>\5', $str);
+  } // if ($time_link)
 
   if ($lines <= 0) { echo $str; return; }
 

@@ -30,6 +30,8 @@ if (COMMON_FIX_YT_LIKELIST)
 else
   $fix_index = false;
 
+$video_start = isset($_GET['t'])? trim($_GET['t']): '';
+
 /* ***************************************************************  */
 /* Try:
  *
@@ -127,8 +129,8 @@ function _page_td($token_name, $dir_str, $i_playlist, $text)
 
   if (isset($glob_yt_result[$token_name])) {
 ?>
-    <td class="video_thumbs_table_pagelink"><a <?
-    ?>class="video_thumbs_table_pagelink" title="<?
+    <td class="video_thumbs_table_pagelink"><a<?
+    ?> class="video_thumbs_table_pagelink" title="<?
       echo $dir_str .' '. YT_PLVIDEOS_MAXRESULTS_HALF;
     ?> videos" href="./?list=<?
       echo $list .'&amp;v='. $glob_yt_plitems[$i_playlist]
@@ -167,9 +169,14 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
     <iframe width="853" height="480" src="//www.youtube.com/embed/<?
       echo $video_id;
     ?>?rel=0&amp;vq=hd720&amp;autoplay=1<?
-      if (isset($glob_yt_videoitem['contentDetails']['startAt']))
+      if ($video_start) {
+        echo '&amp;start='
+        .yt_timeat2sec($video_start);
+      } else if (isset($glob_yt_videoitem['contentDetails']['startAt'])) {
         echo '&amp;start='
         .yt_timeat2sec($glob_yt_videoitem['contentDetails']['startAt']);
+      }
+
       if (isset($glob_yt_videoitem['contentDetails']['endAt']))
         echo '&amp;end='
         .yt_timeat2sec($glob_yt_videoitem['contentDetails']['endAt']);
