@@ -18,4 +18,4 @@
 *.bak
 
 # Config files
-config.inc.php
+www/config.inc.php

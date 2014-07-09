@@ -13,11 +13,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# PHP open tag <? instead of <?php is allowed
-php_value short_open_tag 1
+######################################################################
+# If DOCUMENT_ROOT != INSTALLATION_ROOT then change the following
+# pathes.
 
 # Not Found
 ErrorDocument 404 /errors/e404.php
-
 # Forbidden
 ErrorDocument 403 /errors/e403.php
+
+######################################################################
+
+# PHP open tag <? instead of <?php is allowed
+php_value short_open_tag 1

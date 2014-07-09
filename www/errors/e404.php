@@ -19,7 +19,7 @@
 /* Error files may be included by other files.  So we need to prefix
  * DIRNAME(__FILE__).
  */
-include_once dirname(__FILE__). '/../../inc/common.inc.php';
+include_once dirname(__FILE__). '/../inc/common.inc.php';
 
 include_once dirname(__FILE__)
   .'/../themes/' .CONFIG_THEME. '/begin-head.inc.php';

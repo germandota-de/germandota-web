@@ -16,14 +16,61 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('COMMON_CONF_FILE', dirname(__FILE__). '/../config.inc.php');
-if (!file_exists(COMMON_CONF_FILE)) {
-  die('<font color="#ff0000">config.inc.php not found! Copy it from '
-      .'config.template.inc.php and make necessary changes on the copy</font>');
-}
-include_once COMMON_CONF_FILE;
+define('COMMON_EXIST',                  true);
 
 /* ***************************************************************  */
+/* Formats:
+ *
+ *  * *ROOT: '/var/www/.../'
+ *
+ *  * *ABS: 'inc/xyz/abc/'
+ */
+
+define('COMMON_DIR_INC',      'inc');
+define('COMMON_DIR_THEMES',   'themes');
+define('COMMON_DIR_IMG',      'img');
+
+/* Is depending on apache config directive DocumentRoot if there is a
+ * tailing `/'
+ */
+define('COMMON_DIR_DOCROOT', $_SERVER['DOCUMENT_ROOT']
+       .(preg_match('@/$@', $_SERVER['DOCUMENT_ROOT'])
+	 ? '': '/')
+       );
+define('COMMON_DIR_INSTROOT', realpath(dirname(__FILE__) .'/..'). '/');
+
+define('COMMON_DIR_INST_ABS',
+  preg_replace('@^' .COMMON_DIR_DOCROOT. '(.*)$@', '\1',
+	       COMMON_DIR_INSTROOT));
+
+define('COMMON_CONF_FILE',     'config.inc.php');
+define('COMMON_CONF_FILEROOT', COMMON_DIR_INSTROOT.COMMON_CONF_FILE);
+
+/* ***************************************************************  */
+
+if (!file_exists(COMMON_CONF_FILEROOT)) {
+  die('<font color="#ff0000">config.inc.php not found! Copy it from'
+      .' config.template.inc.php and make necessary changes on the'
+      .' copy</font>');
+}
+$_common_files = scandir(dirname(COMMON_CONF_FILEROOT));
+foreach ($_common_files as $v) {
+  if (preg_match('@^' .COMMON_CONF_FILE. '.+@', $v)) {
+    die('<font color="#ff0000">config.inc.php backup file `' .$v
+	. '\' found!  Delete it, it could be a security issue.</font>');
+  }
+}
+
+include_once COMMON_CONF_FILEROOT;
+
+/* ***************************************************************  */
+
+define('COMMON_DIR_THEMECUR_ABS',
+  COMMON_DIR_INST_ABS.COMMON_DIR_THEMES .'/'. CONFIG_THEME .'/');
+define('COMMON_DIR_THEMECUR_IMG_ABS',
+  COMMON_DIR_THEMECUR_ABS.COMMON_DIR_IMG. '/');
+define('COMMON_DIR_IMG_ABS',
+  COMMON_DIR_INST_ABS.COMMON_DIR_IMG .'/');
 
 define('COMMON_FIX_YT_LIKELIST',        true);
 define('COMMON_USER_NEWLINE',           "\n<br>");
@@ -67,7 +114,27 @@ function common_print_title($title, $short=false)
   echo "\n\n";
 }
 
-function common_user_output($str, $more_link='', $lines=0)
+/* ***************************************************************  */
+
+/* Format: PThhHmmMssS (example: PT25M2S)  */
+function common_time2url($s=0, $min=0, $h=0)
+{
+  $result = 'PT';
+
+  if ($h > 0) {
+    $result .= $h. 'H' .sprintf('%02u', $min). 'M'
+      .sprintf('%02u', $s). 'S';
+  } else {
+    $result .= $min. 'M' .sprintf('%02u', $s). 'S';
+  }
+
+  return $result;
+}
+
+/* ***************************************************************  */
+
+function common_user_output($str, $more_link='', $lines=0,
+                            $time_link='', $time_target='_self')
 {
   $str = _o_get($str);
 
@@ -81,6 +148,22 @@ function common_user_output($str, $more_link='', $lines=0)
                       '\1<i>\2</i>\3', $str);
   $str = preg_replace('@(^|[\s,.:;?!])-(\w[^<>]*?)-([\s,.:;?!]|$)@isu',
                       '\1<del>\2</del>\3', $str);
+
+  if ($time_link) {
+    $time_link_strip = preg_replace('@&t=PT[HMS0-9:]+@', '',
+				    $time_link);
+
+    $str = preg_replace('@(^|[\s,.;?!])'
+      .'([0-9]{1,2}):([0-9]{2,2})([\s,.;?!]|$)@isu',
+      '\1<a target="' .$time_target. '" href="' .preg_replace('@&@',
+        '&amp;', $time_link_strip)
+      .'&amp;t=PT\2M\3S">\2:\3</a>\4', $str);
+    $str = preg_replace('@(^|[\s,.;?!])'
+      .'([0-9]{1,2}):([0-9]{2,2}):([0-9]{2,2})([\s,.;?!]|$)@isu',
+      '\1<a target="' .$time_target. '" href="' .preg_replace('@&@',
+        '&amp;', $time_link_strip)
+      .'&amp;t=PT\2H\3M\4S">\2:\3:\4</a>\5', $str);
+  } // if ($time_link)
 
   if ($lines <= 0) { echo $str; return; }
 
@@ -125,7 +208,8 @@ function common_menu_print($menu_array, $id, $entry_selected)
       if (!isset($menu_array[$entry_selected])) _o($menu_array[0]['title']);
       else _o($menu_array[$entry_selected]['title']);
     ?> <img id="<? echo $id; ?>_dropdown" class="menu_dropdown"<?
-    ?> alt="(dropdown)" src="/img/icon_dropdown.22.png">
+    ?> alt="(dropdown)" src="/<? echo COMMON_DIR_THEMECUR_IMG_ABS;
+    ?>icon_dropdown.22.png">
 
     <ul><?
 
