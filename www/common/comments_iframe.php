@@ -143,8 +143,8 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
       if ($cur_reply_cnt > 0) {
 	echo $cur_reply_cnt. ' replies';
 
-	//$cur_aid = yt_comments_2activityid($glob_results[$i]['id']['$t']);
-        //var_dump(yt_comments_recv_replies($cur_aid));
+        // TODO
+        //var_dump(yt_comments_recv_replies($glob_aid[$i], 2));
       }
 
     ?></td>

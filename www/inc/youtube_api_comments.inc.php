@@ -117,9 +117,9 @@ function yt_comments_recv_comment($activity_id)
   return $result;
 }
 
-function yt_comments_recv_replies($activity_id)
+function yt_comments_recv_replies($activity_id, $max_results)
 {
-  $result = gplus_api_comments_list($activity_id);
+  $result = gplus_api_comments_list($activity_id, $max_results);
   if (!$result) return false;
 
   return $result;

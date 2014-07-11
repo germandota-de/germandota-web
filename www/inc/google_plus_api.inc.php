@@ -29,10 +29,17 @@ define('GPLUS_COMMENTS_MAXREPLIES',       '2');
 
 /* ***************************************************************  */
 
-function gplus_api_comments_list($activity_id)
+define('_GPLUS_COMMENTS_REQUEST_DEFAULT',
+       '?key=' .CONFIG_YT_APIKEY. '&quotaUser=' .COMMON_SESSION_ID);
+define('_GPLUS_COMMENTS_REQUEST_FIELDS',
+       'id,published,updated,actor(id,displayName,image/url)');
+
+function gplus_api_comments_list($activity_id, $max_results)
 {
   $request = GPLUS_REQUEST_PREFIX. 'activities/' .$activity_id
-    . '/comments?key=' .CONFIG_YT_APIKEY. '&quotaUser=' .COMMON_SESSION_ID;
+    .'/comments' ._GPLUS_COMMENTS_REQUEST_DEFAULT. '&fields=items('
+    ._GPLUS_COMMENTS_REQUEST_FIELDS. ',object(content))'
+    .'&maxResults=' .$max_results. '&sortOrder=descending';
 
   $json = file_get_contents($request);
   if (!$json) return false;
@@ -46,10 +53,8 @@ function gplus_api_comments_list($activity_id)
 function gplus_api_activity_get($activity_id)
 {
   $request = GPLUS_REQUEST_PREFIX. 'activities/' .$activity_id
-    .'?key=' .CONFIG_YT_APIKEY. '&quotaUser=' .COMMON_SESSION_ID
-    .'&fields=id,published,updated,actor('
-      .'id,displayName,image/url)'
-      .',object(content,replies(totalItems))';
+    ._GPLUS_COMMENTS_REQUEST_DEFAULT. '&fields='
+    ._GPLUS_COMMENTS_REQUEST_FIELDS. ',object(content,replies(totalItems))';
 
   $json = file_get_contents($request);
   if (!$json) return false;
