@@ -43,4 +43,30 @@ function gplus_api_comments_list($activity_id)
   return $result;
 }
 
+function gplus_api_activity_get($activity_id)
+{
+  $request = GPLUS_REQUEST_PREFIX. 'activities/' .$activity_id
+    . '?key=' .CONFIG_YT_APIKEY;
+
+  $json = file_get_contents($request);
+  if (!$json) return false;
+
+  $result = json_decode($json, true);
+  if (!$result) return false;
+
+  return $result;
+}
+
+/* ***************************************************************  */
+
+function gplus_print_profilelink($name, $url)
+{
+  ?><a class="gplus_profilelink" target="_blank"<?
+  ?> href="<?
+    echo common_url_amp($url);
+  ?>" title="View this profile at plus.google.com"><?
+    _o($name);
+  ?></a><?
+}
+
 /* ***************************************************************  */

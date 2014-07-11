@@ -21,6 +21,7 @@ include_once '../inc/common.inc.php';
 include_once '../inc/youtube_api_comments.inc.php';
 
 define('COMMENTS_LINES_COUNT',          4);
+define('COMMENTS_CHARS_PER_LINE',       80);
 
 $video_id = isset($_GET['v'])? trim($_GET['v']): '';
 
@@ -61,10 +62,10 @@ if ($glob_servername == '127.0.0.1'  /* For development purposes  */
     || $glob_servername == common_url2hostname($_SERVER['HTTP_REFERER'])) {
   $glob_comments = yt_comments_recv($video_id, $order == 'newest',
                                     $page);
-  $glob_results = $glob_comments['results'];
+  $glob_aid = $glob_comments['activityId'];
 } else {
   $glob_comments = false;
-  $glob_results = false;
+  $glob_aid = false;
 }
 
 /* ---------------------------------------------------------------  */
@@ -106,10 +107,12 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
 <?
   } // if ($page != 1)
 
-  for ($i=0; $i<count($glob_results); $i++) {
-    $cur_published = $glob_results[$i]['published']['$t'];
-    $cur_updated = $glob_results[$i]['updated']['$t'];
-    $cur_cid = yt_comments_2channelid($glob_results[$i]['id']['$t']);
+  for ($i=0; $i<count($glob_aid); $i++) {
+    $cur_comment = yt_comments_recv_comment($glob_aid[$i]);
+
+    $cur_published = $cur_comment['published'];
+    $cur_updated = $cur_comment['updated'];
+    $cur_cid = $cur_comment['id'];
 ?>
   <tr<?
     if($i%2 == 0) echo ' class="comments_table_tr2"';
@@ -117,27 +120,32 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
     <td><a name="<?
       echo $cur_cid;
     ?>"></a><span class="comments_author"><?
-      yt_print_chanlink($glob_results[$i]['author'][0]['name']['$t'],
-                        $glob_results[$i]['yt$channelId']['$t']);
+      gplus_print_profilelink($cur_comment['actor']['displayName'],
+                              $cur_comment['actor']['url']);
     ?></span> <span class="comments_date"><?
       _o(yt_str2date($cur_published) .', '. yt_str2time($cur_published));
 
       if ($cur_published != $cur_updated) echo ' (updated)';
 
     ?></span><div class="comments_content"><?
-      common_user_output($glob_results[$i]['content']['$t'],
+      $cur_content = yt_comments_strip_html(
+                                   $cur_comment['object']['content']);
+      $cur_content = common_newline_html($cur_content,
+                                         COMMENTS_CHARS_PER_LINE);
+      common_user_output_htmlin($cur_content,
         _comments_link_self($video_id, $query_time, $order, $page,
                             $cur_cid),
         $more_id == $cur_cid? 0: COMMENTS_LINES_COUNT,
         $query_time, '_parent');
     ?></div><?
-      $cur_reply_cnt = intval($glob_results[$i]['yt$replyCount']['$t']);
+      $cur_reply_cnt
+        = intval($cur_comment['object']['replies']['totalItems']);
 
       if ($cur_reply_cnt > 0) {
 	echo $cur_reply_cnt. ' replies';
 
-	$cur_aid = yt_comments_2activityid($glob_results[$i]['id']['$t']);
-	//var_dump(yt_comments_recv_replies($cur_aid));
+	//$cur_aid = yt_comments_2activityid($glob_results[$i]['id']['$t']);
+        //var_dump(yt_comments_recv_replies($cur_aid));
       }
 
     ?></td>

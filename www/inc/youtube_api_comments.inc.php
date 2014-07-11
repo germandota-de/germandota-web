@@ -44,6 +44,18 @@ define('YT_COMMENTS_SSL_CNMATCH',    '*.google.com');
 
 /* ***************************************************************  */
 
+function yt_comments_2commentid($rcv_str)
+{
+  return preg_replace('@^.*/([^/]+)$@', '\1', $rcv_str);
+}
+
+function _yt_comments_2activityid($rcv_str)
+{
+  return preg_replace('@^.*/([^/]+)$@', '\1', $rcv_str);
+}
+
+/* ***************************************************************  */
+
 function _yt_comments_apiv2_list($method, $start_index, $max_results,
                                  $params_nokey='')
 {
@@ -80,16 +92,30 @@ function yt_comments_recv($vid, $order_newest, $page)
     if ($link['rel'] == 'previous') $prev_exist = true;
   }
 
+  $activity_id = array();
+  foreach ($result['feed']['entry'] as $entry) {
+    $activity_id[count($activity_id)]
+      = _yt_comments_2activityid($entry['id']['$t']);
+  }
+
   return array(
     'totalResults' => $result['feed']['openSearch$totalResults']['$t'],
     'nextExist' => $next_exist,
     'prevExist' => $prev_exist,
     'page' => $page,
-    'results' => $result['feed']['entry']
+    'activityId' => $activity_id
   );
 }
 
 /* ***************************************************************  */
+
+function yt_comments_recv_comment($activity_id)
+{
+  $result = gplus_api_activity_get($activity_id);
+  if (!$result) return false;
+
+  return $result;
+}
 
 function yt_comments_recv_replies($activity_id)
 {
@@ -109,16 +135,6 @@ function yt_comments_iframeheight($comment_count)
   return YT_COMMENTS_OFFSET_PX + (YT_COMMENTS_PXPERCOMMENT*$cnt);
 }
 
-function yt_comments_2channelid($rcv_str)
-{
-  return preg_replace('@^.*/([^/]+)$@', '\1', $rcv_str);
-}
-
-function yt_comments_2activityid($rcv_str)
-{
-  return preg_replace('@^.*/([^/]+)$@', '\1', $rcv_str);
-}
-
 /* ***************************************************************  */
 
 function yt_comments_print_pageinfo($yt_response, $items_str, $url_pre,
@@ -134,7 +150,7 @@ function yt_comments_print_pageinfo($yt_response, $items_str, $url_pre,
     echo 'First ';
   }
 
-  echo count($yt_response['results']) .' of '
+  echo count($yt_response['activityId']) .' of '
     .$yt_response['totalResults'] .' '. $items_str;
 
   if ($yt_response['nextExist']) {
@@ -145,6 +161,19 @@ function yt_comments_print_pageinfo($yt_response, $items_str, $url_pre,
       .($url_post===''? '': '&amp;' .$url_post) .'">'
       .YT_COMMENTS_PERPAGE_NEXT.'+&raquo;</a>';
   }
+}
+
+/* ***************************************************************  */
+
+function yt_comments_strip_html($str)
+{
+  /* Remove UTF-8 Byte Order Marks EF BB BF (sent by ex. Youtube API)  */
+  $str = preg_replace("@\xef\xbb\xbf@", '', $str);
+
+  $str = preg_replace('@<a[^>]+href="[^"]+youtube\.com.*?>([^<]+)</a>@isu',
+                      '\1', $str);
+
+  return $str;
 }
 
 /* ***************************************************************  */

@@ -114,6 +114,15 @@ a:hover.yt_channellink {
   border-style: none;
 }
 
+a.gplus_profilelink {
+  color: #700000;
+  font-weight: bold;
+}
+a:hover.gplus_profilelink {
+  color: #a00000;
+  border-style: none;
+}
+
 iframe.comments_iframe {
   display: table;
   margin-left: auto;
