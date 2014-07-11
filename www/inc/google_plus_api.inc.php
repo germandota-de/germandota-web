@@ -59,13 +59,16 @@ function gplus_api_activity_get($activity_id)
 
 /* ***************************************************************  */
 
-function gplus_print_profilelink($name, $url)
+function gplus_print_profilelink($actor)
 {
   ?><a class="gplus_profilelink" target="_blank"<?
   ?> href="<?
-    echo common_url_amp($url);
-  ?>" title="View this profile at plus.google.com"><?
-    _o($name);
+    echo common_url_amp($actor['url']);
+  ?>" title="View this profile at plus.google.com"><img<?
+  ?> class="gplus_profilelink" alt="(avatar)" src="<?
+    echo common_url_amp($actor['image']['url']);
+  ?>"><?
+    _o($actor['displayName']);
   ?></a><?
 }
 

@@ -109,6 +109,7 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
 
   for ($i=0; $i<count($glob_aid); $i++) {
     $cur_comment = yt_comments_recv_comment($glob_aid[$i]);
+    //var_dump($cur_comment);
 
     $cur_published = $cur_comment['published'];
     $cur_updated = $cur_comment['updated'];
@@ -120,8 +121,7 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
     <td><a name="<?
       echo $cur_cid;
     ?>"></a><span class="comments_author"><?
-      gplus_print_profilelink($cur_comment['actor']['displayName'],
-                              $cur_comment['actor']['url']);
+      gplus_print_profilelink($cur_comment['actor']);
     ?></span> <span class="comments_date"><?
       _o(yt_str2date($cur_published) .', '. yt_str2time($cur_published));
 
