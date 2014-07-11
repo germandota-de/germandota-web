@@ -18,11 +18,16 @@
 
 include_once dirname(__FILE__). '/common.inc.php';
 include_once dirname(__FILE__). '/youtube_api.inc.php';
+include_once dirname(__FILE__). '/google_plus_api.inc.php';
 
 /* Youtube Data API !v2! comment reference:
  *
  * https://developers.google.com/youtube/2.0/developers_guide_protocol_comments
  * https://developers.google.com/youtube/articles/changes_to_comments
+ *
+ * Youtube replies:
+ *
+ * https://developers.google.com/+/api/latest/comments/list
  */
 
 define('YT_COMMENTS_PERPAGE',           10);
@@ -86,6 +91,16 @@ function yt_comments_recv($vid, $order_newest, $page)
 
 /* ***************************************************************  */
 
+function yt_comments_recv_replies($activity_id)
+{
+  $result = gplus_api_comments_list($activity_id);
+  if (!$result) return false;
+
+  return $result;
+}
+
+/* ***************************************************************  */
+
 function yt_comments_iframeheight($comment_count)
 {
   $cnt = $comment_count>YT_COMMENTS_PERPAGE
@@ -94,7 +109,12 @@ function yt_comments_iframeheight($comment_count)
   return YT_COMMENTS_OFFSET_PX + (YT_COMMENTS_PXPERCOMMENT*$cnt);
 }
 
-function yt_comments_2cid($rcv_str)
+function yt_comments_2channelid($rcv_str)
+{
+  return preg_replace('@^.*/([^/]+)$@', '\1', $rcv_str);
+}
+
+function yt_comments_2activityid($rcv_str)
 {
   return preg_replace('@^.*/([^/]+)$@', '\1', $rcv_str);
 }

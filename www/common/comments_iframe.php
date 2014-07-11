@@ -109,7 +109,7 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
   for ($i=0; $i<count($glob_results); $i++) {
     $cur_published = $glob_results[$i]['published']['$t'];
     $cur_updated = $glob_results[$i]['updated']['$t'];
-    $cur_cid = yt_comments_2cid($glob_results[$i]['id']['$t']);
+    $cur_cid = yt_comments_2channelid($glob_results[$i]['id']['$t']);
 ?>
   <tr<?
     if($i%2 == 0) echo ' class="comments_table_tr2"';
@@ -133,7 +133,12 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
     ?></div><?
       $cur_reply_cnt = intval($glob_results[$i]['yt$replyCount']['$t']);
 
-      if ($cur_reply_cnt > 0) echo $cur_reply_cnt. ' replies';
+      if ($cur_reply_cnt > 0) {
+	echo $cur_reply_cnt. ' replies';
+
+	$cur_aid = yt_comments_2activityid($glob_results[$i]['id']['$t']);
+	//var_dump(yt_comments_recv_replies($cur_aid));
+      }
 
     ?></td>
   </tr>
