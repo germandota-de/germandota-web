@@ -109,7 +109,6 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
 
   for ($i=0; $i<count($glob_aid); $i++) {
     $cur_comment = yt_comments_recv_comment($glob_aid[$i]);
-    //var_dump($cur_comment);
 
     $cur_published = $cur_comment['published'];
     $cur_updated = $cur_comment['updated'];

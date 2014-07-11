@@ -18,6 +18,9 @@
 
 define('COMMON_EXIST',                  true);
 
+session_start();
+define('COMMON_SESSION_ID',             session_id());
+
 /* ***************************************************************  */
 /* Formats:
  *

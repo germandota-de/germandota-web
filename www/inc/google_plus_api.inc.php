@@ -32,7 +32,7 @@ define('GPLUS_COMMENTS_MAXREPLIES',       '2');
 function gplus_api_comments_list($activity_id)
 {
   $request = GPLUS_REQUEST_PREFIX. 'activities/' .$activity_id
-    . '/comments?key=' .CONFIG_YT_APIKEY;
+    . '/comments?key=' .CONFIG_YT_APIKEY. '&quotaUser=' .COMMON_SESSION_ID;
 
   $json = file_get_contents($request);
   if (!$json) return false;
@@ -46,7 +46,10 @@ function gplus_api_comments_list($activity_id)
 function gplus_api_activity_get($activity_id)
 {
   $request = GPLUS_REQUEST_PREFIX. 'activities/' .$activity_id
-    . '?key=' .CONFIG_YT_APIKEY;
+    .'?key=' .CONFIG_YT_APIKEY. '&quotaUser=' .COMMON_SESSION_ID
+    .'&fields=id,published,updated,actor('
+      .'id,displayName,image/url)'
+      .',object(content,replies(totalItems))';
 
   $json = file_get_contents($request);
   if (!$json) return false;
@@ -62,8 +65,8 @@ function gplus_api_activity_get($activity_id)
 function gplus_print_profilelink($actor)
 {
   ?><a class="gplus_profilelink" target="_blank"<?
-  ?> href="<?
-    echo common_url_amp($actor['url']);
+  ?> href="https://plus.google.com/<?
+    echo $actor['id'];
   ?>" title="View this profile at plus.google.com"><img<?
   ?> class="gplus_profilelink" alt="(avatar)" src="<?
     echo common_url_amp($actor['image']['url']);
