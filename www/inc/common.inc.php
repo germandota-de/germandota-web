@@ -18,6 +18,9 @@
 
 define('COMMON_EXIST',                  true);
 
+session_start();
+define('COMMON_SESSION_ID',             session_id());
+
 /* ***************************************************************  */
 /* Formats:
  *
@@ -114,6 +117,11 @@ function common_print_title($title, $short=false)
   echo "\n\n";
 }
 
+function common_url_amp($url)
+{
+  return preg_replace('@&@', '&amp;', $url);
+}
+
 /* ***************************************************************  */
 
 /* Format: PThhHmmMssS (example: PT25M2S)  */
@@ -133,15 +141,13 @@ function common_time2url($s=0, $min=0, $h=0)
 
 /* ***************************************************************  */
 
-function common_user_output($str, $more_link='', $lines=0,
-                            $time_link='', $time_target='_self')
+function common_user_output_htmlin($str, $more_link='', $lines=0,
+                                   $time_link='', $time_target='_self')
 {
-  $str = _o_get($str);
-
-  $str = preg_replace('@(https?://[\S]+)@isu',
-                      '<a target="_blank" href="\1">\1</a>', $str);
-  $str = preg_replace('@\s(www\.[\S]+)@isu',
-                      '<a target="_blank" href="http://\1">\1</a>', $str);
+  $str = preg_replace('@([^"])(https?://[\S]+)@isu',
+                      '\1<a target="_blank" href="\2">\2</a>', $str);
+  $str = preg_replace('@(\s)(www\.[\S]+)@isu',
+                      '\1<a target="_blank" href="http://\2">\2</a>', $str);
   $str = preg_replace('@(^|[\s,.:;?!\n])\*(\w[^<>]*?)\*([\s,.:;?!]|$)@isu',
                       '\1<b>\2</b>\3', $str);
   $str = preg_replace('@(^|[\s,.:;?!])_(\w[^<>]*?)_([\s,.:;?!]|$)@isu',
@@ -155,14 +161,14 @@ function common_user_output($str, $more_link='', $lines=0,
 
     $str = preg_replace('@(^|[\s,.;?!])'
       .'([0-9]{1,2}):([0-9]{2,2})([\s,.;?!]|$)@isu',
-      '\1<a target="' .$time_target. '" href="' .preg_replace('@&@',
-        '&amp;', $time_link_strip)
-      .'&amp;t=PT\2M\3S">\2:\3</a>\4', $str);
+      '\1<a target="' .$time_target. '" href="'
+      .common_url_amp($time_link_strip). '&amp;t=PT\2M\3S">\2:\3</a>\4',
+      $str);
     $str = preg_replace('@(^|[\s,.;?!])'
       .'([0-9]{1,2}):([0-9]{2,2}):([0-9]{2,2})([\s,.;?!]|$)@isu',
-      '\1<a target="' .$time_target. '" href="' .preg_replace('@&@',
-        '&amp;', $time_link_strip)
-      .'&amp;t=PT\2H\3M\4S">\2:\3:\4</a>\5', $str);
+      '\1<a target="' .$time_target. '" href="'
+      .common_url_amp($time_link_strip). '&amp;t=PT\2H\3M\4S">\2:\3:\4</a>\5',
+      $str);
   } // if ($time_link)
 
   if ($lines <= 0) { echo $str; return; }
@@ -183,6 +189,43 @@ function common_user_output($str, $more_link='', $lines=0,
     echo $matches[0];
   }
 }
+function common_user_output($str, $more_link='', $lines=0,
+                            $time_link='', $time_target='_self')
+{
+  common_user_output_htmlin(_o_get($str), $more_link, $lines,
+                            $time_link, $time_target);
+}
+
+/* ***************************************************************  */
+
+function common_newline_html($html_str, $chars_per_line)
+{
+  $result = '';
+
+  $cur_char = 0; $nest_count = 0;
+  for ($i=0; $i<strlen($html_str); $i++) {
+    $result .= $html_str[$i];
+
+    if ($html_str[$i] == '<') {
+      if (substr($html_str, $i, 3) == '<br') $cur_char = 0;
+      $nest_count++; continue;
+    }
+    if ($html_str[$i] == '>') { $nest_count--; continue; }
+    if ($nest_count > 0) continue;
+
+    if ($cur_char >= $chars_per_line
+        && $html_str[$i] == ' ') {
+      $result .= COMMON_USER_NEWLINE;
+      $cur_char = 0;
+    }
+
+    $cur_char++;
+  }
+
+  return $result;
+}
+
+/* ***************************************************************  */
 
 function common_url2hostname($url)
 {
@@ -225,3 +268,5 @@ function common_menu_print($menu_array, $id, $entry_selected)
 
 <?
 }
+
+/* ***************************************************************  */

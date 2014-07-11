@@ -37,6 +37,7 @@ define('YT_PLVIDEOS_MAXRESULTS_HALF',   YT_PLVIDEOS_MAXRESULTS >> 1);
 function _yt_api_list($method, $part, $params_nokey='')
 {
   $request = YT_REQUEST_PREFIX .$method. '?key=' .CONFIG_YT_APIKEY
+    .'&quotaUser=' .COMMON_SESSION_ID
     .'&part=' .$part. ($params_nokey == ''? '': '&' .$params_nokey);
 
   $json = file_get_contents($request);
