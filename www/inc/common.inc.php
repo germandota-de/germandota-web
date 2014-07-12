@@ -174,8 +174,8 @@ function common_user_output_htmlin($str, $more_link='', $lines=0,
   if ($lines <= 0) { echo $str; return; }
 
   for ($i=0, $cur=0; $i<$lines+1; $i++) {
-    if (!preg_match('@^.*?($|' .COMMON_USER_NEWLINE. ')@su',
-                    substr($str, $cur), $matches)) return;
+    if (!preg_match('@^.*?($|<br[^>]*>)@su', substr($str, $cur),
+                    $matches)) return;
     if (strlen($matches[0]) == 0) return;
 
     if ($i == $lines) {

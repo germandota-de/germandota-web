@@ -30,8 +30,8 @@ include_once dirname(__FILE__). '/google_plus_api.inc.php';
  * https://developers.google.com/+/api/latest/comments/list
  */
 
-define('YT_COMMENTS_PERPAGE',           10);
-define('YT_COMMENTS_PERPAGE_NEXT',      20);
+define('YT_COMMENTS_PERPAGE',           8);
+define('YT_COMMENTS_PERPAGE_NEXT',      10);
 define('YT_COMMENTS_PXPERCOMMENT',      100);
 define('YT_COMMENTS_OFFSET_PX',         200);
 
