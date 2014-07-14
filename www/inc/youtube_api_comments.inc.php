@@ -178,6 +178,11 @@ function yt_comments_strip_html($str)
   $str = preg_replace('@<a[^>]+class="[^"]+hashtag.*?>'
     .'#([^<]+)</a>@isu', '#\1', $str);
 
+  /* Google+ profile  */
+  $str = preg_replace(
+    '@(<a[^>]class="proflink")(.*?>)@isu', '\1 target="_blank"\2',
+    $str);
+
   return $str;
 }
 

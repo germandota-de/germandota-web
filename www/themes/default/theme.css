@@ -597,7 +597,7 @@ table.comments_replies {
   background-color: #e8e8e8;
 }
 td.comments_replies_td {
-  padding: 2px;
+  padding: 4px;
 }
 td.comments_replies_count {
   padding-bottom: 4px;
