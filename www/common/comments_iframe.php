@@ -36,9 +36,11 @@ default: $order = 'best';
 }
 $page = isset($_GET['p'])? intval(trim($_GET['p'])): 1;
 $more_id = isset($_GET['more'])? trim($_GET['more']): '';
+$replies_id = isset($_GET['replies'])? trim($_GET['replies']): '';
 
 function _comments_link_self($video_id, $query_time, $order=false,
-                             $page=false, $more_id=false)
+                             $page=false, $more_id=false,
+                             $replies_id=false)
 {
   $result = $_SERVER['PHP_SELF'] .'?v='. $video_id;
   $result .= '&amp;q_time=' .urlencode($query_time);
@@ -46,6 +48,7 @@ function _comments_link_self($video_id, $query_time, $order=false,
   $result .= $order !== false? '&amp;order='. $order: '';
   $result .= $page !== false? '&amp;p='. $page: '';
   $result .= $more_id !== false? '&amp;more='. $more_id: '';
+  $result .= $replies_id !== false? '&amp;replies='. $replies_id: '';
 
   /* Does not work in IFrames with Google Chrome  */
   //$result .= $more_id !== false? '#'. $more_id: '';
@@ -127,13 +130,17 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
 
       if ($cur_reply_cnt > 0) {
         $replies = yt_comments_recv_replies($glob_aid[$i],
-                                            GPLUS_COMMENTS_MAXREPLIES);
+        $replies_id == $cur_cid? $cur_reply_cnt: GPLUS_COMMENTS_MAXREPLIES);
 ?>
 
     <table class="comments_replies">
-    <tr><td class="comments_replies_count"><?
-        echo count($replies['items']) .' of '. $cur_reply_cnt;
-    ?> replies</td></tr>
+    <tr><td class="comments_replies_count"><a<?
+    ?> class="comments_replies_showall" href="<?
+        echo _comments_link_self($video_id, $query_time, $order, $page,
+                                 $cur_cid, $cur_cid);
+    ?>">show all <?
+         echo $cur_reply_cnt;
+    ?> replies</a></td></tr>
 <?
         for ($j=0; $j<count($replies['items']); $j++) {
           $cur_reply = $replies['items'][$j];
@@ -142,9 +149,12 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
     <tr<?
           if ($j%2 == 0) echo ' class="comments_replies_tr2"';
     ?>><td class="comments_replies_td"><?
+      /* If we `more' a reply then the current REPLIES_ID must be
+       * transmitted.
+       */
       yt_comments_print_comment($cur_reply,
         _comments_link_self($video_id, $query_time, $order, $page,
-                            $reply_cid),
+                            $reply_cid, $replies_id),
         $more_id == $reply_cid? 0: COMMENTS_REPLY_LINES_COUNT,
         $query_time, '_parent');
     ?></td></tr>
