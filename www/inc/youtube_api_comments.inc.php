@@ -170,8 +170,13 @@ function yt_comments_strip_html($str)
   /* Remove UTF-8 Byte Order Marks EF BB BF (sent by ex. Youtube API)  */
   $str = preg_replace("@\xef\xbb\xbf@", '', $str);
 
-  $str = preg_replace('@<a[^>]+href="[^"]+youtube\.com.*?>([^<]+)</a>@isu',
-                      '\1', $str);
+  /* Start times of videos  */
+  $str = preg_replace('@<a[^>]+href="[^"]+youtube\.com.*?>'
+    .'([0-9]+:[0-9]{2,2}(:[0-9]{2,2})?)</a>@isu', '\1', $str);
+
+  /* Hashtags  */
+  $str = preg_replace('@<a[^>]+class="[^"]+hashtag.*?>'
+    .'#([^<]+)</a>@isu', '#\1', $str);
 
   return $str;
 }
