@@ -17,52 +17,36 @@
  */
 
 include_once dirname(__FILE__). '/common.inc.php';
+include_once dirname(__FILE__). '/google_api.inc.php';
 
 /* Google Plus API v3 Reference:
  *
  * https://developers.google.com/+/api/latest/
  */
 
-define('GPLUS_REQUEST_PREFIX',
-       'https://www.googleapis.com/plus/v1/');
-define('GPLUS_COMMENTS_MAXREPLIES',       '2');
+define('GPLUS_REQUEST_METHOD_PREFIX',   'plus/v1/');
+define('GPLUS_COMMENTS_MAXREPLIES',     '2');
 
 /* ***************************************************************  */
 
-define('_GPLUS_COMMENTS_REQUEST_DEFAULT',
-       '?key=' .CONFIG_YT_APIKEY. '&quotaUser=' .COMMON_SESSION_ID);
 define('_GPLUS_COMMENTS_REQUEST_FIELDS',
        'id,published,updated,actor(id,displayName,image/url)');
 
 function gplus_api_comments_list($activity_id, $max_results)
 {
-  $request = GPLUS_REQUEST_PREFIX. 'activities/' .$activity_id
-    .'/comments' ._GPLUS_COMMENTS_REQUEST_DEFAULT. '&fields=items('
-    ._GPLUS_COMMENTS_REQUEST_FIELDS. ',object(content))'
-    .'&maxResults=' .$max_results. '&sortOrder=descending';
-
-  $json = file_get_contents($request);
-  if (!$json) return false;
-
-  $result = json_decode($json, true);
-  if (!$result) return false;
-
-  return $result;
+  return google_api_recv(
+    GPLUS_REQUEST_METHOD_PREFIX.'activities/'.$activity_id.'/comments',
+    'fields=items('
+      ._GPLUS_COMMENTS_REQUEST_FIELDS. ',object(content))'
+    .'&maxResults=' .$max_results. '&sortOrder=descending');
 }
 
 function gplus_api_activity_get($activity_id)
 {
-  $request = GPLUS_REQUEST_PREFIX. 'activities/' .$activity_id
-    ._GPLUS_COMMENTS_REQUEST_DEFAULT. '&fields='
-    ._GPLUS_COMMENTS_REQUEST_FIELDS. ',object(content,replies(totalItems))';
-
-  $json = file_get_contents($request);
-  if (!$json) return false;
-
-  $result = json_decode($json, true);
-  if (!$result) return false;
-
-  return $result;
+  return google_api_recv(
+    GPLUS_REQUEST_METHOD_PREFIX.'activities/'.$activity_id,
+    'fields='
+    ._GPLUS_COMMENTS_REQUEST_FIELDS. ',object(content,replies(totalItems))');
 }
 
 /* ***************************************************************  */

@@ -20,6 +20,7 @@ define('COMMON_EXIST',                  true);
 
 session_start();
 define('COMMON_SESSION_ID',             session_id());
+define('COMMON_USER_IP',                $_SERVER['REMOTE_ADDR']);
 
 /* ***************************************************************  */
 /* Formats:
