@@ -24,7 +24,7 @@ include_once dirname(__FILE__). '/google_api.inc.php';
  * https://developers.google.com/+/api/latest/
  */
 
-define('GPLUS_REQUEST_METHOD_PREFIX',   'plus/v1/');
+define('_GPLUS_REQUEST_METHOD_PREFIX',  'plus/v1/');
 define('GPLUS_COMMENTS_MAXREPLIES',     '2');
 
 /* ***************************************************************  */
@@ -35,7 +35,7 @@ define('_GPLUS_COMMENTS_REQUEST_FIELDS',
 function gplus_api_comments_list($activity_id, $max_results)
 {
   return google_api_recv(
-    GPLUS_REQUEST_METHOD_PREFIX.'activities/'.$activity_id.'/comments',
+    _GPLUS_REQUEST_METHOD_PREFIX.'activities/'.$activity_id.'/comments',
     'fields=items('
       ._GPLUS_COMMENTS_REQUEST_FIELDS. ',object(content))'
     .'&maxResults=' .$max_results. '&sortOrder=descending');
@@ -44,7 +44,7 @@ function gplus_api_comments_list($activity_id, $max_results)
 function gplus_api_activity_get($activity_id)
 {
   return google_api_recv(
-    GPLUS_REQUEST_METHOD_PREFIX.'activities/'.$activity_id,
+    _GPLUS_REQUEST_METHOD_PREFIX.'activities/'.$activity_id,
     'fields='
     ._GPLUS_COMMENTS_REQUEST_FIELDS. ',object(content,replies(totalItems))');
 }

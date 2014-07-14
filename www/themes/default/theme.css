@@ -135,7 +135,7 @@ iframe.comments_iframe {
   margin-top: 8px;
 
   border-style: none;
-  width: 85%;
+  width: 800px;
   /* HEIGHT will be calculated via HTML attribute ... */
 }
 
@@ -580,7 +580,7 @@ table#comments_table {
 
   font-size: 12px;
 }
-table#comments_table td {
+td.comments_table_td {
   padding: 8px;
 }
 table#comments_table th {
@@ -589,6 +589,23 @@ table#comments_table th {
   padding: 4px;
 }
 tr.comments_table_tr2 { }
+
+table.comments_replies {
+  margin-left: auto;
+  margin-right: auto;
+  width: 700px;
+  background-color: #e8e8e8;
+}
+td.comments_replies_td {
+  padding: 2px;
+}
+td.comments_replies_count {
+  padding-bottom: 4px;
+  font-weight: bold;
+  text-align: left;
+  color: #909090;
+}
+tr.comments_replies_tr2 { }
 
 span.comments_author {
   font-size: 12px;

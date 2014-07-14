@@ -21,6 +21,7 @@ include_once '../inc/common.inc.php';
 include_once '../inc/youtube_api_comments.inc.php';
 
 define('COMMENTS_LINES_COUNT',          4);
+define('COMMENTS_REPLY_LINES_COUNT',    3);
 define('COMMENTS_CHARS_PER_LINE',       80);
 
 $video_id = isset($_GET['v'])? trim($_GET['v']): '';
@@ -109,43 +110,50 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
 
   for ($i=0; $i<count($glob_aid); $i++) {
     $cur_comment = yt_comments_recv_comment($glob_aid[$i]);
-
-    $cur_published = $cur_comment['published'];
-    $cur_updated = $cur_comment['updated'];
     $cur_cid = $cur_comment['id'];
 ?>
   <tr<?
-    if($i%2 == 0) echo ' class="comments_table_tr2"';
+    if ($i%2 == 0) echo ' class="comments_table_tr2"';
   ?>>
-    <td><a name="<?
-      echo $cur_cid;
-    ?>"></a><span class="comments_author"><?
-      gplus_print_profilelink($cur_comment['actor']);
-    ?></span> <span class="comments_date"><?
-      _o(yt_str2date($cur_published) .', '. yt_str2time($cur_published));
-
-      if ($cur_published != $cur_updated) echo ' (updated)';
-
-    ?></span><div class="comments_content"><?
-      $cur_content = yt_comments_strip_html(
-                                   $cur_comment['object']['content']);
-      $cur_content = common_newline_html($cur_content,
-                                         COMMENTS_CHARS_PER_LINE);
-      common_user_output_htmlin($cur_content,
+    <td class="comments_table_td"><?
+      yt_comments_print_comment($cur_comment,
         _comments_link_self($video_id, $query_time, $order, $page,
                             $cur_cid),
         $more_id == $cur_cid? 0: COMMENTS_LINES_COUNT,
         $query_time, '_parent');
-    ?></div><?
+
       $cur_reply_cnt
         = intval($cur_comment['object']['replies']['totalItems']);
 
       if ($cur_reply_cnt > 0) {
-	echo $cur_reply_cnt. ' replies';
+        $replies = yt_comments_recv_replies($glob_aid[$i],
+                                            GPLUS_COMMENTS_MAXREPLIES);
+?>
 
-        // TODO
-        //var_dump(yt_comments_recv_replies($glob_aid[$i], 2));
-      }
+    <table class="comments_replies">
+    <tr><td class="comments_replies_count"><?
+        echo count($replies['items']) .' of '. $cur_reply_cnt;
+    ?> replies</td></tr>
+<?
+        for ($j=0; $j<count($replies['items']); $j++) {
+          $cur_reply = $replies['items'][$j];
+          $reply_cid = $cur_reply['id'];
+?>
+    <tr<?
+          if ($j%2 == 0) echo ' class="comments_replies_tr2"';
+    ?>><td class="comments_replies_td"><?
+      yt_comments_print_comment($cur_reply,
+        _comments_link_self($video_id, $query_time, $order, $page,
+                            $reply_cid),
+        $more_id == $reply_cid? 0: COMMENTS_REPLY_LINES_COUNT,
+        $query_time, '_parent');
+    ?></td></tr>
+<?
+        } // for ($j=0; $j<count($replies['items']); $j++)
+?>
+    </table>
+<?
+      } // if ($cur_reply_cnt > 0)
 
     ?></td>
   </tr>

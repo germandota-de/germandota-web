@@ -182,3 +182,29 @@ function yt_comments_strip_html($str)
 }
 
 /* ***************************************************************  */
+
+function yt_comments_print_comment($comment, $more_link, $lines,
+                                   $time_link, $time_target)
+{
+  $published = $comment['published'];
+  $updated = $comment['updated'];
+  $cid = $comment['id'];
+
+  ?><a name="<?
+    echo $cid;
+  ?>"></a><span class="comments_author"><?
+    gplus_print_profilelink($comment['actor']);
+  ?></span> <span class="comments_date"><?
+    _o(yt_str2date($published) .', '. yt_str2time($published));
+
+    if ($published != $updated) echo ' (updated)';
+
+  ?></span><div class="comments_content"><?
+    $content = yt_comments_strip_html($comment['object']['content']);
+    $content = common_newline_html($content, COMMENTS_CHARS_PER_LINE);
+    common_user_output_htmlin($content, $more_link, $lines, $time_link,
+                              $time_target);
+  ?></div><?
+}
+
+/* ***************************************************************  */
