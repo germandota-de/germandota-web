@@ -17,14 +17,14 @@
  */
 
 include_once dirname(__FILE__). '/common.inc.php';
+include_once dirname(__FILE__). '/google_api.inc.php';
 
 /* Youtube Data API v3 Reference:
  *
  * https://developers.google.com/youtube/v3/docs/
  */
 
-define('YT_REQUEST_PREFIX',
-       'https://www.googleapis.com/youtube/v3/');
+define('_YT_REQUEST_METHOD_PREFIX',     'youtube/v3/');
 define('YT_PLAYLISTS_MAXRESULTS',       '3');
 define('YT_PLAYLISTS_MAXRESULTS_NEXT',  '10');
 
@@ -34,19 +34,10 @@ define('YT_PLVIDEOS_MAXRESULTS_HALF',   YT_PLVIDEOS_MAXRESULTS >> 1);
 
 /* ***************************************************************  */
 
-function _yt_api_list($method, $part, $params_nokey='')
+function _yt_api_list($method, $part, $params='')
 {
-  $request = YT_REQUEST_PREFIX .$method. '?key=' .CONFIG_YT_APIKEY
-    .'&quotaUser=' .COMMON_SESSION_ID
-    .'&part=' .$part. ($params_nokey == ''? '': '&' .$params_nokey);
-
-  $json = file_get_contents($request);
-  if (!$json) return false;
-
-  $result = json_decode($json, true);
-  if (!$result) return false;
-
-  return $result;
+  return google_api_recv(_YT_REQUEST_METHOD_PREFIX .$method,
+    'part=' .$part. ($params == ''? '': '&' .$params));
 }
 
 /* ***************************************************************  */
