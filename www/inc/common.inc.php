@@ -20,6 +20,7 @@ define('COMMON_EXIST',                  true);
 
 session_start();
 define('COMMON_SESSION_ID',             session_id());
+define('COMMON_USER_IP',                $_SERVER['REMOTE_ADDR']);
 
 /* ***************************************************************  */
 /* Formats:
@@ -154,6 +155,9 @@ function common_user_output_htmlin($str, $more_link='', $lines=0,
                       '\1<i>\2</i>\3', $str);
   $str = preg_replace('@(^|[\s,.:;?!])-(\w[^<>]*?)-([\s,.:;?!]|$)@isu',
                       '\1<del>\2</del>\3', $str);
+  $str = preg_replace('@(^|[\s,.:;?!])#(\w[^<>]*?)([\s,.:;?!]|$)@isu',
+    '\1<a class="comment_hashtag" target="_blank"'
+    .' href="https://plus.google.com/s/%23\2">#\2</a>\3', $str);
 
   if ($time_link) {
     $time_link_strip = preg_replace('@&t=PT[HMS0-9:]+@', '',
@@ -161,12 +165,12 @@ function common_user_output_htmlin($str, $more_link='', $lines=0,
 
     $str = preg_replace('@(^|[\s,.;?!])'
       .'([0-9]{1,2}):([0-9]{2,2})([\s,.;?!]|$)@isu',
-      '\1<a target="' .$time_target. '" href="'
+      '\1<a class="comment_time" target="' .$time_target. '" href="'
       .common_url_amp($time_link_strip). '&amp;t=PT\2M\3S">\2:\3</a>\4',
       $str);
     $str = preg_replace('@(^|[\s,.;?!])'
       .'([0-9]{1,2}):([0-9]{2,2}):([0-9]{2,2})([\s,.;?!]|$)@isu',
-      '\1<a target="' .$time_target. '" href="'
+      '\1<a class="comment_time" target="' .$time_target. '" href="'
       .common_url_amp($time_link_strip). '&amp;t=PT\2H\3M\4S">\2:\3:\4</a>\5',
       $str);
   } // if ($time_link)
@@ -174,8 +178,8 @@ function common_user_output_htmlin($str, $more_link='', $lines=0,
   if ($lines <= 0) { echo $str; return; }
 
   for ($i=0, $cur=0; $i<$lines+1; $i++) {
-    if (!preg_match('@^.*?($|' .COMMON_USER_NEWLINE. ')@su',
-                    substr($str, $cur), $matches)) return;
+    if (!preg_match('@^.*?($|<br[^>]*>)@su', substr($str, $cur),
+                    $matches)) return;
     if (strlen($matches[0]) == 0) return;
 
     if ($i == $lines) {

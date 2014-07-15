@@ -30,8 +30,8 @@ include_once dirname(__FILE__). '/google_plus_api.inc.php';
  * https://developers.google.com/+/api/latest/comments/list
  */
 
-define('YT_COMMENTS_PERPAGE',           10);
-define('YT_COMMENTS_PERPAGE_NEXT',      20);
+define('YT_COMMENTS_PERPAGE',           8);
+define('YT_COMMENTS_PERPAGE_NEXT',      10);
 define('YT_COMMENTS_PXPERCOMMENT',      100);
 define('YT_COMMENTS_OFFSET_PX',         200);
 
@@ -170,10 +170,56 @@ function yt_comments_strip_html($str)
   /* Remove UTF-8 Byte Order Marks EF BB BF (sent by ex. Youtube API)  */
   $str = preg_replace("@\xef\xbb\xbf@", '', $str);
 
-  $str = preg_replace('@<a[^>]+href="[^"]+youtube\.com.*?>([^<]+)</a>@isu',
-                      '\1', $str);
+  /* Start times of videos  */
+  $str = preg_replace('@<a[^>]+href="[^"]+youtube\.com.*?>'
+    .'([0-9]+:[0-9]{2,2}(:[0-9]{2,2})?)</a>@isu', '\1', $str);
+
+  /* Hashtags  */
+  $str = preg_replace('@<a[^>]+class="[^"]+hashtag.*?>'
+    .'#([^<]+)</a>@isu', '#\1', $str);
+
+  /* Google+ profile  */
+  $str = preg_replace(
+    '@(<a[^>]class="proflink")(.*?>)@isu', '\1 target="_blank"\2',
+    $str);
 
   return $str;
+}
+
+/* ***************************************************************  */
+
+function yt_comments_print_comment($comment, $more_link, $lines,
+                                   $time_link, $time_target)
+{
+  $published = $comment['published'];
+  $updated = $comment['updated'];
+  $cid = $comment['id'];
+  $like_count = $comment['object']['objectType'] == 'comment'
+    ? $comment['plusoners']['totalItems']
+    : $comment['object']['plusoners']['totalItems'];
+
+  ?><a name="<?
+    echo $cid;
+  ?>"></a><span class="comments_author"><?
+    gplus_print_profilelink($comment['actor']);
+  ?></span><span class="comments_date"><?
+    _o(yt_str2date($published) .', '. yt_str2time($published));
+
+    if ($published != $updated) echo ' (updated)';
+
+  ?></span><div class="comments_content"><?
+    $content = yt_comments_strip_html($comment['object']['content']);
+    $content = common_newline_html($content, COMMENTS_CHARS_PER_LINE);
+    common_user_output_htmlin($content, $more_link, $lines, $time_link,
+                              $time_target);
+  ?><table class="comments_likes"><tr><td class="comments_likes_no"><?
+    if ($like_count > 0) echo $like_count;
+  ?></td><td><img class="comments_likes_icon" alt="(likes)" src="/<?
+    echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_comments_like.32.png"><?
+  ?></td><td><img class="comments_likes_icon" alt="(dislikes)" src="/<?
+    echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_comments_dislike.32.png"><?
+  ?></td><?
+  ?></tr></table></div><?
 }
 
 /* ***************************************************************  */
