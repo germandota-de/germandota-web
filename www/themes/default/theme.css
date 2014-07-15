@@ -599,19 +599,27 @@ table.comments_replies {
 td.comments_replies_td {
   padding: 4px;
 }
+tr.comments_replies_tr2 { }
 td.comments_replies_count {
   padding-bottom: 4px;
   font-weight: bold;
   text-align: left;
   color: #909090;
 }
-tr.comments_replies_tr2 { }
+a.comments_replies_showall {
+  color: #906060;
+}
+a:hover.comments_replies_showall {
+  color: #702020;
+  border-style: none;
+}
 
 span.comments_author {
   font-size: 12px;
 }
 
 span.comments_date {
+  margin-left: 6px;
   font-size: 10px;
   font-style: italic;
   color: #606060;

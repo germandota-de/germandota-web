@@ -199,7 +199,7 @@ function yt_comments_print_comment($comment, $more_link, $lines,
     echo $cid;
   ?>"></a><span class="comments_author"><?
     gplus_print_profilelink($comment['actor']);
-  ?></span> <span class="comments_date"><?
+  ?></span><span class="comments_date"><?
     _o(yt_str2date($published) .', '. yt_str2time($published));
 
     if ($published != $updated) echo ' (updated)';

@@ -134,13 +134,17 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
 ?>
 
     <table class="comments_replies">
-    <tr><td class="comments_replies_count"><a<?
-    ?> class="comments_replies_showall" href="<?
-        echo _comments_link_self($video_id, $query_time, $order, $page,
-                                 $cur_cid, $cur_cid);
-    ?>">show all <?
-         echo $cur_reply_cnt;
-    ?> replies</a></td></tr>
+    <tr><td class="comments_replies_count"><?
+        if ($cur_reply_cnt > COMMENTS_REPLY_LINES_COUNT
+            && $replies_id != $cur_cid) {
+          echo '<a class="comments_replies_showall" href="';
+          echo _comments_link_self($video_id, $query_time, $order,
+                                   $page, $cur_cid, $cur_cid);
+          echo '">show all ' .$cur_reply_cnt. ' replies</a>';
+        } else {
+          echo $cur_reply_cnt. ' replies';
+        }
+    ?></td></tr>
 <?
         for ($j=0; $j<count($replies['items']); $j++) {
           $cur_reply = $replies['items'][$j];
