@@ -18,6 +18,8 @@
 
 include_once 'inc/common.inc.php';
 
+include_once 'inc/youtube_api.inc.php';
+
 include_once 'themes/' .CONFIG_THEME. '/begin-head.inc.php';
 common_print_htmltitle(CONFIG_PROJECT_NAME_POST);
 include_once 'themes/' .CONFIG_THEME. '/head-title.inc.php';
@@ -25,6 +27,10 @@ common_print_title(CONFIG_PROJECT_NAME_POST);
 include_once 'themes/' .CONFIG_THEME. '/title-content.inc.php';
 ?>
 
+<?
+// TODO
+//var_dump(yt_recv_chan_activity(''));
+?>
   <div class="textblock">
     <p>Hier ist der Anlaufpunkt für alle, die gerne die Dota 2 Let&rsquo;s
     Play&rsquo;s von Martin sehen.  Diese Seite ist noch im Aufbau.
