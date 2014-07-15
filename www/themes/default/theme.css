@@ -607,10 +607,10 @@ td.comments_replies_count {
   color: #909090;
 }
 a.comments_replies_showall {
-  color: #906060;
+  color: #b09090;
 }
 a:hover.comments_replies_showall {
-  color: #702020;
+  color: #907070;
   border-style: none;
 }
 
