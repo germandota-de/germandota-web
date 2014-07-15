@@ -639,6 +639,24 @@ div.comments_content {
   text-align: left;
 }
 
+table.comments_likes {
+  margin-top: 8px;
+  margin-left: 10px;
+}
+table.comments_likes td {
+  vertical-align: middle;
+}
+td.comments_likes_no {
+  font-size: 11px;
+  font-style: italic;
+  color: #80c080;
+}
+
+img.comments_likes_icon {
+  margin-left: 6px;
+  height: 16px;
+}
+
 /* ***************************************************************  */
 
 a.comment_time { }

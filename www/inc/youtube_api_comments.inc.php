@@ -194,6 +194,9 @@ function yt_comments_print_comment($comment, $more_link, $lines,
   $published = $comment['published'];
   $updated = $comment['updated'];
   $cid = $comment['id'];
+  $like_count = $comment['object']['objectType'] == 'comment'
+    ? $comment['plusoners']['totalItems']
+    : $comment['object']['plusoners']['totalItems'];
 
   ?><a name="<?
     echo $cid;
@@ -209,7 +212,14 @@ function yt_comments_print_comment($comment, $more_link, $lines,
     $content = common_newline_html($content, COMMENTS_CHARS_PER_LINE);
     common_user_output_htmlin($content, $more_link, $lines, $time_link,
                               $time_target);
-  ?></div><?
+  ?><table class="comments_likes"><tr><td class="comments_likes_no"><?
+    if ($like_count > 0) echo $like_count;
+  ?></td><td><img class="comments_likes_icon" alt="(likes)" src="/<?
+    echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_comments_like.32.png"><?
+  ?></td><td><img class="comments_likes_icon" alt="(dislikes)" src="/<?
+    echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_comments_dislike.32.png"><?
+  ?></td><?
+  ?></tr></table></div><?
 }
 
 /* ***************************************************************  */

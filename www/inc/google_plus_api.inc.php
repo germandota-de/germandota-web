@@ -25,19 +25,19 @@ include_once dirname(__FILE__). '/google_api.inc.php';
  */
 
 define('_GPLUS_REQUEST_METHOD_PREFIX',  'plus/v1/');
-define('GPLUS_COMMENTS_MAXREPLIES',     '2');
 
 /* ***************************************************************  */
 
 define('_GPLUS_COMMENTS_REQUEST_FIELDS',
-       'id,published,updated,actor(id,displayName,image/url)');
+       'id,published,updated,actor(id,displayName,image/url)'
+       .',object(objectType,content)');
 
 function gplus_api_comments_list($activity_id, $max_results)
 {
   return google_api_recv(
     _GPLUS_REQUEST_METHOD_PREFIX.'activities/'.$activity_id.'/comments',
     'fields=items('
-      ._GPLUS_COMMENTS_REQUEST_FIELDS. ',object(content))'
+      ._GPLUS_COMMENTS_REQUEST_FIELDS. ',plusoners(totalItems))'
     .'&maxResults=' .$max_results. '&sortOrder=descending');
 }
 
@@ -46,7 +46,8 @@ function gplus_api_activity_get($activity_id)
   return google_api_recv(
     _GPLUS_REQUEST_METHOD_PREFIX.'activities/'.$activity_id,
     'fields='
-    ._GPLUS_COMMENTS_REQUEST_FIELDS. ',object(content,replies(totalItems))');
+    ._GPLUS_COMMENTS_REQUEST_FIELDS
+    .',object(replies(totalItems),plusoners(totalItems))');
 }
 
 /* ***************************************************************  */

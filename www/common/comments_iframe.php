@@ -23,6 +23,7 @@ include_once '../inc/youtube_api_comments.inc.php';
 define('COMMENTS_LINES_COUNT',          4);
 define('COMMENTS_REPLY_LINES_COUNT',    3);
 define('COMMENTS_CHARS_PER_LINE',       80);
+define('COMMENTS_MAXREPLIES',           2);
 
 $video_id = isset($_GET['v'])? trim($_GET['v']): '';
 
@@ -130,12 +131,12 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
 
       if ($cur_reply_cnt > 0) {
         $replies = yt_comments_recv_replies($glob_aid[$i],
-        $replies_id == $cur_cid? $cur_reply_cnt: GPLUS_COMMENTS_MAXREPLIES);
+        $replies_id == $cur_cid? $cur_reply_cnt: COMMENTS_MAXREPLIES);
 ?>
 
     <table class="comments_replies">
     <tr><td class="comments_replies_count"><?
-        if ($cur_reply_cnt > COMMENTS_REPLY_LINES_COUNT
+        if ($cur_reply_cnt > COMMENTS_MAXREPLIES
             && $replies_id != $cur_cid) {
           echo '<a class="comments_replies_showall" href="';
           echo _comments_link_self($video_id, $query_time, $order,
