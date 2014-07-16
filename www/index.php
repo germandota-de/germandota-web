@@ -20,42 +20,44 @@ include_once 'inc/common.inc.php';
 
 include_once 'inc/youtube_api.inc.php';
 
+$glob_act_result = yt_recv_chan_activity('');
+$glob_activities = $glob_act_result['items'];
+
 include_once 'themes/' .CONFIG_THEME. '/begin-head.inc.php';
 common_print_htmltitle(CONFIG_PROJECT_NAME_POST);
 include_once 'themes/' .CONFIG_THEME. '/head-title.inc.php';
+echo '  News - ';
 common_print_title(CONFIG_PROJECT_NAME_POST);
 include_once 'themes/' .CONFIG_THEME. '/title-content.inc.php';
 ?>
 
+  <table class="activity_table">
 <?
-// TODO
-//var_dump(yt_recv_chan_activity(''));
+
+  for ($i=0; $i<count($glob_activities); $i++) {
+    $cur_activ = $glob_activities[$i];
+    $cur_published = $cur_activ['snippet']['publishedAt'];
 ?>
-  <div class="textblock">
-    <p>Hier ist der Anlaufpunkt für alle, die gerne die Dota 2 Let&rsquo;s
-    Play&rsquo;s von Martin sehen.  Diese Seite ist noch im Aufbau.
-    Und das ist gut, denn so kannst du auch mithelfen diese Webseite
-    zu erweitern und zu verbessern.</p>
-    <p>Und so kannst du helfen:</p>
-    <table class="default_table">
-       <tr><th>Videos gucken :D</th><td>Ist das aller wichtigste!
-         Denn nur so wirst<br>du ein ruhiges und sorgenfreies Leben führen
-         ;P</td></tr>
-       <tr><th>Bugs, Verbesserungen, Ideen</th><td><a target="_blank"
-        href="https://github.com/germandota-de/germandota-web/issues">Kannst
-        du hier rein schreiben</a></td></tr>
-      <tr><th>Selber coden</th><td><a target="_blank"
-        href="https://github.com/germandota-de/germandota-web">Im Code
-          herum stöbern und herum probieren</a></td></tr>
-    </table>
-    <p>Was hoffentlich in den nächsten Tagen noch kommt:</p>
-    <ul>
-       <li>Irgend eine Art von Mini-Forum, mal sehen xD ...</li>
-       <li>Twitch Follow Button für <a href="/live/">Live Stream</a></li>
-       <li>YouTube Kommentare für <a href="/playlist/dota2">Dota 2 Playlist</a></li>
-       <li>Eure Vorschläge ???</li>
-    </ul>
-  </div>
+  <tr<? if ($i%2 == 0) echo ' class="activity_table_tr2"'; ?>>
+    <td class="activity_table_thumb"><?
+      ?><img class="activity_table_thumb" alt="(thumb)" src="<?
+      echo $cur_activ['snippet']['thumbnails']['medium']['url'];
+    ?>"></td>
+    <td class="activity_table_date"><?
+      echo yt_str2date($cur_published) .'<br>'
+        .yt_str2time($cur_published);
+    ?></td>
+    <td class="activity_table_descr"><div class="activity_table_kind"><?
+      // TODO
+    ?>Hello</div><?
+      _o($cur_activ['snippet']['title']);
+    ?></td>
+  </tr>
+<?
+  } // for ($i=0; $i<count($glob_activities); $i++)
+
+?>
+  </table>
 
 <?
 include_once 'themes/' .CONFIG_THEME. '/content-end.inc.php';

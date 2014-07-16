@@ -665,3 +665,45 @@ a.comment_hashtag { }
 
 /* ***************************************************************  */
 
+table.activity_table {
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+  background-color: #d0d0d0;
+}
+table.activity_table td {
+  padding: 8px;
+}
+tr.activity_table_tr2 {
+  background-color: #e0e0e0;
+}
+
+td.activity_table_thumb {
+  width: 1%;
+}
+img.activity_table_thumb {
+  width: 185px;
+}
+
+td.activity_table_date {
+  text-align: center;
+  font-style: italic;
+  font-size: 10px;
+
+  width: 1%;
+  white-space: nowrap;
+}
+
+td.activity_table_descr {
+  vertical-align: top;
+}
+
+div.activity_table_kind {
+  margin-bottom: 4px;
+
+  font-size: 10px;
+  font-weight: bold;
+  color: #808080;
+}
+
+/* ***************************************************************  */
