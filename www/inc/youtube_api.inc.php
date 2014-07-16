@@ -166,20 +166,26 @@ function yt_recv_chan_activity($page_token)
           .',like/resourceId(videoId)'
           .',favorite/resourceId(videoId)'
 
-           /* kind=youtube#[video,channel]*/
+           /* kind=youtube#[video,channel]  */
           .',comment/resourceId(kind,videoId,channelId)'
 
           .',subscription/resourceId(channelId)'
           .',playlistItem(resourceId(videoId),playlistId,playlistItemId)'
 
-           /* kind=youtube#[video,channel]*/
+           /* kind=youtube#[video,channel]  */
           .',recommendation(resourceId(kind,videoId,channelId),reason'
             .',seedResourceId(kind,videoId,channelId))'
 
-           /* kind=youtube#[video,channel,playlist]*/
+           /* kind=youtube#[video,channel,playlist]  */
           .',bulletin/resourceId(kind,videoId,channelId,playlistId)'
 
-          // TODO
+           /* kind=youtube#[video,channel,playlist]  */
+           /* type=[facebook,googlePlus,twitter,unspecified]  */
+          .',social(type,resourceId(kind,videoId,channelId,playlistId)'
+            .',author,referenceUrl,imageUrl)'
+
+           /* kind=youtube#[video,channel,playlist]  */
+          .',channelItem(resourceId)'
 
         .')'
       .')&channelId=' .CONFIG_YT_CHANNELID
