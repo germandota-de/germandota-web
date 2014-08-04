@@ -38,6 +38,8 @@ define('YT_PLVIDEOS_MAXRESULTS_HALF',   YT_PLVIDEOS_MAXRESULTS >> 1);
 define('_YT_REQUEST_FIELDS_PAGING',
        'pageInfo,nextPageToken,prevPageToken');
 
+define('_YT_RECV_PLAYLIST_50PAGES',     3);
+
 /* ***************************************************************  */
 
 function _yt_api_list($method, $part, $params='')
@@ -93,20 +95,24 @@ function yt_recv_playlist_items($playlist_id, $page_token='')
   );
 }
 
-function yt_recv_playlist_items_video($playlist_id, $video_id,
-                                      $fix_index=false)
+function yt_recv_playlist_items_video($playlist_id, $video_id)
 {
-  $result = _yt_api_list('playlistItems', 'snippet',
-    'fields=items/snippet/position'
-    .'&playlistId='.$playlist_id. '&videoId=' .$video_id
-    .'&maxResults=50');
-  if (!$result) return false;
+  $position = 0;
+  for ($i=0, $i_page = ''; $i<_YT_RECV_PLAYLIST_50PAGES; $i++) {
+    $result = _yt_api_list('playlistItems', 'snippet',
+      'fields=nextPageToken,items/snippet(position,resourceId/videoId)'
+      .'&playlistId=' .$playlist_id. '&maxResults=50&pageToken=' .$i_page);
+    if (!$result) return false;
 
-  if (COMMON_FIX_YT_LIKELIST && $fix_index !== false)
-    $position = $fix_index-1;
-  else
-    $position = intval($result['items'][0]['snippet']['position']);
-  var_dump($position);
+    foreach ($result['items'] as $plitem) {
+      if ($plitem['snippet']['resourceId']['videoId'] == $video_id) {
+        $position = intval($plitem['snippet']['position']);
+        break 2;
+      }
+    }
+
+    $i_page = $result['nextPageToken'];
+  }
 
   /* ***  */
 
