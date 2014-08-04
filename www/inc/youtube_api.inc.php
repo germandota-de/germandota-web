@@ -329,3 +329,36 @@ function yt_print_pageinfo($yt_response, $items_str, $url_pre,
 }
 
 /* ***************************************************************  */
+
+function yt_get_url($yt_activity)
+{
+  $snippet = $yt_activity['snippet'];
+  $kind = $snippet['type'];
+
+  $content = $yt_activity['contentDetails'];
+
+  if ($kind == 'like')
+    return '/' .COMMON_DIR_WATCH_ABS. '?list='
+      .yt_get_likedlist_plid()
+      .'&v=' .$content[$kind]['resourceId']['videoId'];
+  else if ($kind == 'upload')
+    return '/' .COMMON_DIR_WATCH_ABS. '?v='
+      .$content[$kind]['videoId'];
+  else
+    return '.';
+}
+
+function yt_print_activity_link($yt_activity)
+{
+  $title = $yt_activity['snippet']['title'];
+
+  ?><a class="yt_activity_link"<?
+  ?> title="Watch video" href="<?
+    echo yt_get_url($yt_activity);
+  ?>"><img class="icon_large" alt="(video)" src="/<?
+    echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_video.32.png"><?
+    _o($title);
+  ?></a><?
+}
+
+/* ***************************************************************  */

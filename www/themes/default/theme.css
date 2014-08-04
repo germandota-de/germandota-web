@@ -683,7 +683,7 @@ td.activity_table_thumb {
   width: 1%;
 }
 img.activity_table_thumb {
-  width: 185px;
+  width: 120px;
 }
 
 td.activity_table_date {
@@ -697,6 +697,7 @@ td.activity_table_date {
 
 td.activity_table_descr {
   vertical-align: top;
+  text-align: left;
 }
 
 div.activity_table_kind {
