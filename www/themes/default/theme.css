@@ -299,6 +299,7 @@ td.lists_table_videocount p {
 
 td.lists_table_text {
   vertical-align: bottom;
+  text-align: left;
 }
 
 a.playlist_link {
@@ -607,10 +608,10 @@ td.comments_replies_count {
   color: #909090;
 }
 a.comments_replies_showall {
-  color: #b09090;
+  color: #905050;
 }
 a:hover.comments_replies_showall {
-  color: #907070;
+  color: #b07070;
   border-style: none;
 }
 

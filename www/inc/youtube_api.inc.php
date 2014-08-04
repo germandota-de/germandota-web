@@ -98,13 +98,15 @@ function yt_recv_playlist_items_video($playlist_id, $video_id,
 {
   $result = _yt_api_list('playlistItems', 'snippet',
     'fields=items/snippet/position'
-    .'&playlistId='.$playlist_id. '&videoId=' .$video_id);
+    .'&playlistId='.$playlist_id. '&videoId=' .$video_id
+    .'&maxResults=50');
   if (!$result) return false;
 
   if (COMMON_FIX_YT_LIKELIST && $fix_index !== false)
     $position = $fix_index-1;
   else
     $position = intval($result['items'][0]['snippet']['position']);
+  var_dump($position);
 
   /* ***  */
 
