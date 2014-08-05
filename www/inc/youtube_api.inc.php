@@ -340,7 +340,7 @@ function yt_get_url($yt_activity)
   if ($kind == 'like')
     return '/' .COMMON_DIR_WATCH_ABS. '?list='
       .yt_get_likedlist_plid()
-      .'&v=' .$content[$kind]['resourceId']['videoId'];
+      .'&amp;v=' .$content[$kind]['resourceId']['videoId'];
   else if ($kind == 'upload')
     return '/' .COMMON_DIR_WATCH_ABS. '?v='
       .$content[$kind]['videoId'];
@@ -355,10 +355,20 @@ function yt_print_activity_link($yt_activity)
   ?><a class="yt_activity_link"<?
   ?> title="Watch video" href="<?
     echo yt_get_url($yt_activity);
-  ?>"><img class="icon_large" alt="(video)" src="/<?
-    echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_video.32.png"><?
+  ?>"><img class="icon_default" alt="(video)" src="/<?
+    echo COMMON_DIR_THEMECUR_IMG_ABS;
+  ?>icon_video.32.png"><span class="icon_text"><?
     _o($title);
-  ?></a><?
+  ?></span></a><?
+}
+
+function yt_print_activity_thumblink($yt_activity)
+{
+  $thumb_url = $yt_activity['snippet']['thumbnails']['medium']['url'];
+
+  ?><img class="activity_table_thumb" alt="(thumb)" src="<?
+    echo $thumb_url;
+  ?>"><?
 }
 
 /* ***************************************************************  */

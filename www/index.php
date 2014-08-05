@@ -42,9 +42,8 @@ include_once 'themes/' .CONFIG_THEME. '/title-content.inc.php';
 ?>
   <tr<? if ($i%2 == 0) echo ' class="activity_table_tr2"'; ?>>
     <td class="activity_table_thumb"><?
-      ?><img class="activity_table_thumb" alt="(thumb)" src="<?
-      echo $cur_activ['snippet']['thumbnails']['medium']['url'];
-    ?>"></td>
+      yt_print_activity_thumblink($cur_activ);
+    ?></td>
     <td class="activity_table_date"><?
       echo yt_str2date($cur_published) .'<br>'
         .yt_str2time($cur_published);

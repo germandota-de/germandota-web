@@ -104,14 +104,13 @@ img.icon_large {
   height: 13px;
   margin-right: 3px;
 }
-
-a.yt_channellink {
-  color: #700000;
-  font-weight: bold;
+img.icon_default {
+  height: 10px;
+  margin-right: 3px;
 }
-a:hover.yt_channellink {
-  color: #a00000;
-  border-style: none;
+span.icon_text {
+  display: inline-table;
+  width: 95%;
 }
 
 img.gplus_profilelink {
@@ -706,6 +705,26 @@ div.activity_table_kind {
   font-size: 10px;
   font-weight: bold;
   color: #808080;
+}
+
+/* ***************************************************************  */
+
+a.yt_channellink {
+  color: #700000;
+  font-weight: bold;
+}
+a:hover.yt_channellink {
+  color: #a00000;
+  border-style: none;
+}
+
+a.yt_activity_link {
+  color: #a02020;
+  font-weight: bold;
+}
+a:hover.yt_activity_link {
+  color: #e02020;
+  border-style: none;
 }
 
 /* ***************************************************************  */
