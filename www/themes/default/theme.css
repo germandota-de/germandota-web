@@ -104,15 +104,27 @@ img.icon_large {
   height: 13px;
   margin-right: 3px;
 }
+img.icon_default {
+  height: 10px;
+  margin-right: 3px;
+}
+span.icon_text {
+  display: inline-table;
+  width: 95%;
+}
 
-a.yt_channellink {
-  color: #700000;
-  font-weight: bold;
+div.description {
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-bottom: 8px;
+
+  overflow: auto;
+  overflow-x: hidden;
+
+  border-radius: 6px;
 }
-a:hover.yt_channellink {
-  color: #a00000;
-  border-style: none;
-}
+
+/* ***************************************************************  */
 
 img.gplus_profilelink {
   float: left;
@@ -299,6 +311,7 @@ td.lists_table_videocount p {
 
 td.lists_table_text {
   vertical-align: bottom;
+  text-align: left;
 }
 
 a.playlist_link {
@@ -312,14 +325,12 @@ a:hover.playlist_link {
 }
 
 div.lists_table_text_descr {
+  padding-top: 8px;
+
   background-color: #d0d0d0;
-  padding: 8px;
   margin-top: 6px;
 
   height: 60px;
-  overflow: auto;
-  overflow-x: hidden;
-  border-radius: 6px;
 
   font-style: italic;
   text-align: center;
@@ -462,17 +473,9 @@ div#video_description {
   width: 60%;
 
   background-color: #d0d0d0;
-  padding-left: 8px;
-  padding-right: 8px;
-  padding-bottom: 8px;
 
   height: 90px;
-  overflow: auto;
-  overflow-x: hidden;
-  border-radius: 6px;
-
   text-align: left;
-
 }
 span#video_description_title {
   font-weight: bold;
@@ -607,10 +610,10 @@ td.comments_replies_count {
   color: #909090;
 }
 a.comments_replies_showall {
-  color: #b09090;
+  color: #905050;
 }
 a:hover.comments_replies_showall {
-  color: #907070;
+  color: #b07070;
   border-style: none;
 }
 
@@ -665,3 +668,83 @@ a.comment_hashtag { }
 
 /* ***************************************************************  */
 
+table.activity_table {
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+  background-color: #d0d0d0;
+}
+table.activity_table td {
+  padding: 8px;
+}
+tr.activity_table_tr2 {
+  background-color: #e0e0e0;
+}
+
+td.activity_table_thumb {
+  width: 1%;
+}
+
+td.activity_table_date {
+  text-align: center;
+  font-style: italic;
+  font-size: 10px;
+
+  width: 1%;
+  white-space: nowrap;
+}
+
+td.activity_table_descr {
+  vertical-align: top;
+  text-align: left;
+}
+
+div.activity_table_kind {
+  margin-bottom: 4px;
+
+  font-size: 10px;
+  font-weight: bold;
+  color: #808080;
+}
+
+div.activity_table_descr {
+  padding-top: 8px;
+
+  margin-top: 2px;
+  margin-left: auto;
+  margin-right: auto;
+
+  background-color: #d8d8d8;
+
+  height: 40px;
+  text-align: left;
+  font-size: 10px;
+  font-style: italic;
+  color: #404040;
+}
+
+/* ***************************************************************  */
+
+a.yt_channellink {
+  color: #700000;
+  font-weight: bold;
+}
+a:hover.yt_channellink {
+  color: #a00000;
+  border-style: none;
+}
+
+a.yt_activity_link {
+  color: #a02020;
+  font-weight: bold;
+}
+a:hover.yt_activity_link {
+  color: #e02020;
+  border-style: none;
+}
+
+img.yt_activity_thumb {
+  width: 140px;
+}
+
+/* ***************************************************************  */

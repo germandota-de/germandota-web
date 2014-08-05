@@ -23,13 +23,6 @@ include_once '../inc/youtube_api_comments.inc.php';
 
 $list = isset($_GET['list'])? trim($_GET['list']): '';
 $video_id = isset($_GET['v'])? trim($_GET['v']): '';
-
-//if (COMMON_FIX_YT_LIKELIST && $list == yt_get_likedlist_plid())
-if (COMMON_FIX_YT_LIKELIST)
-  $fix_index = isset($_GET['index'])? intval(trim($_GET['index'])): false;
-else
-  $fix_index = false;
-
 $video_start = isset($_GET['t'])? trim($_GET['t']): '';
 
 /* ***************************************************************  */
@@ -52,8 +45,7 @@ $temp_video = false;
 /* If video_id was given  */
 if ($video_id) {
   if ($list)
-    $temp_plist = yt_recv_playlist_items_video($list, $video_id,
-                                               $fix_index);
+    $temp_plist = yt_recv_playlist_items_video($list, $video_id);
 
   /* If video not in playlist, load without playlist  */
   if (!$temp_plist) $temp_video = yt_recv_video($video_id);
@@ -75,8 +67,11 @@ if (($temp_plist && $temp_plist['result']['items']
     || ($temp_video && $temp_video['items'][0]['snippet']['channelId']
         != CONFIG_YT_CHANNELID)
     ) {
-  $temp_plist = false;
-  $temp_video = false;
+
+  if (!common_server_is_localhost()) {  /* For development purposes  */
+    $temp_plist = false;
+    $temp_video = false;
+  }
 }
 
 /* ---------------------------------------------------------------  */
@@ -135,10 +130,6 @@ function _page_td($token_name, $dir_str, $i_playlist, $text)
     ?> videos" href="./?list=<?
       echo $list .'&amp;v='. $glob_yt_plitems[$i_playlist]
         ['contentDetails']['videoId'];
-      //if (COMMON_FIX_YT_LIKELIST && $list == yt_get_likedlist_plid())
-      if (COMMON_FIX_YT_LIKELIST)
-        echo '&amp;index=' .($glob_video_plposition
-          -(YT_PLVIDEOS_MAXRESULTS_HALF+$glob_correction) + $i_playlist+1);
     ?>"><? echo $text; ?></a></td>
 <?
   } else { // if (isset($glob_yt_result['nextPageToken']))
@@ -183,6 +174,7 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
     ?>" frameborder="0" allowfullscreen></iframe>
 
     <div id="video_videoframe_bottom">
+      <a name="description"></a>
       <table id="video_videoframe_table">
       <tr>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
@@ -259,8 +251,13 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
     _page_td('prevPageToken', 'Previous', 0, '&laquo;');
 
   for ($i=0; $i<count($glob_yt_plitems); $i++) {
-    if ($glob_yt_plitems[$i]['status']['privacyStatus'] != 'public')
-      continue;
+    /* Show noise thumbnail ...
+     *
+     * if ($glob_yt_plitems[$i]['status']['privacyStatus'] != 'public')
+     *   continue;
+     */
+
+    $cur_snippet = $glob_yt_plitems[$i]['snippet'];
 ?>
     <td class="<?
       if ($i - YT_PLVIDEOS_MAXRESULTS_HALF == $glob_correction)
@@ -268,15 +265,14 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
       else
         echo 'video_thumbs_table';
     ?>"><a class="img_link" title="<?
-      _o($glob_yt_plitems[$i]['snippet']['title']);
+      _o($cur_snippet['title']);
     ?>" href="./?list=<?
       echo $list .'&amp;v='. $glob_yt_plitems[$i]['contentDetails']['videoId'];
-      //if (COMMON_FIX_YT_LIKELIST && $list == yt_get_likedlist_plid())
-      if (COMMON_FIX_YT_LIKELIST)
-        echo '&amp;index=' .($glob_video_plposition
-          -(YT_PLVIDEOS_MAXRESULTS_HALF+$glob_correction) + $i+1);
     ?>"><img class="videos_thumbs" alt="(thumb)" src="<?
-      echo $glob_yt_plitems[$i]['snippet']['thumbnails']['default']['url'];
+      if (!isset($cur_snippet['thumbnails']['default']['url']))
+        echo '/' .COMMON_DIR_THEMECUR_IMG_ABS. 'thumb_noise.120.90.png';
+      else
+        echo $cur_snippet['thumbnails']['default']['url'];
     ?>"></a></td>
 <?
   } /* for ($i=0, $k=0; $i<count($glob_yt_plitems); $i++)  */
@@ -325,7 +321,7 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
 
 ?>
 
-  <div id="video_description">
+  <div id="video_description" class="description">
     <span id="video_description_title">Published from <?
       yt_print_chanlink($glob_yt_video['snippet']['channelTitle'],
                         $glob_yt_video['snippet']['channelId']);
