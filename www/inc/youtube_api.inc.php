@@ -25,12 +25,20 @@ include_once dirname(__FILE__). '/google_api.inc.php';
  */
 
 define('_YT_REQUEST_METHOD_PREFIX',     'youtube/v3/');
-define('YT_PLAYLISTS_MAXRESULTS',       '3');
-define('YT_PLAYLISTS_MAXRESULTS_NEXT',  '10');
+define('YT_PLAYLISTS_MAXRESULTS',       3);
+define('YT_PLAYLISTS_MAXRESULTS_NEXT',  10);
+
+define('YT_CHAN_ACTIV_MAXRESULTS',      8);
+define('YT_CHAN_ACTIV_MAXRESULTS_NEXT', 10);
 
 /* Must be odd (3, 5, 7, ...) */
-define('YT_PLVIDEOS_MAXRESULTS',        '7');
+define('YT_PLVIDEOS_MAXRESULTS',        7);
 define('YT_PLVIDEOS_MAXRESULTS_HALF',   YT_PLVIDEOS_MAXRESULTS >> 1);
+
+define('_YT_REQUEST_FIELDS_PAGING',
+       'pageInfo,nextPageToken,prevPageToken');
+
+define('_YT_RECV_PLAYLIST_50PAGES',     3);
 
 /* ***************************************************************  */
 
@@ -48,7 +56,7 @@ function yt_recv_playlists($page_token, $plid='')
     : YT_PLAYLISTS_MAXRESULTS_NEXT;
 
   $result = _yt_api_list('playlists', 'status,contentDetails,snippet',
-    'fields=pageInfo,nextPageToken,prevPageToken,items('
+    'fields=' ._YT_REQUEST_FIELDS_PAGING. ',items('
       .'id,status/privacyStatus,contentDetails/itemCount'
       .',snippet(publishedAt,title,description,thumbnails/medium/url))'
     .($plid? '&id=' .$plid: '&channelId=' .CONFIG_YT_CHANNELID)
@@ -73,7 +81,7 @@ function yt_recv_playlist_items($playlist_id, $page_token='')
   /* The channelId is the ID who owns the list, not the video.  */
 
   $result = _yt_api_list('playlistItems', 'status,contentDetails,snippet',
-    'fields=pageInfo,nextPageToken,prevPageToken,items('
+    'fields=' ._YT_REQUEST_FIELDS_PAGING. ',items('
       .'status/privacyStatus,contentDetails(videoId,startAt,endAt)'
       .',snippet(publishedAt,channelId,title,thumbnails/default/url'
       .',position))'
@@ -87,18 +95,24 @@ function yt_recv_playlist_items($playlist_id, $page_token='')
   );
 }
 
-function yt_recv_playlist_items_video($playlist_id, $video_id,
-                                      $fix_index=false)
+function yt_recv_playlist_items_video($playlist_id, $video_id)
 {
-  $result = _yt_api_list('playlistItems', 'snippet',
-    'fields=items/snippet/position'
-    .'&playlistId='.$playlist_id. '&videoId=' .$video_id);
-  if (!$result) return false;
+  $position = 0;
+  for ($i=0, $i_page = ''; $i<_YT_RECV_PLAYLIST_50PAGES; $i++) {
+    $result = _yt_api_list('playlistItems', 'snippet',
+      'fields=nextPageToken,items/snippet(position,resourceId/videoId)'
+      .'&playlistId=' .$playlist_id. '&maxResults=50&pageToken=' .$i_page);
+    if (!$result) return false;
 
-  if (COMMON_FIX_YT_LIKELIST && $fix_index !== false)
-    $position = $fix_index-1;
-  else
-    $position = intval($result['items'][0]['snippet']['position']);
+    foreach ($result['items'] as $plitem) {
+      if ($plitem['snippet']['resourceId']['videoId'] == $video_id) {
+        $position = intval($plitem['snippet']['position']);
+        break 2;
+      }
+    }
+
+    $i_page = $result['nextPageToken'];
+  }
 
   /* ***  */
 
@@ -140,6 +154,50 @@ function yt_recv_video($vid)
       .'snippet(publishedAt,channelId,channelTitle,title,description)'
       .',contentDetails(duration),statistics(viewCount,likeCount'
       .',dislikeCount,commentCount))&id=' .$vid);
+  if (!$result) return false;
+
+  return $result;
+}
+
+/* ***************************************************************  */
+
+function yt_recv_chan_activity($page_token)
+{
+  $max_result = ($page_token === '')? YT_CHAN_ACTIV_MAXRESULTS
+    : YT_CHAN_ACTIV_MAXRESULTS_NEXT;
+
+  $result = _yt_api_list('activities', 'snippet,contentDetails',
+    'fields=' ._YT_REQUEST_FIELDS_PAGING. ',items('
+        .'snippet(publishedAt,title,description,thumbnails/medium/url'
+        .',type,groupId),contentDetails('
+          .'upload(videoId)'
+          .',like/resourceId(videoId)'
+          .',favorite/resourceId(videoId)'
+
+           /* kind=youtube#[video,channel]  */
+          .',comment/resourceId(kind,videoId,channelId)'
+
+          .',subscription/resourceId(channelId)'
+          .',playlistItem(resourceId(videoId),playlistId,playlistItemId)'
+
+           /* kind=youtube#[video,channel]  */
+          .',recommendation(resourceId(kind,videoId,channelId),reason'
+            .',seedResourceId(kind,videoId,channelId))'
+
+           /* kind=youtube#[video,channel,playlist]  */
+          .',bulletin/resourceId(kind,videoId,channelId,playlistId)'
+
+           /* kind=youtube#[video,channel,playlist]  */
+           /* type=[facebook,googlePlus,twitter,unspecified]  */
+          .',social(type,resourceId(kind,videoId,channelId,playlistId)'
+            .',author,referenceUrl,imageUrl)'
+
+           /* kind=youtube#[video,channel,playlist]  */
+          .',channelItem(resourceId)'
+
+        .')'
+      .')&channelId=' .CONFIG_YT_CHANNELID
+    . '&maxResults=' .$max_result. '&pageToken=' .$page_token);
   if (!$result) return false;
 
   return $result;
@@ -268,6 +326,51 @@ function yt_print_pageinfo($yt_response, $items_str, $url_pre,
       .($url_post===''? '': '&amp;' .$url_post) .'">'
       .YT_PLAYLISTS_MAXRESULTS_NEXT.'+&raquo;</a>';
   }
+}
+
+/* ***************************************************************  */
+
+function yt_get_url($yt_activity)
+{
+  $snippet = $yt_activity['snippet'];
+  $kind = $snippet['type'];
+
+  $content = $yt_activity['contentDetails'];
+
+  if ($kind == 'like')
+    return '/' .COMMON_DIR_WATCH_ABS. '?list='
+      .yt_get_likedlist_plid()
+      .'&amp;v=' .$content[$kind]['resourceId']['videoId'];
+  else if ($kind == 'upload')
+    return '/' .COMMON_DIR_WATCH_ABS. '?v='
+      .$content[$kind]['videoId'];
+  else
+    return '.';
+}
+
+function yt_print_activity_link($yt_activity)
+{
+  $title = $yt_activity['snippet']['title'];
+
+  ?><a class="yt_activity_link"<?
+  ?> title="Watch video" href="<?
+    echo yt_get_url($yt_activity);
+  ?>"><img class="icon_default" alt="(video)" src="/<?
+    echo COMMON_DIR_THEMECUR_IMG_ABS;
+  ?>icon_video.32.png"><span class="icon_text"><?
+    _o($title);
+  ?></span></a><?
+}
+
+function yt_print_activity_thumblink($yt_activity)
+{
+  $thumb_url = $yt_activity['snippet']['thumbnails']['medium']['url'];
+
+  ?><a class="img_link" title="Watch video" href="<?
+    echo yt_get_url($yt_activity);
+  ?>"><img class="yt_activity_thumb" alt="(thumb)" src="<?
+    echo $thumb_url;
+  ?>"></a><?
 }
 
 /* ***************************************************************  */

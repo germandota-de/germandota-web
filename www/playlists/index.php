@@ -99,9 +99,10 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
     ?> title="Watch playlist" href="../watch/?list=<?
       echo $cur_id;
     ?>"><img class="icon_large" alt="(video)" src="/<?
-            echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_video.32.png"><?
+      echo COMMON_DIR_THEMECUR_IMG_ABS;
+    ?>icon_video.32.png"><span class="icon_text"><?
       _o($cur_title);
-    ?></a><div class="lists_table_text_descr"><?
+    ?></span></a><div class="description lists_table_text_descr"><?
       if (!$cur_description)
         _o('The playlist of '.$cur_title. '.');
       else

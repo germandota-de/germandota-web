@@ -62,9 +62,9 @@ function _comments_link_self($video_id, $query_time, $order=false,
 /* Allow only if referred from our self  */
 
 $glob_servername = $_SERVER['SERVER_NAME'];
-if ($glob_servername == '127.0.0.1'  /* For development purposes  */
-    || $glob_servername == 'localhost'
-    || $glob_servername == common_url2hostname($_SERVER['HTTP_REFERER'])) {
+if (common_server_is_localhost()  /* For development purposes  */
+    || (isset($_SERVER['HTTP_REFERER'])
+        && $glob_servername == common_url2hostname($_SERVER['HTTP_REFERER']))) {
   $glob_comments = yt_comments_recv($video_id, $order == 'newest',
                                     $page);
   $glob_aid = $glob_comments['activityId'];
