@@ -366,9 +366,11 @@ function yt_print_activity_thumblink($yt_activity)
 {
   $thumb_url = $yt_activity['snippet']['thumbnails']['medium']['url'];
 
-  ?><img class="activity_table_thumb" alt="(thumb)" src="<?
+  ?><a class="img_link" title="Watch video" href="<?
+    echo yt_get_url($yt_activity);
+  ?>"><img class="yt_activity_thumb" alt="(thumb)" src="<?
     echo $thumb_url;
-  ?>"><?
+  ?>"></a><?
 }
 
 /* ***************************************************************  */

@@ -22,7 +22,6 @@ include_once 'inc/youtube_api.inc.php';
 
 $glob_act_result = yt_recv_chan_activity('');
 $glob_activities = $glob_act_result['items'];
-//var_dump($glob_act_result);
 
 include_once 'themes/' .CONFIG_THEME. '/begin-head.inc.php';
 common_print_htmltitle(CONFIG_PROJECT_NAME_POST);
@@ -38,6 +37,9 @@ include_once 'themes/' .CONFIG_THEME. '/title-content.inc.php';
   for ($i=0; $i<count($glob_activities); $i++) {
     $cur_activ = $glob_activities[$i];
     $cur_published = $cur_activ['snippet']['publishedAt'];
+    $cur_title = $cur_activ['snippet']['title'];
+    $cur_description = $cur_activ['snippet']['description'];
+    $cur_url = yt_get_url($cur_activ);
 
 ?>
   <tr<? if ($i%2 == 0) echo ' class="activity_table_tr2"'; ?>>
@@ -52,7 +54,13 @@ include_once 'themes/' .CONFIG_THEME. '/title-content.inc.php';
       echo $cur_activ['snippet']['type'];
     ?></div><?
       yt_print_activity_link($cur_activ);
-    ?></td>
+    ?><div class="description activity_table_descr"><?
+      if (!$cur_description)
+        _o('Video "'.$cur_title. '".');
+      else
+        common_user_output($cur_description, $cur_url. '#description',
+                           2, $cur_url. '&amp;t=', '_self');
+    ?></div></td>
   </tr>
 <?
   } // for ($i=0; $i<count($glob_activities); $i++)

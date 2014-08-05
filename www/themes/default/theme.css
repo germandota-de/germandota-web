@@ -113,6 +113,19 @@ span.icon_text {
   width: 95%;
 }
 
+div.description {
+  padding-left: 8px;
+  padding-right: 8px;
+  padding-bottom: 8px;
+
+  overflow: auto;
+  overflow-x: hidden;
+
+  border-radius: 6px;
+}
+
+/* ***************************************************************  */
+
 img.gplus_profilelink {
   float: left;
   margin-right: 8px;
@@ -312,14 +325,12 @@ a:hover.playlist_link {
 }
 
 div.lists_table_text_descr {
+  padding-top: 8px;
+
   background-color: #d0d0d0;
-  padding: 8px;
   margin-top: 6px;
 
   height: 60px;
-  overflow: auto;
-  overflow-x: hidden;
-  border-radius: 6px;
 
   font-style: italic;
   text-align: center;
@@ -462,17 +473,9 @@ div#video_description {
   width: 60%;
 
   background-color: #d0d0d0;
-  padding-left: 8px;
-  padding-right: 8px;
-  padding-bottom: 8px;
 
   height: 90px;
-  overflow: auto;
-  overflow-x: hidden;
-  border-radius: 6px;
-
   text-align: left;
-
 }
 span#video_description_title {
   font-weight: bold;
@@ -668,7 +671,7 @@ a.comment_hashtag { }
 table.activity_table {
   margin-left: auto;
   margin-right: auto;
-  width: 80%;
+  width: 90%;
   background-color: #d0d0d0;
 }
 table.activity_table td {
@@ -680,9 +683,6 @@ tr.activity_table_tr2 {
 
 td.activity_table_thumb {
   width: 1%;
-}
-img.activity_table_thumb {
-  width: 120px;
 }
 
 td.activity_table_date {
@@ -707,6 +707,22 @@ div.activity_table_kind {
   color: #808080;
 }
 
+div.activity_table_descr {
+  padding-top: 8px;
+
+  margin-top: 2px;
+  margin-left: auto;
+  margin-right: auto;
+
+  background-color: #d8d8d8;
+
+  height: 40px;
+  text-align: left;
+  font-size: 10px;
+  font-style: italic;
+  color: #404040;
+}
+
 /* ***************************************************************  */
 
 a.yt_channellink {
@@ -725,6 +741,10 @@ a.yt_activity_link {
 a:hover.yt_activity_link {
   color: #e02020;
   border-style: none;
+}
+
+img.yt_activity_thumb {
+  width: 140px;
 }
 
 /* ***************************************************************  */

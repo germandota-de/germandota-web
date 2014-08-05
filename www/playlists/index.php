@@ -102,7 +102,7 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
       echo COMMON_DIR_THEMECUR_IMG_ABS;
     ?>icon_video.32.png"><span class="icon_text"><?
       _o($cur_title);
-    ?></span></a><div class="lists_table_text_descr"><?
+    ?></span></a><div class="description lists_table_text_descr"><?
       if (!$cur_description)
         _o('The playlist of '.$cur_title. '.');
       else

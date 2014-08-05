@@ -174,6 +174,7 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
     ?>" frameborder="0" allowfullscreen></iframe>
 
     <div id="video_videoframe_bottom">
+      <a name="description"></a>
       <table id="video_videoframe_table">
       <tr>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
@@ -320,7 +321,7 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
 
 ?>
 
-  <div id="video_description">
+  <div id="video_description" class="description">
     <span id="video_description_title">Published from <?
       yt_print_chanlink($glob_yt_video['snippet']['channelTitle'],
                         $glob_yt_video['snippet']['channelId']);
