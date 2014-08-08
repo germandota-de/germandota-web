@@ -26,7 +26,8 @@ include_once dirname(__FILE__). '/common.inc.php';
 define('_GOOGLE_REQUEST_PREFIX',   'https://www.googleapis.com');
 define('_GOOGLE_REQUEST_DEFAULT',
        '?key=' .CONFIG_YT_APIKEY. '&userIp='.COMMON_USER_IP
-       .'&quotaUser=' .COMMON_SESSION_ID
+       /* Do not use session_id (or other fakeable ID) as `quotaUser'!
+        */
        );
 
 /* ***************************************************************  */
