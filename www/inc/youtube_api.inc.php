@@ -40,6 +40,9 @@ define('_YT_REQUEST_FIELDS_PAGING',
 
 define('_YT_RECV_PLAYLIST_50PAGES',     3);
 
+define('YT_URL_WATCH',        'https://www.youtube.com/watch');
+define('YT_URL_CHANNEL',      'https://www.youtube.com/channel/');
+
 /* ***************************************************************  */
 
 function _yt_api_list($method, $part, $params='')
@@ -161,6 +164,19 @@ function yt_recv_video($vid)
 
 /* ***************************************************************  */
 
+function yt_recv_channel($chan_id)
+{
+  $result = _yt_api_list('channels', 'snippet',
+    'fields=items('
+      .'snippet(title,description,publishedAt,thumbnails/medium)'
+    .')&id=' .$chan_id);
+  if (!$result) return false;
+
+  return $result;
+}
+
+/* ***************************************************************  */
+
 function yt_recv_chan_activity($page_token)
 {
   $max_result = ($page_token === '')? YT_CHAN_ACTIV_MAXRESULTS
@@ -171,17 +187,24 @@ function yt_recv_chan_activity($page_token)
         .'snippet(publishedAt,title,description,thumbnails/medium/url'
         .',type,groupId),contentDetails('
           .'upload(videoId)'
-          .',like/resourceId(videoId)'
-          .',favorite/resourceId(videoId)'
+
+           /* kind=youtube#[video]  */
+          .',like/resourceId'
+
+           /* kind=youtube#[video]  */
+          .',favorite/resourceId'
 
            /* kind=youtube#[video,channel]  */
-          .',comment/resourceId(kind,videoId,channelId)'
+          .',comment/resourceId'
 
-          .',subscription/resourceId(channelId)'
-          .',playlistItem(resourceId(videoId),playlistId,playlistItemId)'
+           /* kind=youtube#[channel]  */
+          .',subscription/resourceId'
+
+           /* kind=youtube#[video]  */
+          .',playlistItem(resourceId,playlistId,playlistItemId)'
 
            /* kind=youtube#[video,channel]  */
-          .',recommendation(resourceId(kind,videoId,channelId),reason'
+          .',recommendation(resourceId,reason'
             .',seedResourceId(kind,videoId,channelId))'
 
            /* kind=youtube#[video,channel,playlist]  */
@@ -330,31 +353,73 @@ function yt_print_pageinfo($yt_response, $items_str, $url_pre,
 
 /* ***************************************************************  */
 
-function yt_get_url($yt_activity)
+function yt_activity_recv_channel($yt_activity)
 {
-  $snippet = $yt_activity['snippet'];
-  $kind = $snippet['type'];
+  $type = $yt_activity['snippet']['type'];
+  $content = $yt_activity['contentDetails'][$type];
 
-  $content = $yt_activity['contentDetails'];
+  if (isset($content['resourceId'])
+      && $content['resourceId']['kind'] == 'youtube#channel') {
 
-  if ($kind == 'like')
-    return '/' .COMMON_DIR_WATCH_ABS. '?list='
-      .yt_get_likedlist_plid()
-      .'&amp;v=' .$content[$kind]['resourceId']['videoId'];
-  else if ($kind == 'upload')
-    return '/' .COMMON_DIR_WATCH_ABS. '?v='
-      .$content[$kind]['videoId'];
-  else
-    return '.';
+    $result = yt_recv_channel($content['resourceId']['channelId']);
+    return $result['items'][0];
+  }
+
+  return false;
 }
 
-function yt_print_activity_link($yt_activity)
+function _yt_activity_url_resourceid($resource_id, $playlist_id,
+                                     $local_url)
+{
+  if ($resource_id['kind'] == 'youtube#video') {
+    if ($local_url) {
+      if ($playlist_id == '')
+        return array(false, '/' .COMMON_DIR_WATCH_ABS. '?v='
+                     .$resource_id['videoId']);
+      else
+        return array(false, '/' .COMMON_DIR_WATCH_ABS. '?list='
+                     .$playlist_id. '&amp;v=' .$resource_id['videoId']);
+    } else {
+      return array(true, YT_URL_WATCH. '?v=' .$resource_id['videoId']);
+    }
+  } else if ($resource_id['kind'] == 'youtube#channel') {
+    return array(true, YT_URL_CHANNEL. $resource_id['channelId']);
+  }
+
+  return array(false, '.');
+}
+function yt_activity_url($yt_activity)
+{
+  $type = $yt_activity['snippet']['type'];
+  $content = $yt_activity['contentDetails'][$type];
+
+  if ($type == 'like') {
+    return
+      _yt_activity_url_resourceid($content['resourceId'],
+                                  yt_get_likedlist_plid(), true);
+  } else if ($type == 'upload') {
+    return array(false,
+                 '/' .COMMON_DIR_WATCH_ABS. '?v=' .$content['videoId']);
+  } else if ($type == 'favorite') {
+    return _yt_activity_url_resourceid($content['resourceId'], '', false);
+  } else if ($type == 'comment') {
+    return _yt_activity_url_resourceid($content['resourceId'], '', false);
+  } else if ($type == 'subscription') {
+    return _yt_activity_url_resourceid($content['resourceId'], '', false);
+  }
+
+  return array(false, '.');
+}
+
+function yt_print_activity_link($yt_activity, $yt_channel, $blank,
+                                $url)
 {
   $title = $yt_activity['snippet']['title'];
 
   ?><a class="yt_activity_link"<?
-  ?> title="Watch video" href="<?
-    echo yt_get_url($yt_activity);
+    if ($blank) echo ' target="_blank"';
+  ?> href="<?
+    echo $url;
   ?>"><img class="icon_default" alt="(video)" src="/<?
     echo COMMON_DIR_THEMECUR_IMG_ABS;
   ?>icon_video.32.png"><span class="icon_text"><?
@@ -362,15 +427,48 @@ function yt_print_activity_link($yt_activity)
   ?></span></a><?
 }
 
-function yt_print_activity_thumblink($yt_activity)
+function yt_print_activity_thumblink($yt_activity, $yt_channel, $blank,
+                                     $url)
 {
-  $thumb_url = $yt_activity['snippet']['thumbnails']['medium']['url'];
-
-  ?><a class="img_link" title="Watch video" href="<?
-    echo yt_get_url($yt_activity);
+  ?><a class="img_link"<?
+    if ($blank) echo ' target="_blank"';
+  ?> href="<?
+    echo $url;
   ?>"><img class="yt_activity_thumb" alt="(thumb)" src="<?
-    echo $thumb_url;
+    if ($yt_channel)
+      echo $yt_channel['snippet']['thumbnails']['medium']['url'];
+    else
+      echo $yt_activity['snippet']['thumbnails']['medium']['url'];
   ?>"></a><?
+}
+
+function _yt_print_activity_type($yt_activity)
+{
+  echo $yt_activity['snippet']['type'];
+}
+function yt_printshort_activity_type($yt_activities, $i)
+{
+  $cur_activ = $yt_activities[$i];
+  _yt_print_activity_type($cur_activ);
+
+  if (!isset($cur_activ['snippet']['groupId'])) return $yt_activities;
+
+  $group_id = $cur_activ['snippet']['groupId'];
+  $result = array_slice($yt_activities, 0, $i+1);
+
+  for ($k=$i+1; $k<count($yt_activities); $k++) {
+    $cur_activ = $yt_activities[$k];
+
+    if (isset($cur_activ['snippet']['groupId'])
+        && $cur_activ['snippet']['groupId'] == $group_id) {
+      echo ' + ';
+      _yt_print_activity_type($cur_activ);
+    } else {
+      $result[count($result)] = $cur_activ;
+    }
+  } /* for ($k=$i+1; $k<count($yt_activities); $k++)  */
+
+  return $result;
 }
 
 /* ***************************************************************  */
