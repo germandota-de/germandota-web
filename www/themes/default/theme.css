@@ -683,6 +683,7 @@ tr.activity_table_tr2 {
 
 td.activity_table_thumb {
   width: 1%;
+  text-align: right;
 }
 
 td.activity_table_date {
@@ -716,7 +717,7 @@ div.activity_table_descr {
 
   background-color: #d8d8d8;
 
-  height: 40px;
+  height: 50px;
   text-align: left;
   font-size: 10px;
   font-style: italic;
@@ -744,7 +745,7 @@ a:hover.yt_activity_link {
 }
 
 img.yt_activity_thumb {
-  width: 140px;
+  height: 80px;
 }
 
 /* ***************************************************************  */
