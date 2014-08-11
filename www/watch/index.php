@@ -251,7 +251,7 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
     _page_td('prevPageToken', 'Previous', 0, '&laquo;');
 
   for ($i=0; $i<count($glob_yt_plitems); $i++) {
-    /* Show noise thumbnail ...
+    /* Show noise thumbnail (comment #1) ...
      *
      * if ($glob_yt_plitems[$i]['status']['privacyStatus'] != 'public')
      *   continue;
@@ -293,8 +293,11 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
 <?
 
   for ($i=0; $i<count($glob_yt_plitems); $i++) {
-    if ($glob_yt_plitems[$i]['status']['privacyStatus'] != 'public')
-      continue;
+    /* Show noise thumbnail (comment #2) ...
+     *
+     * if ($glob_yt_plitems[$i]['status']['privacyStatus'] != 'public')
+     *   continue;
+     */
 ?>
     <th class="<?
       if ($i - YT_PLVIDEOS_MAXRESULTS_HALF == $glob_correction)
