@@ -22,7 +22,6 @@ include_once 'inc/youtube_api.inc.php';
 
 $glob_act_result = yt_recv_chan_activity('');
 $glob_activities = $glob_act_result['items'];
-var_dump($glob_act_result);
 
 include_once 'themes/' .CONFIG_THEME. '/begin-head.inc.php';
 common_print_htmltitle(CONFIG_PROJECT_NAME_POST);

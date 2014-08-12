@@ -507,7 +507,7 @@ function yt_print_activity_desc($activ_selected, $yt_channel, $blank,
     common_user_output($desc, $more_url, $target, 2, $time_url, $target);
     ?></div><?
     } else if ($type == 'bulletin') {
-    ?><div class="TODOdescription activity_table_descr"><?
+    ?><div class="description activity_table_descr"><?
       // TODO
     common_user_output($desc, $more_url, $target, 2, $time_url, $target);
     ?></div><?
