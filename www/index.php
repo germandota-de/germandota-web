@@ -22,6 +22,7 @@ include_once 'inc/youtube_api.inc.php';
 
 $glob_act_result = yt_recv_chan_activity('');
 $glob_activities = $glob_act_result['items'];
+//var_dump($glob_act_result);
 
 include_once 'themes/' .CONFIG_THEME. '/begin-head.inc.php';
 common_print_htmltitle(CONFIG_PROJECT_NAME_POST);
@@ -41,8 +42,6 @@ include_once 'themes/' .CONFIG_THEME. '/title-content.inc.php';
     $cur_channel = yt_activity_recv_channel($cur_activ);
 
     $cur_published = $cur_activ['snippet']['publishedAt'];
-    $cur_title = $cur_activ['snippet']['title'];
-    $cur_description = $cur_activ['snippet']['description'];
 
 ?>
   <tr<? if ($i%2 == 0) echo ' class="activity_table_tr2"'; ?>>
@@ -61,11 +60,8 @@ include_once 'themes/' .CONFIG_THEME. '/title-content.inc.php';
       yt_print_activity_link($cur_activ, $cur_channel, $cur_blank,
                              $cur_url);
     ?><div class="description activity_table_descr"><?
-      if (!$cur_description)
-        _o('Video "'.$cur_title. '".');
-      else
-        common_user_output($cur_description, $cur_url. '#description',
-                           2, $cur_url. '&amp;t=', '_self');
+      yt_print_activity_desc($cur_activ, $cur_channel, $cur_blank,
+                             $cur_url);
     ?></div></td>
   </tr>
 <?

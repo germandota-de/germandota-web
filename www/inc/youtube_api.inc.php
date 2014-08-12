@@ -168,7 +168,7 @@ function yt_recv_channel($chan_id)
 {
   $result = _yt_api_list('channels', 'snippet',
     'fields=items('
-      .'snippet(title,description,publishedAt,thumbnails/medium)'
+      .'snippet(title,description,thumbnails/medium)'
     .')&id=' .$chan_id);
   if (!$result) return false;
 
@@ -414,8 +414,6 @@ function yt_activity_url($yt_activity)
 function yt_print_activity_link($yt_activity, $yt_channel, $blank,
                                 $url)
 {
-  $title = $yt_activity['snippet']['title'];
-
   ?><a class="yt_activity_link"<?
     if ($blank) echo ' target="_blank"';
   ?> href="<?
@@ -423,7 +421,10 @@ function yt_print_activity_link($yt_activity, $yt_channel, $blank,
   ?>"><img class="icon_default" alt="(video)" src="/<?
     echo COMMON_DIR_THEMECUR_IMG_ABS;
   ?>icon_video.32.png"><span class="icon_text"><?
-    _o($title);
+    if ($yt_channel)
+      _o($yt_channel['snippet']['title']);
+    else
+      _o($yt_activity['snippet']['title']);
   ?></span></a><?
 }
 
@@ -469,6 +470,29 @@ function yt_printshort_activity_type($yt_activities, $i)
   } /* for ($k=$i+1; $k<count($yt_activities); $k++)  */
 
   return $result;
+}
+
+function yt_print_activity_desc($yt_activity, $yt_channel, $blank,
+                                $url)
+{
+  if ($yt_channel) {
+    $title = $yt_channel['snippet']['title'];
+    $desc = $yt_channel['snippet']['description'];
+    if (!$desc) $desc = 'Channel "'.$title. '".';
+
+    $more_url = $url. '/about';
+    $time_url = '';
+  } else {
+    $title = $yt_activity['snippet']['title'];
+    $desc = $yt_activity['snippet']['description'];
+    if (!$desc) $desc = 'Channel "'.$title. '".';
+
+    $more_url = $url. '#description';
+    $time_url = $url;
+  }
+  $target = $blank? '_blank': '_self';
+
+  common_user_output($desc, $more_url, $target, 2, $time_url, $target);
 }
 
 /* ***************************************************************  */

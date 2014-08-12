@@ -122,7 +122,7 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
     <td class="comments_table_td"><?
       yt_comments_print_comment($cur_comment,
         _comments_link_self($video_id, $query_time, $order, $page,
-                            $cur_cid),
+                            $cur_cid), '_self',
         $more_id == $cur_cid? 0: COMMENTS_LINES_COUNT,
         $query_time, '_parent');
 
@@ -159,7 +159,7 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
        */
       yt_comments_print_comment($cur_reply,
         _comments_link_self($video_id, $query_time, $order, $page,
-                            $reply_cid, $replies_id),
+                            $reply_cid, $replies_id), '_self',
         $more_id == $reply_cid? 0: COMMENTS_REPLY_LINES_COUNT,
         $query_time, '_parent');
     ?></td></tr>
