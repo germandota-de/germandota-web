@@ -168,7 +168,7 @@ function yt_recv_channel($chan_id)
 {
   $result = _yt_api_list('channels', 'snippet',
     'fields=items('
-      .'snippet(title,description,publishedAt,thumbnails/medium)'
+      .'snippet(title,description,thumbnails/medium)'
     .')&id=' .$chan_id);
   if (!$result) return false;
 
@@ -368,6 +368,30 @@ function yt_activity_recv_channel($yt_activity)
   return false;
 }
 
+function yt_activity_group($yt_activities, $i)
+{
+  $cur_activ = $yt_activities[$i];
+
+  if (!isset($cur_activ['snippet']['groupId']))
+    return array($yt_activities, array($cur_activ));
+
+  $group_id = $cur_activ['snippet']['groupId'];
+  $result = array_slice($yt_activities, 0, $i+1);
+  $result_selected = array($cur_activ);
+
+  for ($k=$i+1; $k<count($yt_activities); $k++) {
+    $cur_activ = $yt_activities[$k];
+
+    if (isset($cur_activ['snippet']['groupId'])
+        && $cur_activ['snippet']['groupId'] == $group_id)
+      $result_selected[count($result_selected)] = $cur_activ;
+    else
+      $result[count($result)] = $cur_activ;
+  } /* for ($k=$i+1; $k<count($yt_activities); $k++)  */
+
+  return array($result, $result_selected);
+}
+
 function _yt_activity_url_resourceid($resource_id, $playlist_id,
                                      $local_url)
 {
@@ -406,16 +430,17 @@ function yt_activity_url($yt_activity)
     return _yt_activity_url_resourceid($content['resourceId'], '', false);
   } else if ($type == 'subscription') {
     return _yt_activity_url_resourceid($content['resourceId'], '', false);
+  } else if ($type == 'bulletin') {
+    /* First post of video  */
+    return _yt_activity_url_resourceid($content['resourceId'], '', false);
   }
 
-  return array(false, '.');
+  return array(false, '.'); // array($blank, $url);
 }
 
 function yt_print_activity_link($yt_activity, $yt_channel, $blank,
                                 $url)
 {
-  $title = $yt_activity['snippet']['title'];
-
   ?><a class="yt_activity_link"<?
     if ($blank) echo ' target="_blank"';
   ?> href="<?
@@ -423,7 +448,10 @@ function yt_print_activity_link($yt_activity, $yt_channel, $blank,
   ?>"><img class="icon_default" alt="(video)" src="/<?
     echo COMMON_DIR_THEMECUR_IMG_ABS;
   ?>icon_video.32.png"><span class="icon_text"><?
-    _o($title);
+    if ($yt_channel)
+      _o($yt_channel['snippet']['title']);
+    else
+      _o($yt_activity['snippet']['title']);
   ?></span></a><?
 }
 
@@ -442,33 +470,49 @@ function yt_print_activity_thumblink($yt_activity, $yt_channel, $blank,
   ?>"></a><?
 }
 
-function _yt_print_activity_type($yt_activity)
+function yt_printshort_activity_type($activ_selected)
 {
-  echo $yt_activity['snippet']['type'];
+  for ($i=count($activ_selected)-1; $i>=0; $i--) {
+    if ($i < count($activ_selected)-1) echo ' + ';
+    _o($activ_selected[$i]['snippet']['type']);
+  }
 }
-function yt_printshort_activity_type($yt_activities, $i)
+
+function yt_print_activity_desc($activ_selected, $yt_channel, $blank,
+                                $url)
 {
-  $cur_activ = $yt_activities[$i];
-  _yt_print_activity_type($cur_activ);
+  for ($i=count($activ_selected)-1; $i>=0; $i--) {
+    $yt_activity = $activ_selected[$i];
 
-  if (!isset($cur_activ['snippet']['groupId'])) return $yt_activities;
+    if ($yt_channel) {
+      $title = $yt_channel['snippet']['title'];
+      $desc = $yt_channel['snippet']['description'];
+      if (!$desc) $desc = 'Channel "'.$title. '".';
 
-  $group_id = $cur_activ['snippet']['groupId'];
-  $result = array_slice($yt_activities, 0, $i+1);
-
-  for ($k=$i+1; $k<count($yt_activities); $k++) {
-    $cur_activ = $yt_activities[$k];
-
-    if (isset($cur_activ['snippet']['groupId'])
-        && $cur_activ['snippet']['groupId'] == $group_id) {
-      echo ' + ';
-      _yt_print_activity_type($cur_activ);
+      $more_url = $url. '/about';
+      $time_url = '';
     } else {
-      $result[count($result)] = $cur_activ;
-    }
-  } /* for ($k=$i+1; $k<count($yt_activities); $k++)  */
+      $title = $yt_activity['snippet']['title'];
+      $desc = $yt_activity['snippet']['description'];
+      if (!$desc) $desc = 'Channel "'.$title. '".';
 
-  return $result;
+      $more_url = $url. '#description';
+      $time_url = $url;
+    }
+    $target = $blank? '_blank': '_self';
+
+    $type = $yt_activity['snippet']['type'];
+    if ($i == 0) {
+    ?><div class="description activity_table_descr"><?
+    common_user_output($desc, $more_url, $target, 2, $time_url, $target);
+    ?></div><?
+    } else if ($type == 'bulletin') {
+    ?><div class="description activity_table_descr"><?
+      // TODO
+    common_user_output($desc, $more_url, $target, 2, $time_url, $target);
+    ?></div><?
+    }
+  } /* for ($i=count($activ_selected)-1; $i>=0; $i--)  */
 }
 
 /* ***************************************************************  */

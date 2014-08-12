@@ -188,8 +188,8 @@ function yt_comments_strip_html($str)
 
 /* ***************************************************************  */
 
-function yt_comments_print_comment($comment, $more_link, $lines,
-                                   $time_link, $time_target)
+function yt_comments_print_comment($comment, $more_link, $more_target,
+  $lines, $time_link, $time_target)
 {
   $published = $comment['published'];
   $updated = $comment['updated'];
@@ -210,8 +210,8 @@ function yt_comments_print_comment($comment, $more_link, $lines,
   ?></span><div class="comments_content"><?
     $content = yt_comments_strip_html($comment['object']['content']);
     $content = common_newline_html($content, COMMENTS_CHARS_PER_LINE);
-    common_user_output_htmlin($content, $more_link, $lines, $time_link,
-                              $time_target);
+    common_user_output_htmlin($content, $more_link, $more_target,
+                              $lines, $time_link, $time_target);
   ?><table class="comments_likes"><tr><td class="comments_likes_no"><?
     if ($like_count > 0) echo $like_count;
   ?></td><td><img class="comments_likes_icon" alt="(likes)" src="/<?
