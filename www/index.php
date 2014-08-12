@@ -22,7 +22,7 @@ include_once 'inc/youtube_api.inc.php';
 
 $glob_act_result = yt_recv_chan_activity('');
 $glob_activities = $glob_act_result['items'];
-//var_dump($glob_act_result);
+var_dump($glob_act_result);
 
 include_once 'themes/' .CONFIG_THEME. '/begin-head.inc.php';
 common_print_htmltitle(CONFIG_PROJECT_NAME_POST);
@@ -36,7 +36,9 @@ include_once 'themes/' .CONFIG_THEME. '/title-content.inc.php';
 <?
 
   for ($i=0; $i<count($glob_activities); $i++) {
-    $cur_activ = $glob_activities[$i];
+    list($glob_activities, $cur_selected)
+      = yt_activity_group($glob_activities, $i);
+    $cur_activ = $cur_selected[0];
 
     list($cur_blank, $cur_url) = yt_activity_url($cur_activ);
     $cur_channel = yt_activity_recv_channel($cur_activ);
@@ -54,15 +56,14 @@ include_once 'themes/' .CONFIG_THEME. '/title-content.inc.php';
         .yt_str2time($cur_published);
     ?></td>
     <td class="activity_table_descr"><div class="activity_table_kind"><?
-      $glob_activities
-        = yt_printshort_activity_type($glob_activities, $i);
+      yt_printshort_activity_type($cur_selected);
     ?></div><?
       yt_print_activity_link($cur_activ, $cur_channel, $cur_blank,
                              $cur_url);
-    ?><div class="description activity_table_descr"><?
-      yt_print_activity_desc($cur_activ, $cur_channel, $cur_blank,
+
+      yt_print_activity_desc($cur_selected, $cur_channel, $cur_blank,
                              $cur_url);
-    ?></div></td>
+    ?></td>
   </tr>
 <?
   } // for ($i=0; $i<count($glob_activities); $i++)

@@ -368,6 +368,30 @@ function yt_activity_recv_channel($yt_activity)
   return false;
 }
 
+function yt_activity_group($yt_activities, $i)
+{
+  $cur_activ = $yt_activities[$i];
+
+  if (!isset($cur_activ['snippet']['groupId']))
+    return array($yt_activities, array($cur_activ));
+
+  $group_id = $cur_activ['snippet']['groupId'];
+  $result = array_slice($yt_activities, 0, $i+1);
+  $result_selected = array($cur_activ);
+
+  for ($k=$i+1; $k<count($yt_activities); $k++) {
+    $cur_activ = $yt_activities[$k];
+
+    if (isset($cur_activ['snippet']['groupId'])
+        && $cur_activ['snippet']['groupId'] == $group_id)
+      $result_selected[count($result_selected)] = $cur_activ;
+    else
+      $result[count($result)] = $cur_activ;
+  } /* for ($k=$i+1; $k<count($yt_activities); $k++)  */
+
+  return array($result, $result_selected);
+}
+
 function _yt_activity_url_resourceid($resource_id, $playlist_id,
                                      $local_url)
 {
@@ -406,9 +430,12 @@ function yt_activity_url($yt_activity)
     return _yt_activity_url_resourceid($content['resourceId'], '', false);
   } else if ($type == 'subscription') {
     return _yt_activity_url_resourceid($content['resourceId'], '', false);
+  } else if ($type == 'bulletin') {
+    /* First post of video  */
+    return _yt_activity_url_resourceid($content['resourceId'], '', false);
   }
 
-  return array(false, '.');
+  return array(false, '.'); // array($blank, $url);
 }
 
 function yt_print_activity_link($yt_activity, $yt_channel, $blank,
@@ -443,56 +470,49 @@ function yt_print_activity_thumblink($yt_activity, $yt_channel, $blank,
   ?>"></a><?
 }
 
-function _yt_print_activity_type($yt_activity)
+function yt_printshort_activity_type($activ_selected)
 {
-  echo $yt_activity['snippet']['type'];
-}
-function yt_printshort_activity_type($yt_activities, $i)
-{
-  $cur_activ = $yt_activities[$i];
-  _yt_print_activity_type($cur_activ);
-
-  if (!isset($cur_activ['snippet']['groupId'])) return $yt_activities;
-
-  $group_id = $cur_activ['snippet']['groupId'];
-  $result = array_slice($yt_activities, 0, $i+1);
-
-  for ($k=$i+1; $k<count($yt_activities); $k++) {
-    $cur_activ = $yt_activities[$k];
-
-    if (isset($cur_activ['snippet']['groupId'])
-        && $cur_activ['snippet']['groupId'] == $group_id) {
-      echo ' + ';
-      _yt_print_activity_type($cur_activ);
-    } else {
-      $result[count($result)] = $cur_activ;
-    }
-  } /* for ($k=$i+1; $k<count($yt_activities); $k++)  */
-
-  return $result;
+  for ($i=count($activ_selected)-1; $i>=0; $i--) {
+    if ($i < count($activ_selected)-1) echo ' + ';
+    _o($activ_selected[$i]['snippet']['type']);
+  }
 }
 
-function yt_print_activity_desc($yt_activity, $yt_channel, $blank,
+function yt_print_activity_desc($activ_selected, $yt_channel, $blank,
                                 $url)
 {
-  if ($yt_channel) {
-    $title = $yt_channel['snippet']['title'];
-    $desc = $yt_channel['snippet']['description'];
-    if (!$desc) $desc = 'Channel "'.$title. '".';
+  for ($i=count($activ_selected)-1; $i>=0; $i--) {
+    $yt_activity = $activ_selected[$i];
 
-    $more_url = $url. '/about';
-    $time_url = '';
-  } else {
-    $title = $yt_activity['snippet']['title'];
-    $desc = $yt_activity['snippet']['description'];
-    if (!$desc) $desc = 'Channel "'.$title. '".';
+    if ($yt_channel) {
+      $title = $yt_channel['snippet']['title'];
+      $desc = $yt_channel['snippet']['description'];
+      if (!$desc) $desc = 'Channel "'.$title. '".';
 
-    $more_url = $url. '#description';
-    $time_url = $url;
-  }
-  $target = $blank? '_blank': '_self';
+      $more_url = $url. '/about';
+      $time_url = '';
+    } else {
+      $title = $yt_activity['snippet']['title'];
+      $desc = $yt_activity['snippet']['description'];
+      if (!$desc) $desc = 'Channel "'.$title. '".';
 
-  common_user_output($desc, $more_url, $target, 2, $time_url, $target);
+      $more_url = $url. '#description';
+      $time_url = $url;
+    }
+    $target = $blank? '_blank': '_self';
+
+    $type = $yt_activity['snippet']['type'];
+    if ($i == 0) {
+    ?><div class="description activity_table_descr"><?
+    common_user_output($desc, $more_url, $target, 2, $time_url, $target);
+    ?></div><?
+    } else if ($type == 'bulletin') {
+    ?><div class="TODOdescription activity_table_descr"><?
+      // TODO
+    common_user_output($desc, $more_url, $target, 2, $time_url, $target);
+    ?></div><?
+    }
+  } /* for ($i=count($activ_selected)-1; $i>=0; $i--)  */
 }
 
 /* ***************************************************************  */
