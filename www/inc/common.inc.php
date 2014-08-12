@@ -144,8 +144,8 @@ function common_time2url($s=0, $min=0, $h=0)
 
 /* ***************************************************************  */
 
-function common_user_output_htmlin($str, $more_link='', $lines=0,
-                                   $time_link='', $time_target='_self')
+function common_user_output_htmlin($str, $more_link='',
+  $more_target='_self', $lines=0, $time_link='', $time_target='_self')
 {
   $str = preg_replace('@([^"])(https?://[\S]+)@isu',
                       '\1<a target="_blank" href="\2">\2</a>', $str);
@@ -185,8 +185,8 @@ function common_user_output_htmlin($str, $more_link='', $lines=0,
     if (strlen($matches[0]) == 0) return;
 
     if ($i == $lines) {
-      echo '<a class="useroutput_more" title="Show full text" href="'
-        .$more_link. '"> ... (more)</a>';
+      echo '<a class="useroutput_more" title="Show full text" target="'
+        .$more_target. '" href="' .$more_link. '"> ... (more)</a>';
       return;
     }
 
@@ -195,11 +195,11 @@ function common_user_output_htmlin($str, $more_link='', $lines=0,
     echo $matches[0];
   }
 }
-function common_user_output($str, $more_link='', $lines=0,
-                            $time_link='', $time_target='_self')
+function common_user_output($str, $more_link='',
+  $more_target='_self', $lines=0, $time_link='', $time_target='_self')
 {
-  common_user_output_htmlin(_o_get($str), $more_link, $lines,
-                            $time_link, $time_target);
+  common_user_output_htmlin(_o_get($str), $more_link, $more_target,
+                            $lines, $time_link, $time_target);
 }
 
 /* ***************************************************************  */

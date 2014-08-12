@@ -331,7 +331,7 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
     ?></span><br>
     <?
       common_user_output($glob_yt_video['snippet']['description'], '',
-                         0, $_SERVER['REQUEST_URI'], '_self');
+                         '_self', 0, $_SERVER['REQUEST_URI'], '_self');
     ?>
   </div>
 
