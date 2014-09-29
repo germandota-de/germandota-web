@@ -20,8 +20,22 @@ include_once 'inc/common.inc.php';
 
 include_once 'inc/youtube_api.inc.php';
 
-$glob_act_result = yt_recv_chan_activity('');
+$page_token = isset($_GET['p'])? trim($_GET['p']): '';
+
+/* ***************************************************************  */
+
+$glob_act_result = yt_recv_chan_activity($page_token);
+
+/* On error we are trying the first page  */
+if (!$glob_act_result) {
+  $page_token = '';
+  $glob_act_result = yt_recv_chan_activity($page_token);
+}
+
+$state_first_page = !isset($glob_act_result['prevPageToken']);
 $glob_activities = $glob_act_result['items'];
+
+/* ***************************************************************  */
 
 include_once 'themes/' .CONFIG_THEME. '/begin-head.inc.php';
 common_print_htmltitle(CONFIG_PROJECT_NAME_POST);
@@ -33,11 +47,21 @@ include_once 'themes/' .CONFIG_THEME. '/title-content.inc.php';
 
   <table class="activity_table">
 <?
+  if (!$state_first_page) {
+?>
+  <tr><th colspan="3"><?
+    yt_print_pageinfo($glob_act_result, 'activities', './');
+  ?></th></tr>
+<?
+  }
 
-  for ($i=0; $i<count($glob_activities); $i++) {
+  $n = $state_first_page
+    ? YT_CHAN_ACTIV_MAXRESULTS: YT_CHAN_ACTIV_MAXRESULTS_NEXT;
+
+  for ($i=0; ($i<count($glob_activities)) && ($i<$n); $i++) {
     list($glob_activities, $cur_selected)
       = yt_activity_group($glob_activities, $i);
-    $cur_activ = $cur_selected[0];
+    $cur_activ = $cur_selected[count($cur_selected)-1];
 
     list($cur_blank, $cur_url) = yt_activity_url($cur_activ);
     $cur_channel = yt_activity_recv_channel($cur_activ);
@@ -53,10 +77,10 @@ include_once 'themes/' .CONFIG_THEME. '/title-content.inc.php';
     <td class="activity_table_date"><?
       echo yt_str2date($cur_published) .'<br>'
         .yt_str2time($cur_published);
-    ?></td>
-    <td class="activity_table_descr"><div class="activity_table_kind"><?
+    ?><div class="activity_table_kind"><?
       yt_printshort_activity_type($cur_selected);
-    ?></div><?
+    ?></div></td>
+    <td class="activity_table_descr"><?
       yt_print_activity_link($cur_activ, $cur_channel, $cur_blank,
                              $cur_url);
 
@@ -66,8 +90,10 @@ include_once 'themes/' .CONFIG_THEME. '/title-content.inc.php';
   </tr>
 <?
   } // for ($i=0; $i<count($glob_activities); $i++)
-
 ?>
+  <tr><th colspan="3"><?
+    yt_print_pageinfo($glob_act_result, 'activities', './');
+  ?></th></tr>
   </table>
 
 <?
