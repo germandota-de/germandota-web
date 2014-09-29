@@ -432,9 +432,12 @@ function yt_activity_url($yt_activity)
     return _yt_activity_url_resourceid($content['resourceId'], '', false);
   } else if ($type == 'subscription') {
     return _yt_activity_url_resourceid($content['resourceId'], '', false);
+  } else if ($type == 'playlistItem') {
+    return _yt_activity_url_resourceid($content['resourceId'],
+                                       $content['playlistId'], true);
   } else if ($type == 'bulletin') {
     /* First post of video  */
-    return _yt_activity_url_resourceid($content['resourceId'], '', false);
+    return _yt_activity_url_resourceid($content['resourceId'], '', true);
   }
 
   return array(false, '.'); // array($blank, $url);
@@ -445,7 +448,7 @@ function yt_print_activity_link($yt_activity, $yt_channel, $blank,
 {
   ?><a class="yt_activity_link"<?
     if ($blank) echo ' target="_blank"';
-  ?> href="<?
+  ?> title="Watch it!" href="<?
     echo $url;
   ?>"><img class="icon_default" alt="(video)" src="/<?
     echo COMMON_DIR_THEMECUR_IMG_ABS;
@@ -462,7 +465,7 @@ function yt_print_activity_thumblink($yt_activity, $yt_channel, $blank,
 {
   ?><a class="img_link"<?
     if ($blank) echo ' target="_blank"';
-  ?> href="<?
+  ?> title="Watch it!" href="<?
     echo $url;
   ?>"><img class="yt_activity_thumb" alt="(thumb)" src="<?
     if ($yt_channel)
@@ -475,7 +478,7 @@ function yt_print_activity_thumblink($yt_activity, $yt_channel, $blank,
 function yt_printshort_activity_type($activ_selected)
 {
   for ($i=count($activ_selected)-1; $i>=0; $i--) {
-    if ($i < count($activ_selected)-1) echo ' + ';
+    if ($i < count($activ_selected)-1) echo '<br>';
     _o($activ_selected[$i]['snippet']['type']);
   }
 }
