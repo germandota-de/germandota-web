@@ -28,7 +28,7 @@ define('_YT_REQUEST_METHOD_PREFIX',     'youtube/v3/');
 define('YT_PLAYLISTS_MAXRESULTS',       3);
 define('YT_PLAYLISTS_MAXRESULTS_NEXT',  10);
 
-define('YT_CHAN_ACTIV_MAXRESULTS',      8);
+define('YT_CHAN_ACTIV_MAXRESULTS',      3);
 define('YT_CHAN_ACTIV_MAXRESULTS_NEXT', 10);
 
 /* Must be odd (3, 5, 7, ...) */
@@ -179,8 +179,10 @@ function yt_recv_channel($chan_id)
 
 function yt_recv_chan_activity($page_token)
 {
-  $max_result = ($page_token === '')? YT_CHAN_ACTIV_MAXRESULTS
-    : YT_CHAN_ACTIV_MAXRESULTS_NEXT;
+  /* YT_CHAN_ACTIV_MAXRESULTS is used during print loop because of
+   * grouping stuff.
+   */
+  $max_result = YT_CHAN_ACTIV_MAXRESULTS_NEXT;
 
   $result = _yt_api_list('activities', 'snippet,contentDetails',
     'fields=' ._YT_REQUEST_FIELDS_PAGING. ',items('
@@ -220,7 +222,7 @@ function yt_recv_chan_activity($page_token)
 
         .')'
       .')&channelId=' .CONFIG_YT_CHANNELID
-    . '&maxResults=' .$max_result. '&pageToken=' .$page_token);
+    .'&maxResults=' .$max_result. '&pageToken=' .$page_token);
   if (!$result) return false;
 
   return $result;
@@ -336,7 +338,7 @@ function yt_print_pageinfo($yt_response, $items_str, $url_pre,
       .($url_post===''? '': '&amp;' .$url_1post) .'">&laquo;-'
       .YT_PLAYLISTS_MAXRESULTS_NEXT.'</a> ';
   } else {
-    echo 'First 1+';
+    echo 'First ';
   }
 
   echo count($yt_response['items']) .' of '
@@ -430,9 +432,12 @@ function yt_activity_url($yt_activity)
     return _yt_activity_url_resourceid($content['resourceId'], '', false);
   } else if ($type == 'subscription') {
     return _yt_activity_url_resourceid($content['resourceId'], '', false);
+  } else if ($type == 'playlistItem') {
+    return _yt_activity_url_resourceid($content['resourceId'],
+                                       $content['playlistId'], true);
   } else if ($type == 'bulletin') {
     /* First post of video  */
-    return _yt_activity_url_resourceid($content['resourceId'], '', false);
+    return _yt_activity_url_resourceid($content['resourceId'], '', true);
   }
 
   return array(false, '.'); // array($blank, $url);
@@ -443,7 +448,7 @@ function yt_print_activity_link($yt_activity, $yt_channel, $blank,
 {
   ?><a class="yt_activity_link"<?
     if ($blank) echo ' target="_blank"';
-  ?> href="<?
+  ?> title="Watch it!" href="<?
     echo $url;
   ?>"><img class="icon_default" alt="(video)" src="/<?
     echo COMMON_DIR_THEMECUR_IMG_ABS;
@@ -460,7 +465,7 @@ function yt_print_activity_thumblink($yt_activity, $yt_channel, $blank,
 {
   ?><a class="img_link"<?
     if ($blank) echo ' target="_blank"';
-  ?> href="<?
+  ?> title="Watch it!" href="<?
     echo $url;
   ?>"><img class="yt_activity_thumb" alt="(thumb)" src="<?
     if ($yt_channel)
@@ -473,7 +478,7 @@ function yt_print_activity_thumblink($yt_activity, $yt_channel, $blank,
 function yt_printshort_activity_type($activ_selected)
 {
   for ($i=count($activ_selected)-1; $i>=0; $i--) {
-    if ($i < count($activ_selected)-1) echo ' + ';
+    if ($i < count($activ_selected)-1) echo '<br>';
     _o($activ_selected[$i]['snippet']['type']);
   }
 }
@@ -503,12 +508,11 @@ function yt_print_activity_desc($activ_selected, $yt_channel, $blank,
 
     $type = $yt_activity['snippet']['type'];
     if ($i == 0) {
-    ?><div class="description activity_table_descr"><?
+    ?><div class="description activity_table_box activity_table_descr"><?
     common_user_output($desc, $more_url, $target, 2, $time_url, $target);
     ?></div><?
     } else if ($type == 'bulletin') {
-    ?><div class="description activity_table_descr"><?
-      // TODO
+    ?><div class="description activity_table_box activity_table_bulletin"><?
     common_user_output($desc, $more_url, $target, 2, $time_url, $target);
     ?></div><?
     }
