@@ -40,7 +40,7 @@ $glob_activities = $glob_act_result['items'];
 include_once 'themes/' .CONFIG_THEME. '/begin-head.inc.php';
 common_print_htmltitle(CONFIG_PROJECT_NAME_POST);
 include_once 'themes/' .CONFIG_THEME. '/head-title.inc.php';
-echo '  News - ';
+echo "\n  News - ";
 common_print_title(CONFIG_PROJECT_NAME_POST);
 include_once 'themes/' .CONFIG_THEME. '/title-content.inc.php';
 ?>

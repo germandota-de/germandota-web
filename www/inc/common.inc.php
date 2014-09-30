@@ -107,9 +107,27 @@ function _o_html($str)
 
 function common_print_htmltitle($title)
 {
-  echo "\n  <title>";
-  _o(CONFIG_PROJECT_SITENAME .' - '. $title);
-  echo "</title>\n\n";
+?>
+
+  <meta name="generator" content="GermanDota.de Webcode">
+  <meta name="abstract" content="Website of <?
+    _o(CONFIG_PROJECT_NAME_SHORT .' '. CONFIG_PROJECT_NAME_POST);
+  ?>">
+  <meta name="description" content="Here is the social media stuff of <?
+    _o(CONFIG_PROJECT_NAME_SHORT .' '. CONFIG_PROJECT_NAME_POST);
+  ?>.">
+  <meta name="robots" content="all">
+  <link rel="shortcut icon" type="image/x-icon" href="/<?
+        echo COMMON_DIR_INST_ABS; ?>favicon.ico">
+  <link rel="stylesheet" type="text/css" href="/<?
+        echo COMMON_DIR_INST_ABS; ?>default.css">
+  <script type="text/javascript" src="/<?
+        echo COMMON_DIR_INST_ABS; ?>default.js"></script>
+  <title><?
+    _o(CONFIG_PROJECT_SITENAME .' - '. $title);
+  ?></title>
+
+<?
 }
 
 function common_print_title($title, $short=false)
