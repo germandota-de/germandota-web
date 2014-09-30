@@ -28,7 +28,7 @@ define('_YT_REQUEST_METHOD_PREFIX',     'youtube/v3/');
 define('YT_PLAYLISTS_MAXRESULTS',       3);
 define('YT_PLAYLISTS_MAXRESULTS_NEXT',  10);
 
-define('YT_CHAN_ACTIV_MAXRESULTS',      3);
+define('YT_CHAN_ACTIV_MAXRESULTS',      4);
 define('YT_CHAN_ACTIV_MAXRESULTS_NEXT', 10);
 
 /* Must be odd (3, 5, 7, ...) */
@@ -179,10 +179,8 @@ function yt_recv_channel($chan_id)
 
 function yt_recv_chan_activity($page_token)
 {
-  /* YT_CHAN_ACTIV_MAXRESULTS is used during print loop because of
-   * grouping stuff.
-   */
-  $max_result = YT_CHAN_ACTIV_MAXRESULTS_NEXT;
+  $max_result = ($page_token === '')? YT_CHAN_ACTIV_MAXRESULTS
+    : YT_CHAN_ACTIV_MAXRESULTS_NEXT;
 
   $result = _yt_api_list('activities', 'snippet,contentDetails',
     'fields=' ._YT_REQUEST_FIELDS_PAGING. ',items('
@@ -412,7 +410,7 @@ function _yt_activity_url_resourceid($resource_id, $playlist_id,
     return array(true, YT_URL_CHANNEL. $resource_id['channelId']);
   }
 
-  return array(false, '.');
+  return array(false, '.'); // array($blank, $url);
 }
 function yt_activity_url($yt_activity)
 {
