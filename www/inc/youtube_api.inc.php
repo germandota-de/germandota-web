@@ -100,6 +100,19 @@ function yt_recv_playlist_items($playlist_id, $page_token='')
 
 function yt_recv_playlist_items_video($playlist_id, $video_id)
 {
+  /* Youtube SELECT the maxResults playlistItems first and AFTER that
+   * the videoId is filtered!  For this reason that code does NOT work
+   * :( ...
+   *
+   * nextPageToken is only available if there are maxResults items
+   * sent to us.  So we can't use the videoId parameter :(( ...
+   *
+     var_dump(_yt_api_list('playlistItems', 'snippet',
+       'fields=items/snippet/position'
+       .'&playlistId='.$playlist_id. '&videoId=' .$video_id
+       .'&maxResults=1'));
+   */
+
   $position = 0;
   for ($i=0, $i_page = ''; $i<_YT_RECV_PLAYLIST_50PAGES; $i++) {
     $result = _yt_api_list('playlistItems', 'snippet',
