@@ -100,6 +100,19 @@ function yt_recv_playlist_items($playlist_id, $page_token='')
 
 function yt_recv_playlist_items_video($playlist_id, $video_id)
 {
+  /* Youtube SELECT the maxResults playlistItems first and AFTER that
+   * the videoId is filtered!  For this reason that code does NOT work
+   * :( ...
+   *
+   * nextPageToken is only available if there are maxResults items
+   * sent to us.  So we can't use the videoId parameter :(( ...
+   *
+     var_dump(_yt_api_list('playlistItems', 'snippet',
+       'fields=items/snippet/position'
+       .'&playlistId='.$playlist_id. '&videoId=' .$video_id
+       .'&maxResults=1'));
+   */
+
   $position = 0;
   for ($i=0, $i_page = ''; $i<_YT_RECV_PLAYLIST_50PAGES; $i++) {
     $result = _yt_api_list('playlistItems', 'snippet',
@@ -476,8 +489,25 @@ function yt_print_activity_thumblink($yt_activity, $yt_channel, $blank,
 function yt_printshort_activity_type($activ_selected)
 {
   for ($i=count($activ_selected)-1; $i>=0; $i--) {
-    if ($i < count($activ_selected)-1) echo '<br>';
-    _o($activ_selected[$i]['snippet']['type']);
+    if ($i < count($activ_selected)-1) echo ' '; // No &nbsp;
+
+    $type = $activ_selected[$i]['snippet']['type'];
+    if ($type == 'upload') {
+      ?><img class="yt_activity_type" alt="Uploaded" title="Uploaded" src="/<?
+        echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_upload.32.png"><?
+    } else if ($type == 'like') {
+      ?><img class="yt_activity_type" alt="Liked" title="Liked" src="/<?
+        echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_like.32.png"><?
+    } else if ($type == 'favorite') {
+      ?><img class="yt_activity_type" alt="Favorited" title="Favorited" src="/<?
+        echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_favorite.32.png"><?
+    } else if ($type == 'comment') {
+      ?><img class="yt_activity_type" alt="Commented" title="Commented" src="/<?
+        echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_comment.32.png"><?
+        // TODO Subscription and other ...
+    } else {
+      _o($type);
+    } // if ($type == ...)
   }
 }
 
