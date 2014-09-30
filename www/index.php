@@ -55,10 +55,7 @@ include_once 'themes/' .CONFIG_THEME. '/title-content.inc.php';
 <?
   }
 
-  $n = $state_first_page
-    ? YT_CHAN_ACTIV_MAXRESULTS: YT_CHAN_ACTIV_MAXRESULTS_NEXT;
-
-  for ($i=0; ($i<count($glob_activities)) && ($i<$n); $i++) {
+  for ($i=0; $i<count($glob_activities); $i++) {
     list($glob_activities, $cur_selected)
       = yt_activity_group($glob_activities, $i);
     $cur_activ = $cur_selected[count($cur_selected)-1];
