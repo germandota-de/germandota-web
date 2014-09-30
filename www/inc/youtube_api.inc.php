@@ -489,8 +489,25 @@ function yt_print_activity_thumblink($yt_activity, $yt_channel, $blank,
 function yt_printshort_activity_type($activ_selected)
 {
   for ($i=count($activ_selected)-1; $i>=0; $i--) {
-    if ($i < count($activ_selected)-1) echo '<br>';
-    _o($activ_selected[$i]['snippet']['type']);
+    if ($i < count($activ_selected)-1) echo ' '; // No &nbsp;
+
+    $type = $activ_selected[$i]['snippet']['type'];
+    if ($type == 'upload') {
+      ?><img class="yt_activity_type" alt="Uploaded" title="Uploaded" src="/<?
+        echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_upload.32.png"><?
+    } else if ($type == 'like') {
+      ?><img class="yt_activity_type" alt="Liked" title="Liked" src="/<?
+        echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_like.32.png"><?
+    } else if ($type == 'favorite') {
+      ?><img class="yt_activity_type" alt="Favorited" title="Favorited" src="/<?
+        echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_favorite.32.png"><?
+    } else if ($type == 'comment') {
+      ?><img class="yt_activity_type" alt="Commented" title="Commented" src="/<?
+        echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_comment.32.png"><?
+        // TODO Subscription and other ...
+    } else {
+      _o($type);
+    } // if ($type == ...)
   }
 }
 
