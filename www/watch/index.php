@@ -19,7 +19,6 @@
 include_once '../inc/common.inc.php';
 
 include_once '../inc/youtube.inc.php';
-include_once '../inc/youtube_api_comments.inc.php';
 
 $list = isset($_GET['list'])? trim($_GET['list']): '';
 $video_id = isset($_GET['v'])? trim($_GET['v']): '';

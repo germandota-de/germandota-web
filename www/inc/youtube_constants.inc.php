@@ -34,3 +34,19 @@ define('_YT_REQUEST_FIELDS_PAGING',
 
 define('YT_URL_WATCH',        'https://www.youtube.com/watch');
 define('YT_URL_CHANNEL',      'https://www.youtube.com/channel/');
+
+/* ***************************************************************  */
+
+define('YT_COMMENTS_PERPAGE',           8);
+define('YT_COMMENTS_PERPAGE_NEXT',      10);
+define('YT_COMMENTS_PXPERCOMMENT',      100);
+define('YT_COMMENTS_OFFSET_PX',         200);
+
+/* HTTPS:
+ *
+ * Peer certificate CN=`*.google.com' did not match expected CN=`gdata.youtube.com'
+ */
+define('YT_COMMENTS_REQUEST_PREFIX', 'https://gdata.youtube.com/feeds/api/');
+define('YT_COMMENTS_SSL_CNMATCH',    '*.google.com');
+
+/* ***************************************************************  */

@@ -17,7 +17,8 @@
  */
 
 include_once dirname(__FILE__). '/common.inc.php';
-include_once dirname(__FILE__). '/youtube.inc.php';
+include_once dirname(__FILE__). '/youtube_constants.inc.php';
+
 include_once dirname(__FILE__). '/google_plus_api.inc.php';
 
 /* Youtube Data API !v2! comment reference:
@@ -29,18 +30,6 @@ include_once dirname(__FILE__). '/google_plus_api.inc.php';
  *
  * https://developers.google.com/+/api/latest/comments/list
  */
-
-define('YT_COMMENTS_PERPAGE',           8);
-define('YT_COMMENTS_PERPAGE_NEXT',      10);
-define('YT_COMMENTS_PXPERCOMMENT',      100);
-define('YT_COMMENTS_OFFSET_PX',         200);
-
-/* HTTPS:
- *
- * Peer certificate CN=`*.google.com' did not match expected CN=`gdata.youtube.com'
- */
-define('YT_COMMENTS_REQUEST_PREFIX', 'https://gdata.youtube.com/feeds/api/');
-define('YT_COMMENTS_SSL_CNMATCH',    '*.google.com');
 
 /* ***************************************************************  */
 
