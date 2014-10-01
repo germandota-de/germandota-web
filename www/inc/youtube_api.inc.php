@@ -205,6 +205,7 @@ function yt_recv_chan_activity($page_token)
           .',like/resourceId'
 
            /* kind=youtube#[video]  */
+           // NOT TESTED
           .',favorite/resourceId'
 
            /* kind=youtube#[video,channel]  */
@@ -217,6 +218,7 @@ function yt_recv_chan_activity($page_token)
           .',playlistItem(resourceId,playlistId,playlistItemId)'
 
            /* kind=youtube#[video,channel]  */
+           // NOT IMPLEMENTED
           .',recommendation(resourceId,reason'
             .',seedResourceId(kind,videoId,channelId))'
 
@@ -225,10 +227,12 @@ function yt_recv_chan_activity($page_token)
 
            /* kind=youtube#[video,channel,playlist]  */
            /* type=[facebook,googlePlus,twitter,unspecified]  */
+           // NOT IMPLEMENTED
           .',social(type,resourceId(kind,videoId,channelId,playlistId)'
             .',author,referenceUrl,imageUrl)'
 
            /* kind=youtube#[video,channel,playlist]  */
+           // NOT IMPLEMENTED
           .',channelItem(resourceId)'
 
         .')'
