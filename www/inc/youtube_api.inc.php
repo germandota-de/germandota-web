@@ -491,7 +491,8 @@ function yt_printshort_activity_type($activ_selected)
   for ($i=count($activ_selected)-1; $i>=0; $i--) {
     if ($i < count($activ_selected)-1) echo ' '; // No &nbsp;
 
-    $type = $activ_selected[$i]['snippet']['type'];
+    $cur_activity = $activ_selected[$i];
+    $type = $cur_activity['snippet']['type'];
     if ($type == 'upload') {
       ?><img class="yt_activity_type" alt="Uploaded"<?
       ?> title="Uploaded" src="/<?
@@ -513,9 +514,15 @@ function yt_printshort_activity_type($activ_selected)
       ?> title="Subscribed" src="/<?
         echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_subscribe.32.png"><?
     } else if ($type == 'playlistItem') {
+      list($blank, $url) = yt_activity_url($cur_activity);
+
+      ?><a class="img_link"<?
+        if ($blank) echo ' target="_blank"';
+      ?> title="Watch in playlist!" href="<? echo $url; ?>"><?
       ?><img class="yt_activity_type" alt="Playlist"<?
       ?> title="Added to playlist" src="/<?
         echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_playlist_add.35.32.png"><?
+      ?></a><?
     } else if ($type == 'bulletin') {
       // Icon shown in yt_print_activity_desc()
     } else {
@@ -553,7 +560,8 @@ function yt_print_activity_desc($activ_selected, $yt_channel, $blank,
     common_user_output($desc, $more_url, $target, 2, $time_url, $target);
     ?></div><?
     } else if ($type == 'bulletin') {
-    ?><div class="description activity_table_box activity_table_bulletin"><img class="yt_activity_type" alt="Bulletin"<?
+    ?><div class="description activity_table_box activity_table_bulletin"><?
+      ?><img class="yt_activity_type" alt="Bulletin"<?
       ?> title="Bulletin" src="/<?
         echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_bulletin.32.png">&nbsp;<?
     common_user_output($desc, $more_url, $target, 2, $time_url, $target);
