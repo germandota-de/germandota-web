@@ -34,6 +34,10 @@ define('_GPLUS_COMMENTS_REQUEST_FIELDS',
 
 function gplus_api_comments_list($activity_id, $max_results)
 {
+  debug_api_info_incr('cnt_google_plus', 1,
+    'activities/comments - max. results: ' .$max_results. ' - '
+    .$activity_id);
+
   return google_api_recv(
     _GPLUS_REQUEST_METHOD_PREFIX.'activities/'.$activity_id.'/comments',
     'fields=items('
@@ -43,6 +47,9 @@ function gplus_api_comments_list($activity_id, $max_results)
 
 function gplus_api_activity_get($activity_id)
 {
+  debug_api_info_incr('cnt_google_plus', 1,
+                      'activities - ' .$activity_id);
+
   return google_api_recv(
     _GPLUS_REQUEST_METHOD_PREFIX.'activities/'.$activity_id,
     'fields='

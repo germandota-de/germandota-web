@@ -16,21 +16,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('COMMON_EXIST')) exit();
-
-?>  <!-- begin of content-end -->
-<? debug_api_info_print(); ?>
-    </div>
-  </div>
-  <div id="footer">
-    <span class="floatleft"><? _o_html(CONFIG_TEMPL_FOOTERLEFT_HTML); ?></span>
-    <? _o_html(CONFIG_TEMPL_FOOTERCENTER_HTML); ?>
-
-    <span class="floatright"><a id="impressum" href="/about/">About us</a></span>
-  </div>
-<?
-  echo CONFIG_TEMPL_ANALYTICS_HTML;
-?>
-
-</body>
-</html>
+include_once dirname(__FILE__). '/youtube_receive.inc.php';
+include_once dirname(__FILE__). '/youtube_common.inc.php';
+include_once dirname(__FILE__). '/youtube_comments.inc.php';

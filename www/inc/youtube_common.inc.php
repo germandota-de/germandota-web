@@ -17,227 +17,7 @@
  */
 
 include_once dirname(__FILE__). '/common.inc.php';
-include_once dirname(__FILE__). '/google_api.inc.php';
-
-/* Youtube Data API v3 Reference:
- *
- * https://developers.google.com/youtube/v3/docs/
- */
-
-define('_YT_REQUEST_METHOD_PREFIX',     'youtube/v3/');
-define('YT_PLAYLISTS_MAXRESULTS',       3);
-define('YT_PLAYLISTS_MAXRESULTS_NEXT',  10);
-
-define('YT_CHAN_ACTIV_MAXRESULTS',      4);
-define('YT_CHAN_ACTIV_MAXRESULTS_NEXT', 10);
-
-/* Must be odd (3, 5, 7, ...) */
-define('YT_PLVIDEOS_MAXRESULTS',        7);
-define('YT_PLVIDEOS_MAXRESULTS_HALF',   YT_PLVIDEOS_MAXRESULTS >> 1);
-
-define('_YT_REQUEST_FIELDS_PAGING',
-       'pageInfo,nextPageToken,prevPageToken');
-
-define('_YT_RECV_PLAYLIST_50PAGES',     3);
-
-define('YT_URL_WATCH',        'https://www.youtube.com/watch');
-define('YT_URL_CHANNEL',      'https://www.youtube.com/channel/');
-
-/* ***************************************************************  */
-
-function _yt_api_list($method, $part, $params='')
-{
-  return google_api_recv(_YT_REQUEST_METHOD_PREFIX .$method,
-    'part=' .$part. ($params == ''? '': '&' .$params));
-}
-
-/* ***************************************************************  */
-
-function yt_recv_playlists($page_token, $plid='')
-{
-  $max_result = ($page_token === '')? YT_PLAYLISTS_MAXRESULTS
-    : YT_PLAYLISTS_MAXRESULTS_NEXT;
-
-  $result = _yt_api_list('playlists', 'status,contentDetails,snippet',
-    'fields=' ._YT_REQUEST_FIELDS_PAGING. ',items('
-      .'id,status/privacyStatus,contentDetails/itemCount'
-      .',snippet(publishedAt,title,description,thumbnails/medium/url))'
-    .($plid? '&id=' .$plid: '&channelId=' .CONFIG_YT_CHANNELID)
-    .'&maxResults=' .$max_result .'&pageToken=' .$page_token);
-  if (!$result) return false;
-
-  return $result;
-}
-function yt_recv_playlist_short($plid)
-{
-  $result = _yt_api_list('playlists', 'snippet',
-    'fields=items(snippet(publishedAt,title))&id=' .$plid);
-  if (!$result) return false;
-
-  return $result;
-}
-
-/* ***************************************************************  */
-
-function yt_recv_playlist_items($playlist_id, $page_token='')
-{
-  /* The channelId is the ID who owns the list, not the video.  */
-
-  $result = _yt_api_list('playlistItems', 'status,contentDetails,snippet',
-    'fields=' ._YT_REQUEST_FIELDS_PAGING. ',items('
-      .'status/privacyStatus,contentDetails(videoId,startAt,endAt)'
-      .',snippet(publishedAt,channelId,title,thumbnails/default/url'
-      .',position))'
-    .'&playlistId=' .$playlist_id. '&maxResults=' .YT_PLVIDEOS_MAXRESULTS
-    .'&pageToken=' .$page_token);
-  if (!$result) return false;
-
-  return array(
-    'correction' => -YT_PLVIDEOS_MAXRESULTS_HALF,
-    'result' => $result
-  );
-}
-
-function yt_recv_playlist_items_video($playlist_id, $video_id)
-{
-  /* Youtube SELECT the maxResults playlistItems first and AFTER that
-   * the videoId is filtered!  For this reason that code does NOT work
-   * :( ...
-   *
-   * nextPageToken is only available if there are maxResults items
-   * sent to us.  So we can't use the videoId parameter :(( ...
-   *
-     var_dump(_yt_api_list('playlistItems', 'snippet',
-       'fields=items/snippet/position'
-       .'&playlistId='.$playlist_id. '&videoId=' .$video_id
-       .'&maxResults=1'));
-   */
-
-  $position = 0;
-  for ($i=0, $i_page = ''; $i<_YT_RECV_PLAYLIST_50PAGES; $i++) {
-    $result = _yt_api_list('playlistItems', 'snippet',
-      'fields=nextPageToken,items/snippet(position,resourceId/videoId)'
-      .'&playlistId=' .$playlist_id. '&maxResults=50&pageToken=' .$i_page);
-    if (!$result) return false;
-
-    foreach ($result['items'] as $plitem) {
-      if ($plitem['snippet']['resourceId']['videoId'] == $video_id) {
-        $position = intval($plitem['snippet']['position']);
-        break 2;
-      }
-    }
-
-    $i_page = $result['nextPageToken'];
-  }
-
-  /* ***  */
-
-  $start = $position - YT_PLVIDEOS_MAXRESULTS_HALF;
-
-  /* Youtube Data API v3 - maxResults:
-   *
-   * Acceptable values are 0 to 50, inclusive.
-   */
-  for ($page_token=''; $start>0; $start-=50) {
-    $result =  _yt_api_list('playlistItems', 'id',
-      'fields=nextPageToken'
-      .'&playlistId=' .$playlist_id. '&maxResults='
-      .($start>50? 50: $start). '&pageToken=' .$page_token);
-    if (!$result) return false;
-
-    $page_token = $result['nextPageToken'];
-
-    if ($start <= 50) break;
-  }
-
-  /* ***  */
-
-  $result = yt_recv_playlist_items($playlist_id, $page_token);
-  if (!$result) return false;
-
-  return array(
-    'correction' => $start > 0? 0: $start,
-    'result' => $result['result']
-  );
-}
-
-/* ***************************************************************  */
-
-function yt_recv_video($vid)
-{
-  $result = _yt_api_list('videos', 'snippet,contentDetails,statistics',
-    'fields=items('
-      .'snippet(publishedAt,channelId,channelTitle,title,description)'
-      .',contentDetails(duration),statistics(viewCount,likeCount'
-      .',dislikeCount,commentCount))&id=' .$vid);
-  if (!$result) return false;
-
-  return $result;
-}
-
-/* ***************************************************************  */
-
-function yt_recv_channel($chan_id)
-{
-  $result = _yt_api_list('channels', 'snippet',
-    'fields=items('
-      .'snippet(title,description,thumbnails/medium)'
-    .')&id=' .$chan_id);
-  if (!$result) return false;
-
-  return $result;
-}
-
-/* ***************************************************************  */
-
-function yt_recv_chan_activity($page_token)
-{
-  $max_result = ($page_token === '')? YT_CHAN_ACTIV_MAXRESULTS
-    : YT_CHAN_ACTIV_MAXRESULTS_NEXT;
-
-  $result = _yt_api_list('activities', 'snippet,contentDetails',
-    'fields=' ._YT_REQUEST_FIELDS_PAGING. ',items('
-        .'snippet(publishedAt,title,description,thumbnails/medium/url'
-        .',type,groupId),contentDetails('
-          .'upload(videoId)'
-
-           /* kind=youtube#[video]  */
-          .',like/resourceId'
-
-           /* kind=youtube#[video]  */
-          .',favorite/resourceId'
-
-           /* kind=youtube#[video,channel]  */
-          .',comment/resourceId'
-
-           /* kind=youtube#[channel]  */
-          .',subscription/resourceId'
-
-           /* kind=youtube#[video]  */
-          .',playlistItem(resourceId,playlistId,playlistItemId)'
-
-           /* kind=youtube#[video,channel]  */
-          .',recommendation(resourceId,reason'
-            .',seedResourceId(kind,videoId,channelId))'
-
-           /* kind=youtube#[video,channel,playlist]  */
-          .',bulletin/resourceId(kind,videoId,channelId,playlistId)'
-
-           /* kind=youtube#[video,channel,playlist]  */
-           /* type=[facebook,googlePlus,twitter,unspecified]  */
-          .',social(type,resourceId(kind,videoId,channelId,playlistId)'
-            .',author,referenceUrl,imageUrl)'
-
-           /* kind=youtube#[video,channel,playlist]  */
-          .',channelItem(resourceId)'
-
-        .')'
-      .')&channelId=' .CONFIG_YT_CHANNELID
-    .'&maxResults=' .$max_result. '&pageToken=' .$page_token);
-  if (!$result) return false;
-
-  return $result;
-}
+include_once dirname(__FILE__). '/youtube_constants.inc.php';
 
 /* ***************************************************************  */
 
@@ -491,20 +271,40 @@ function yt_printshort_activity_type($activ_selected)
   for ($i=count($activ_selected)-1; $i>=0; $i--) {
     if ($i < count($activ_selected)-1) echo ' '; // No &nbsp;
 
-    $type = $activ_selected[$i]['snippet']['type'];
+    $cur_activity = $activ_selected[$i];
+    $type = $cur_activity['snippet']['type'];
     if ($type == 'upload') {
-      ?><img class="yt_activity_type" alt="Uploaded" title="Uploaded" src="/<?
+      ?><img class="yt_activity_type" alt="Uploaded"<?
+      ?> title="Uploaded" src="/<?
         echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_upload.32.png"><?
     } else if ($type == 'like') {
-      ?><img class="yt_activity_type" alt="Liked" title="Liked" src="/<?
+      ?><img class="yt_activity_type" alt="Liked"<?
+      ?> title="Liked" src="/<?
         echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_like.32.png"><?
     } else if ($type == 'favorite') {
-      ?><img class="yt_activity_type" alt="Favorited" title="Favorited" src="/<?
+      ?><img class="yt_activity_type" alt="Favorited"<?
+      ?> title="Favorited" src="/<?
         echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_favorite.32.png"><?
     } else if ($type == 'comment') {
-      ?><img class="yt_activity_type" alt="Commented" title="Commented" src="/<?
+      ?><img class="yt_activity_type" alt="Commented"<?
+      ?> title="Commented" src="/<?
         echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_comment.32.png"><?
-        // TODO Subscription and other ...
+    } else if ($type == 'subscription') {
+      ?><img class="yt_activity_type" alt="Subscribed"<?
+      ?> title="Subscribed" src="/<?
+        echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_subscribe.32.png"><?
+    } else if ($type == 'playlistItem') {
+      list($blank, $url) = yt_activity_url($cur_activity);
+
+      ?><a class="img_link"<?
+        if ($blank) echo ' target="_blank"';
+      ?> title="Watch in playlist!" href="<? echo $url; ?>"><?
+      ?><img class="yt_activity_type" alt="Playlist"<?
+      ?> title="Added to playlist" src="/<?
+        echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_playlist_add.35.32.png"><?
+      ?></a><?
+    } else if ($type == 'bulletin') {
+      // Icon shown in yt_print_activity_desc()
     } else {
       _o($type);
     } // if ($type == ...)
@@ -541,6 +341,9 @@ function yt_print_activity_desc($activ_selected, $yt_channel, $blank,
     ?></div><?
     } else if ($type == 'bulletin') {
     ?><div class="description activity_table_box activity_table_bulletin"><?
+      ?><img class="yt_activity_type" alt="Bulletin"<?
+      ?> title="Bulletin" src="/<?
+        echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_bulletin.32.png">&nbsp;<?
     common_user_output($desc, $more_url, $target, 2, $time_url, $target);
     ?></div><?
     }

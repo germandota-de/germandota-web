@@ -18,7 +18,7 @@
 
 include_once '../inc/common.inc.php';
 
-include_once '../inc/youtube_api.inc.php';
+include_once '../inc/youtube.inc.php';
 
 $page_token = isset($_GET['p'])? trim($_GET['p']): '';
 
