@@ -19,5 +19,6 @@
 if (!defined('COMMON_EXIST')) exit();
 
 ?>  <!-- begin of content-end-comments -->
+<? debug_api_info_print(); ?>
 </body>
 </html>

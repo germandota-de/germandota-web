@@ -302,3 +302,5 @@ function common_menu_print($menu_array, $id, $entry_selected)
 }
 
 /* ***************************************************************  */
+
+include_once dirname(__FILE__). '/debug.inc.php';

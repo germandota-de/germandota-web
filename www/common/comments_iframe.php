@@ -18,7 +18,7 @@
 
 include_once '../inc/common.inc.php';
 
-include_once '../inc/youtube_api_comments.inc.php';
+include_once '../inc/youtube.inc.php';
 
 define('COMMENTS_LINES_COUNT',          4);
 define('COMMENTS_REPLY_LINES_COUNT',    3);
