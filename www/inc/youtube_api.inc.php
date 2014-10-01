@@ -493,18 +493,31 @@ function yt_printshort_activity_type($activ_selected)
 
     $type = $activ_selected[$i]['snippet']['type'];
     if ($type == 'upload') {
-      ?><img class="yt_activity_type" alt="Uploaded" title="Uploaded" src="/<?
+      ?><img class="yt_activity_type" alt="Uploaded"<?
+      ?> title="Uploaded" src="/<?
         echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_upload.32.png"><?
     } else if ($type == 'like') {
-      ?><img class="yt_activity_type" alt="Liked" title="Liked" src="/<?
+      ?><img class="yt_activity_type" alt="Liked"<?
+      ?> title="Liked" src="/<?
         echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_like.32.png"><?
     } else if ($type == 'favorite') {
-      ?><img class="yt_activity_type" alt="Favorited" title="Favorited" src="/<?
+      ?><img class="yt_activity_type" alt="Favorited"<?
+      ?> title="Favorited" src="/<?
         echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_favorite.32.png"><?
     } else if ($type == 'comment') {
-      ?><img class="yt_activity_type" alt="Commented" title="Commented" src="/<?
+      ?><img class="yt_activity_type" alt="Commented"<?
+      ?> title="Commented" src="/<?
         echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_comment.32.png"><?
-        // TODO Subscription and other ...
+    } else if ($type == 'subscription') {
+      ?><img class="yt_activity_type" alt="Subscribed"<?
+      ?> title="Subscribed" src="/<?
+        echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_subscribe.32.png"><?
+    } else if ($type == 'playlistItem') {
+      ?><img class="yt_activity_type" alt="Playlist"<?
+      ?> title="Added to playlist" src="/<?
+        echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_playlist_add.35.32.png"><?
+    } else if ($type == 'bulletin') {
+      // Icon shown in yt_print_activity_desc()
     } else {
       _o($type);
     } // if ($type == ...)
@@ -540,7 +553,9 @@ function yt_print_activity_desc($activ_selected, $yt_channel, $blank,
     common_user_output($desc, $more_url, $target, 2, $time_url, $target);
     ?></div><?
     } else if ($type == 'bulletin') {
-    ?><div class="description activity_table_box activity_table_bulletin"><?
+    ?><div class="description activity_table_box activity_table_bulletin"><img class="yt_activity_type" alt="Bulletin"<?
+      ?> title="Bulletin" src="/<?
+        echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_bulletin.32.png">&nbsp;<?
     common_user_output($desc, $more_url, $target, 2, $time_url, $target);
     ?></div><?
     }

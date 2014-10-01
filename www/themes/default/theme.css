@@ -771,6 +771,8 @@ img.yt_activity_thumb {
 
 img.yt_activity_type {
   height: 16px;
+  border-radius: 0px;
+  vertical-align: middle;
 }
 
 /* ***************************************************************  */
