@@ -46,12 +46,16 @@ function _yt_comments_2activityid($rcv_str)
 /* ***************************************************************  */
 
 function _yt_comments_apiv2_list($method, $start_index, $max_results,
-                                 $params_nokey='')
+                                 $params='')
 {
   /* ?prettyprint=true for debugging ...  */
   $request = YT_COMMENTS_REQUEST_PREFIX .$method. '?alt=json&start-index='
     .$start_index. '&max-results=' .$max_results
-    . ($params_nokey == ''? '': '&' .$params_nokey);
+    . ($params == ''? '': '&' .$params);
+
+  debug_api_info_incr('cnt_youtube_api_v2', 1,
+                      $method .' - index ' .$start_index. '..'
+                      .($start_index+$max_results). ' - ' .$params);
 
   $json = file_get_contents($request, false, stream_context_create(
     array('ssl' => array('CN_match' => YT_COMMENTS_SSL_CNMATCH))

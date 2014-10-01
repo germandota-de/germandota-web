@@ -19,6 +19,7 @@
 if (!defined('COMMON_EXIST')) exit();
 
 ?>  <!-- begin of content-end -->
+<? debug_api_info_print(); ?>
     </div>
   </div>
   <div id="footer">

@@ -30,6 +30,9 @@ include_once dirname(__FILE__). '/google_api.inc.php';
 
 function _yt_api_list($method, $part, $params='')
 {
+  debug_api_info_incr('cnt_youtube_list', 1,
+                      $method .' - '. $part. ' ' .$params);
+
   return google_api_recv(_YT_REQUEST_METHOD_PREFIX .$method,
     'part=' .$part. ($params == ''? '': '&' .$params));
 }
