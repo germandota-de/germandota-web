@@ -38,6 +38,7 @@ function google_api_recv($method, $params)
     ._GOOGLE_REQUEST_DEFAULT. '&' .$params;
 
   /* Do not display $request because of the API key  */
+  //debug_api_info_incr('cnt_google_api', 1, $request);
   debug_api_info_incr('cnt_google_api', 1);
 
   $json = file_get_contents($request);
