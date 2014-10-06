@@ -18,6 +18,8 @@
 
 include_once dirname(__FILE__). '/common.inc.php';
 
+include_once dirname(__FILE__). '/oauth2.inc.php';
+
 /* Google References:
  *
  * https://developers.google.com/products/

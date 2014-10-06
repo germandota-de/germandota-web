@@ -16,20 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once '../inc/common.inc.php';
+include_once dirname(__FILE__). '/common.inc.php';
+include_once dirname(__FILE__). '/youtube_constants.inc.php';
 
-include_once '../inc/youtube_auth.inc.php';
+include_once dirname(__FILE__). '/google_api.inc.php';
 
-include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
-common_print_htmltitle('Authenticating ...');
-include_once '../themes/' .CONFIG_THEME. '/head-title.frame.inc.php';
-common_print_title('Authenticating ...');
-include_once '../themes/' .CONFIG_THEME. '/title-content.frame.inc.php';
-?>
+/* Progamming Guide:
+ *
+ * https://developers.google.com/youtube/v3/guides/authentication#server-side-apps
+ */
 
-  <div class="warning">
-    Checking your identity using Authentication Server.  Please wait ...
-  </div>
-
-<?
-include_once '../themes/' .CONFIG_THEME. '/content-end.frame.inc.php';
+/* ***************************************************************  */
