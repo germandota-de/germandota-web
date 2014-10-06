@@ -21,18 +21,18 @@ if (!defined('COMMON_EXIST')) exit();
 ?>  <!-- begin of head-title -->
 </head>
 <body onload="init()">
-  <div class="topnav">
-    <img id="topnav_logo" src="<? echo CONFIG_PROJECT_LOGO_ABS; ?>" alt="(logo)">
-    <span class="topnav">
-      <a class="topnav_link" href="/<?
+  <div class="theme_topnav">
+    <img id="theme_topnav_logo" src="<? echo CONFIG_PROJECT_LOGO_ABS; ?>" alt="(logo)">
+    <span class="theme_topnav">
+      <a class="theme_topnav_link" href="/<?
         echo COMMON_DIR_INST_ABS; ?>">Home</a>
-      | <a class="topnav_link" href="/<?
+      | <a class="theme_topnav_link" href="/<?
         echo COMMON_DIR_INST_ABS; ?>live/">Live Stream</a>
-      | <a class="topnav_link" href="/<?
+      | <a class="theme_topnav_link" href="/<?
         echo COMMON_DIR_INST_ABS; ?>playlists/">Playlists</a>
     </span>
   </div>
 
-  <div id="main">
-    <div id="title">
+  <div id="theme_main">
+    <div id="theme_title">
   <!-- end of head-title -->

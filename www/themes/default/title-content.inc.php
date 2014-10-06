@@ -20,5 +20,5 @@ if (!defined('COMMON_EXIST')) exit();
 
 ?>  <!-- begin of title-content -->
     </div>
-    <div id="content">
+    <div id="theme_content">
   <!-- end of title-content -->

@@ -18,8 +18,8 @@
 
 if (!defined('COMMON_EXIST')) exit();
 
-?>  <!-- begin of head-title-comments -->
+?>  <!-- begin of head-title-frame -->
 </head>
-<body id="comments_body" onload="init_comments()">
-  <div id="comments_title">
-  <!-- end of head-title-comments -->
+<body id="theme_frame_body" onload="init_frame()">
+  <div id="theme_frame_title">
+  <!-- end of head-title-frame -->

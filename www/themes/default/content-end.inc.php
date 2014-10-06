@@ -22,11 +22,11 @@ if (!defined('COMMON_EXIST')) exit();
 <? debug_api_info_print(); ?>
     </div>
   </div>
-  <div id="footer">
+  <div id="theme_footer">
     <span class="floatleft"><? _o_html(CONFIG_TEMPL_FOOTERLEFT_HTML); ?></span>
     <? _o_html(CONFIG_TEMPL_FOOTERCENTER_HTML); ?>
 
-    <span class="floatright"><a id="impressum" href="/about/">About us</a></span>
+    <span class="floatright"><a id="theme_impressum" href="/about/">About us</a></span>
   </div>
 <?
   echo CONFIG_TEMPL_ANALYTICS_HTML;

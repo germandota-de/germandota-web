@@ -18,6 +18,6 @@
 
 if (!defined('COMMON_EXIST')) exit();
 
-?>  <!-- begin of title-content-comments -->
+?>  <!-- begin of title-content-frame -->
   </div>
-  <!-- end of title-content-comments -->
+  <!-- end of title-content-frame -->

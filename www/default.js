@@ -22,7 +22,7 @@ function init()
   }
 }
 
-function init_comments()
+function init_frame()
 {
 }
 
