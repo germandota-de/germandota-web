@@ -27,3 +27,16 @@ include_once dirname(__FILE__). '/google_api.inc.php';
  */
 
 /* ***************************************************************  */
+
+function yt_auth_print_link($descr, $html)
+{
+  $url_out
+    = common_url_amp('https://accounts.google.com/o/oauth2/auth?TODO=1&uswusf=blahh');
+  // TODO ...
+
+  ?><a class="auth_link" target="auth" title="<? _o($descr); ?>"<?
+  ?> onclick="return auth_popup('<? echo $url_out; ?>');"<?
+  ?> href="javascript:void()"><?
+    echo $html;
+  ?></a><?
+}
