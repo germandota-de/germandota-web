@@ -34,6 +34,7 @@ define('COMMON_DIR_INC',      'inc');
 define('COMMON_DIR_THEMES',   'themes');
 define('COMMON_DIR_IMG',      'img');
 define('COMMON_DIR_WATCH',    'watch');
+define('COMMON_DIR_OAUTH2',   'oauth2');
 
 /* Is depending on apache config directive DocumentRoot if there is a
  * tailing `/'
@@ -78,6 +79,8 @@ define('COMMON_DIR_IMG_ABS',
   COMMON_DIR_INST_ABS.COMMON_DIR_IMG .'/');
 define('COMMON_DIR_WATCH_ABS',
   COMMON_DIR_INST_ABS.COMMON_DIR_WATCH .'/');
+define('COMMON_DIR_OAUTH2_ABS',
+  COMMON_DIR_INST_ABS.COMMON_DIR_OAUTH2 .'/');
 
 define('COMMON_USER_NEWLINE',           "\n<br>");
 
