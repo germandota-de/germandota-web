@@ -18,17 +18,76 @@
 
 include_once '../inc/common.inc.php';
 
-include_once '../inc/youtube_auth.inc.php';
+include_once '../inc/youtube.inc.php';
+
+$global_pf = isset($_POST['pf'])? $_POST['pf']: false;
+$global_cb = isset($_POST['cb'])? $_POST['cb']: false;
+
+/* ***************************************************************  */
+
+function _oauth2_init_redirect()
+{
+  global $global_args, $global_redirect_link;
+
+  $global_args = array();
+  for ($i=0; isset($_POST['arg_' .$i]); $i++) {
+    $global_args[$i] = $_POST['arg_' .$i];
+  }
+
+  // TODO
+  //$global_redirect_link = yt_auth_link_get($callback, $args);
+
+  return 'redirect';
+}
+
+/* ***************************************************************  */
+
+$global_state = false;
+if ($global_pf !== false && $global_cb !== false)
+  $global_state = _oauth2_init_redirect();
+
+var_dump($global_args);
+
+/* ***************************************************************  */
 
 include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
-common_print_htmltitle('Authenticating ...');
+
+if ($global_state == 'redirect')
+  common_print_htmltitle('Redirecting ...');
+else if ($global_state == 'auth')
+  common_print_htmltitle('Authenticating ...');
+else
+  common_print_htmltitle('What ???');
+
 include_once '../themes/' .CONFIG_THEME. '/head-title.frame.inc.php';
-common_print_title('Authenticating ...');
+
+if ($global_state == 'redirect')
+  common_print_title('Redirecting ...');
+else if ($global_state == 'auth')
+  common_print_title('Authenticating ...');
+else
+  common_print_htmltitle('What ???');
+
 include_once '../themes/' .CONFIG_THEME. '/title-content.frame.inc.php';
 ?>
 
   <div class="warning">
+<?
+
+  if ($global_state == 'redirect') {
+?>
+    Redirecting you to an Authentication Server.  Please wait ...
+<?
+  } else if ($global_state == 'auth') {
+?>
     Checking your identity using Authentication Server.  Please wait ...
+<?
+  } else {
+?>
+    Do not know what you want :((
+<?
+  }
+?>
   </div>
 
 <?
