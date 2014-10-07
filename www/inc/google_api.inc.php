@@ -57,12 +57,13 @@ function google_api_recv($method, $params)
 
 /* ***************************************************************  */
 
-function google_oauth2_login_url_get($scope, $data)
+function google_oauth2_login_url_get($scope, $callback, $args)
 {
   return oauth2_login_url_get(
-    _GOOGLE_OAUTH2_PRE, CONFIG_GOOGLE_CLIENT_ID, $scope, $data,
-    '&approval_prompt=auto&access_type=offline'
-  //'&approval_prompt=auto&access_type=offline&login_hint=email@addre.ss'
+    _GOOGLE_OAUTH2_PRE, CONFIG_GOOGLE_CLIENT_ID, $scope,
+    '&approval_prompt=auto&access_type=offline',
+  //'&approval_prompt=auto&access_type=offline&login_hint=email@addre.ss',
+    $callback, $args
   );
 }
 

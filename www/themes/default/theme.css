@@ -417,9 +417,10 @@ span.video_videoframe_table_date {
   font-size: 10px;
 }
 
-img.video_videoframe_table_icon {
+.video_videoframe_table_icon {
   height: 22px;
 }
+
 /* ***************************************************************  */
 
 table#video_thumbs_table {
@@ -777,10 +778,25 @@ img.yt_activity_type {
 
 /* ***************************************************************  */
 
-a.auth_link {
+form.yt_auth_form {
+  display: inline;
 }
-a:hover.auth_link {
+
+input:hover.yt_auth_submit {
+  background-color: transparent;
   border-style: none;
+  padding: 0px;
+  position: relative;
+  left: -1px;
+  top: -1px;
+}
+input:active.yt_auth_submit {
+  background-color: transparent;
+  border-style: none;
+  padding: 0px;
+  position: relative;
+  left: 1px;
+  top: 1px;
 }
 
 /* ***************************************************************  */

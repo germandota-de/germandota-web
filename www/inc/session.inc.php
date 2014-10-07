@@ -25,22 +25,24 @@ define('SESSION_PRE_OAUTH2LOGIN',       'oauth2_login_');
 
 /* ***************************************************************  */
 
-function session_oauth2login_set($data)
+function session_oauth2login_set($callback, $args)
 {
-  $state = sha1(print_r($data, true));
+  $data = array('callback' => $callback, 'args' => $args);
 
-  $_SESSION[SESSION_PRE_OAUTH2LOGIN .$state] = $data;
+  $id = sha1(print_r($data, true));
+  $_SESSION[SESSION_PRE_OAUTH2LOGIN .$id] = $data;
 
-  return $state;
+  return $id;
 }
 
-function session_oauth2login_delete($state)
+function session_oauth2login_delete($id)
 {
-  $i = SESSION_PRE_OAUTH2LOGIN .$state;
+  $i = SESSION_PRE_OAUTH2LOGIN .$id;
 
+  if (!isset($_SESSION[$i])) return false;
   $data = $_SESSION[$i]; unset($_SESSION[$i]);
 
-  return $data;
+  return array($data['callback'], $data['args']);
 }
 
 /* ***************************************************************  */

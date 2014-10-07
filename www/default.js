@@ -86,7 +86,7 @@ function iframe_scroll_top()
 
 /* ***************************************************************  */
 
-function auth_popup(link)
+function auth_popup()
 {
   var w = screen.availWidth * 1/2;
   var h = screen.availHeight * 3/4;
@@ -101,12 +101,12 @@ function auth_popup(link)
     + ",menubar=no,resizable=yes,scrollbars=no,status=no"
     + ",toolbar=no,location=no";
 
-  var pwindow = window.open(link, 'auth', width_height);
+  var pwindow = window.open('about:blank', 'auth', width_height);
 
   if (!pwindow) return true;
   pwindow.focus();
 
-  return false;
+  return true;
 }
 
 /* ***************************************************************  */

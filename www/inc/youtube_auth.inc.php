@@ -31,10 +31,28 @@ define('_YT_AUTH_OAUTH2_SCOPE',
 
 /* ***************************************************************  */
 
-function yt_auth_print_link($descr, $html)
+function yt_auth_print_form($submit_class, $alt, $descr, $callback,
+                            $args, $pic_url)
+{
+  ?><form class="yt_auth_form" method="post" target="auth" action="/<?
+    echo COMMON_DIR_OAUTH2_ABS;
+  ?>" onsubmit="return auth_popup();"><?
+
+    oauth2_redirect_params_print(OAUTH2_PLATFORM_YOUTUBE, $callback,
+                                 $args);
+    ?><input class="<? echo $submit_class; ?> yt_auth_submit"<?
+    ?> type="image" src="<? echo $pic_url; ?>" alt="<? echo $alt; ?>"<?
+    ?> title="<? _o($descr); ?>"><?
+
+  ?></form><?
+}
+
+/* ***************************************************************  */
+
+function yt_auth_print_link_TODO($descr, $html)
 {
   $href = common_url_amp(google_oauth2_login_url_get(
-    _YT_AUTH_OAUTH2_SCOPE, array(1, 2, 3, 4)));
+    _YT_AUTH_OAUTH2_SCOPE, 'my_method', array(2, 2, 3, 4)));
 
   // TODO: Need a redirection page ...
 

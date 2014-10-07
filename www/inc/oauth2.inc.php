@@ -27,20 +27,38 @@ define('_OAUTH2_REDIRECT_URI',
        COMMON_SERVER_PROTOCOL. '://' .COMMON_SERVER_NAME. '/'
        .COMMON_DIR_OAUTH2_ABS);
 
+define('OAUTH2_PLATFORM_YOUTUBE',       'youtube');
+
 /* ***************************************************************  */
 
-function oauth2_login_url_get($url_pre, $client_id, $scope, $data,
-                              $url_post='')
+function oauth2_redirect_params_print($platform, $callback, $args)
+{
+  ?><input type="hidden" name="pf" value="<? echo $platform; ?>"><?
+  ?><input type="hidden" name="cb" value="<? echo $callback; ?>"><?
+
+  for ($i=0; $i<count($args); $i++) {
+    ?><input type="hidden" name="arg_<?
+      echo $i;
+    ?>" value="<?
+      echo $args[$i];
+    ?>"><?
+  }
+}
+
+function oauth2_login_url_get($url_pre, $client_id, $scope, $url_post,
+                              $callback, $args)
 {
   /* Must be application/x-www-form-urlencoded (RFC 6749 section
    * 3.1.2.)
    */
   $redirect_uri = urlencode(_OAUTH2_REDIRECT_URI);
 
-  $state = session_oauth2login_set($data);
+  $id = session_oauth2login_set($callback, $args);
 
   return $url_pre. '?response_type=code'
     .'&client_id=' .CONFIG_GOOGLE_CLIENT_ID
     .'&redirect_uri=' .$redirect_uri .'&scope=' .$scope
-    .'&state=' .$state. $url_post;
+    .'&state=' .$id. $url_post;
 }
+
+/* ***************************************************************  */
