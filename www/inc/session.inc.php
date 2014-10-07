@@ -17,30 +17,30 @@
  */
 
 include_once dirname(__FILE__). '/common.inc.php';
-include_once dirname(__FILE__). '/youtube_constants.inc.php';
 
-include_once dirname(__FILE__). '/google_api.inc.php';
+session_start();
+define('SESSION_ID',                    session_id());
 
-/* Progamming Guide:
- *
- * https://developers.google.com/youtube/v3/guides/authentication#server-side-apps
- */
-
-define('_YT_AUTH_OAUTH2_SCOPE',
-       'https://www.googleapis.com/auth/youtube.readonly');
+define('SESSION_PRE_OAUTH2LOGIN',       'oauth2_login_');
 
 /* ***************************************************************  */
 
-function yt_auth_print_link($descr, $html)
+function session_oauth2login_set($data)
 {
-  $href = common_url_amp(google_oauth2_login_url_get(
-    _YT_AUTH_OAUTH2_SCOPE, array(1, 2, 3, 4)));
+  $state = sha1(print_r($data, true));
 
-  // TODO: Need a redirection page ...
+  $_SESSION[SESSION_PRE_OAUTH2LOGIN .$state] = $data;
 
-  ?><a class="auth_link" target="auth" title="<? _o($descr); ?>"<?
-  ?> onclick="return auth_popup('<? echo $href; ?>');"<?
-  ?> href="javascript:void()"><?
-    echo $html;
-  ?></a><?
+  return $state;
 }
+
+function session_oauth2login_delete($state)
+{
+  $i = SESSION_PRE_OAUTH2LOGIN .$state;
+
+  $data = $_SESSION[$i]; unset($_SESSION[$i]);
+
+  return $data;
+}
+
+/* ***************************************************************  */

@@ -17,30 +17,13 @@
  */
 
 include_once dirname(__FILE__). '/common.inc.php';
-include_once dirname(__FILE__). '/youtube_constants.inc.php';
+include_once dirname(__FILE__). '/twitch_constants.inc.php';
 
-include_once dirname(__FILE__). '/google_api.inc.php';
+include_once dirname(__FILE__). '/twitch_api.inc.php';
 
 /* Progamming Guide:
  *
- * https://developers.google.com/youtube/v3/guides/authentication#server-side-apps
+ * https://github.com/justintv/Twitch-API/blob/master/authentication.md
  */
 
-define('_YT_AUTH_OAUTH2_SCOPE',
-       'https://www.googleapis.com/auth/youtube.readonly');
-
 /* ***************************************************************  */
-
-function yt_auth_print_link($descr, $html)
-{
-  $href = common_url_amp(google_oauth2_login_url_get(
-    _YT_AUTH_OAUTH2_SCOPE, array(1, 2, 3, 4)));
-
-  // TODO: Need a redirection page ...
-
-  ?><a class="auth_link" target="auth" title="<? _o($descr); ?>"<?
-  ?> onclick="return auth_popup('<? echo $href; ?>');"<?
-  ?> href="javascript:void()"><?
-    echo $html;
-  ?></a><?
-}

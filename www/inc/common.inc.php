@@ -18,9 +18,10 @@
 
 define('COMMON_EXIST',                  true);
 
-session_start();
-define('COMMON_SESSION_ID',             session_id());
-define('COMMON_USER_IP',                $_SERVER['REMOTE_ADDR']);
+define('COMMON_USER_IP',           $_SERVER['REMOTE_ADDR']);
+define('COMMON_SERVER_NAME',       $_SERVER['SERVER_NAME']);
+define('COMMON_SERVER_PROTOCOL',   isset($_SERVER['HTTPS'])
+       ? 'https': 'http');
 
 /* ***************************************************************  */
 /* Formats:
@@ -307,3 +308,5 @@ function common_menu_print($menu_array, $id, $entry_selected)
 /* ***************************************************************  */
 
 include_once dirname(__FILE__). '/debug.inc.php';
+
+include_once dirname(__FILE__). '/session.inc.php';

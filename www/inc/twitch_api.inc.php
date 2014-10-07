@@ -18,29 +18,9 @@
 
 include_once dirname(__FILE__). '/common.inc.php';
 
-/* Specification:
+include_once dirname(__FILE__). '/oauth2.inc.php';
+
+/* Twitch References:
  *
- * http://tools.ietf.org/html/rfc6749
+ * https://github.com/justintv/twitch-api
  */
-
-define('_OAUTH2_REDIRECT_URI',
-       COMMON_SERVER_PROTOCOL. '://' .COMMON_SERVER_NAME. '/'
-       .COMMON_DIR_OAUTH2_ABS);
-
-/* ***************************************************************  */
-
-function oauth2_login_url_get($url_pre, $client_id, $scope, $data,
-                              $url_post='')
-{
-  /* Must be application/x-www-form-urlencoded (RFC 6749 section
-   * 3.1.2.)
-   */
-  $redirect_uri = urlencode(_OAUTH2_REDIRECT_URI);
-
-  $state = session_oauth2login_set($data);
-
-  return $url_pre. '?response_type=code'
-    .'&client_id=' .CONFIG_GOOGLE_CLIENT_ID
-    .'&redirect_uri=' .$redirect_uri .'&scope=' .$scope
-    .'&state=' .$state. $url_post;
-}

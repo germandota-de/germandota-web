@@ -23,14 +23,17 @@ include_once dirname(__FILE__). '/oauth2.inc.php';
 /* Google References:
  *
  * https://developers.google.com/products/
+ * https://developers.google.com/youtube/v3/guides/authentication#server-side-apps
  */
 
 define('_GOOGLE_REQUEST_PREFIX',   'https://www.googleapis.com');
 define('_GOOGLE_REQUEST_DEFAULT',
-       '?key=' .CONFIG_YT_APIKEY. '&userIp='.COMMON_USER_IP
+       '?key=' .CONFIG_GOOGLE_APIKEY. '&userIp=' .COMMON_USER_IP
        /* Do not use session_id (or other fakeable ID) as `quotaUser'!
         */
        );
+
+define('_GOOGLE_OAUTH2_PRE',   'https://accounts.google.com/o/oauth2/auth');
 
 /* ***************************************************************  */
 
@@ -50,6 +53,17 @@ function google_api_recv($method, $params)
   if (!$result) return false;
 
   return $result;
+}
+
+/* ***************************************************************  */
+
+function google_oauth2_login_url_get($scope, $data)
+{
+  return oauth2_login_url_get(
+    _GOOGLE_OAUTH2_PRE, CONFIG_GOOGLE_CLIENT_ID, $scope, $data,
+    '&approval_prompt=auto&access_type=offline'
+  //'&approval_prompt=auto&access_type=offline&login_hint=email@addre.ss'
+  );
 }
 
 /* ***************************************************************  */
