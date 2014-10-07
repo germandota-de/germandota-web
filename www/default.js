@@ -22,7 +22,7 @@ function init()
   }
 }
 
-function init_comments()
+function init_frame()
 {
 }
 
@@ -80,6 +80,31 @@ function iframe_scroll_top()
   _iframe_scroll_top_parent.timer_id
     = _iframe_scroll_top_parent.setInterval('_iframe_scroll_top_exec()',
                                             _iframe_scroll_top_timeout_ms);
+
+  return true;
+}
+
+/* ***************************************************************  */
+
+function auth_popup()
+{
+  var w = screen.availWidth * 1/2;
+  var h = screen.availHeight * 3/4;
+  var l = (screen.width-w)/2;
+  var t = (screen.height-h)/2;
+
+  var width_height =
+    "width=" + w
+    + ",height=" + h
+    + ",left=" + l
+    + ",top=" + t
+    + ",menubar=no,resizable=yes,scrollbars=no,status=no"
+    + ",toolbar=no,location=no";
+
+  var pwindow = window.open('about:blank', 'auth', width_height);
+
+  if (!pwindow) return true;
+  pwindow.focus();
 
   return true;
 }

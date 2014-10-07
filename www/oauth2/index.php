@@ -16,10 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('COMMON_EXIST')) exit();
+include_once '../inc/common.inc.php';
 
-?>  <!-- begin of head-title-comments -->
-</head>
-<body id="comments_body" onload="init_comments()">
-  <div id="comments_title">
-  <!-- end of head-title-comments -->
+include_once '../inc/youtube_auth.inc.php';
+
+include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
+common_print_htmltitle('Authenticating ...');
+include_once '../themes/' .CONFIG_THEME. '/head-title.frame.inc.php';
+common_print_title('Authenticating ...');
+include_once '../themes/' .CONFIG_THEME. '/title-content.frame.inc.php';
+?>
+
+  <div class="warning">
+    Checking your identity using Authentication Server.  Please wait ...
+  </div>
+
+<?
+include_once '../themes/' .CONFIG_THEME. '/content-end.frame.inc.php';

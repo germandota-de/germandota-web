@@ -92,10 +92,10 @@ $glob_comments_order = array(
 
 include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
 common_print_htmltitle('Comments (' .$glob_comments['totalResults']. ')');
-include_once '../themes/' .CONFIG_THEME. '/head-title.comments.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/head-title.frame.inc.php';
 common_menu_print($glob_comments_order, 'comments_order', $order);
 common_print_title('Comments (' .$glob_comments['totalResults']. ')', true);
-include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/title-content.frame.inc.php';
 ?>
 
   <table id="comments_table">
@@ -185,4 +185,4 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
   </table>
 
 <?
-include_once '../themes/' .CONFIG_THEME. '/content-end.comments.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/content-end.frame.inc.php';

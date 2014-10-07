@@ -16,9 +16,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('COMMON_EXIST')) exit();
+include_once dirname(__FILE__). '/common.inc.php';
+include_once dirname(__FILE__). '/twitch_constants.inc.php';
 
-?>  <!-- begin of title-content -->
-    </div>
-    <div id="theme_content">
-  <!-- end of title-content -->
+include_once dirname(__FILE__). '/twitch_api.inc.php';
+
+/* Progamming Guide:
+ *
+ * https://github.com/justintv/Twitch-API/blob/master/authentication.md
+ */
+
+/* ***************************************************************  */

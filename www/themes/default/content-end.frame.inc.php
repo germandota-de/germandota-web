@@ -18,6 +18,7 @@
 
 if (!defined('COMMON_EXIST')) exit();
 
-?>  <!-- begin of title-content-comments -->
-  </div>
-  <!-- end of title-content-comments -->
+?>  <!-- begin of content-end-frame -->
+<? debug_api_info_print(); ?>
+</body>
+</html>

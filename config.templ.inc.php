@@ -27,9 +27,30 @@
  *   2. APIs -> 'Google+ API' set to ON
  *
  *   3. Credentials -> Public API access -> Server key
+ *
+ *   4. Credentials -> OAuth -> Web application
+ *
+ *        * Authorized JavaScript origins:
+ *          <leave blank>
+ *
+ *        * Authorized redirect URI (for every reachabel (sub-)domain):
+ *            http[s]://www.<your-domain.com>/oauth2/
+ *          or
+ *            http[s]://www.<your-domain.com>/<install_dir>/oauth2/
  */
-define('CONFIG_YT_APIKEY', '');
-if (CONFIG_YT_APIKEY == '') die('CONFIG_YT_APIKEY not configured!');
+define('CONFIG_GOOGLE_APIKEY',
+  '');
+define('CONFIG_GOOGLE_CLIENT_ID',
+  '');
+define('CONFIG_GOOGLE_CLIENT_SECRET',
+  '');
+
+if (CONFIG_GOOGLE_APIKEY == '')
+  die('CONFIG_GOOGLE_APIKEY not configured!');
+if (CONFIG_GOOGLE_CLIENT_ID == '')
+  die('CONFIG_GOOGLE_CLIENT_ID not configured!');
+if (CONFIG_GOOGLE_CLIENT_SECRET == '')
+  die('CONFIG_GOOGLE_CLIENT_SECRET not configured!');
 
 /* Youtube API request:
  *

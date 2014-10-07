@@ -18,9 +18,10 @@
 
 define('COMMON_EXIST',                  true);
 
-session_start();
-define('COMMON_SESSION_ID',             session_id());
-define('COMMON_USER_IP',                $_SERVER['REMOTE_ADDR']);
+define('COMMON_USER_IP',           $_SERVER['REMOTE_ADDR']);
+define('COMMON_SERVER_NAME',       $_SERVER['SERVER_NAME']);
+define('COMMON_SERVER_PROTOCOL',   isset($_SERVER['HTTPS'])
+       ? 'https': 'http');
 
 /* ***************************************************************  */
 /* Formats:
@@ -34,6 +35,7 @@ define('COMMON_DIR_INC',      'inc');
 define('COMMON_DIR_THEMES',   'themes');
 define('COMMON_DIR_IMG',      'img');
 define('COMMON_DIR_WATCH',    'watch');
+define('COMMON_DIR_OAUTH2',   'oauth2');
 
 /* Is depending on apache config directive DocumentRoot if there is a
  * tailing `/'
@@ -78,6 +80,8 @@ define('COMMON_DIR_IMG_ABS',
   COMMON_DIR_INST_ABS.COMMON_DIR_IMG .'/');
 define('COMMON_DIR_WATCH_ABS',
   COMMON_DIR_INST_ABS.COMMON_DIR_WATCH .'/');
+define('COMMON_DIR_OAUTH2_ABS',
+  COMMON_DIR_INST_ABS.COMMON_DIR_OAUTH2 .'/');
 
 define('COMMON_USER_NEWLINE',           "\n<br>");
 
@@ -304,3 +308,5 @@ function common_menu_print($menu_array, $id, $entry_selected)
 /* ***************************************************************  */
 
 include_once dirname(__FILE__). '/debug.inc.php';
+
+include_once dirname(__FILE__). '/session.inc.php';

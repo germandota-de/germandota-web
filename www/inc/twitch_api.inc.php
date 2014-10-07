@@ -16,9 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('COMMON_EXIST')) exit();
+include_once dirname(__FILE__). '/common.inc.php';
 
-?>  <!-- begin of title-content -->
-    </div>
-    <div id="theme_content">
-  <!-- end of title-content -->
+include_once dirname(__FILE__). '/oauth2.inc.php';
+
+/* Twitch References:
+ *
+ * https://github.com/justintv/twitch-api
+ */

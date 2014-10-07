@@ -18,7 +18,8 @@
 
 if (!defined('COMMON_EXIST')) exit();
 
-?>  <!-- begin of title-content -->
-    </div>
-    <div id="theme_content">
-  <!-- end of title-content -->
+?>  <!-- begin of head-title-frame -->
+</head>
+<body id="theme_frame_body" onload="init_frame()">
+  <div id="theme_frame_title">
+  <!-- end of head-title-frame -->
