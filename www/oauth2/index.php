@@ -70,12 +70,30 @@ function _init_error()
   return 'error';
 }
 
+function _init_auth()
+{
+  global $global_state_get, $global_code;
+
+  /* Set following globals  */
+  global $global_pf, $global_cb, $global_args;
+
+  $tmp = oauth2_login_id2vars($global_state_get);
+  if (!$tmp) return false;
+  list($global_pf, $global_cb, $global_args) = $tmp;
+
+  // TODO: Request Access & Refresh token && set these into $_SESSION
+
+  return 'auth';
+}
+
 /* ***************************************************************  */
 
 if ($global_pf !== false && $global_cb !== false)
   $global_state = _init_redirect();
 else if ($global_state_get !== false && $global_error !== false)
   $global_state = _init_error();
+else if ($global_state_get !== false && $global_code !== false)
+  $global_state = _init_auth();
 else
   $global_state = false;
 
@@ -129,6 +147,7 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.frame.inc.php';
   } else if ($global_state == 'auth') {
 ?>
     Checking your identity using Authorization Server.  Please wait ...
+    <p><span class="oauth2_errmsg">Not implemented</span></p>
 <?
   } else {
 ?>

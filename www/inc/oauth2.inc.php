@@ -99,3 +99,30 @@ function oauth2_login_2errormsg($error_resp)
 }
 
 /* ***************************************************************  */
+
+function oauth2_auth_post_setsession($url, $code, $client_id,
+                                     $client_secret)
+{
+  /* Must be application/x-www-form-urlencoded (RFC 6749 section
+   * 4.1.3.)
+   */
+  $redirect_uri = urlencode(_OAUTH2_REDIRECT_URI);
+
+  $data = 'code=' .$code. '&client_id=' .$client_id. '&client_secret='
+    .$client_secret. '&redirect_uri=' .$redirect_uri
+    .'&grant_type=authorization_code';
+
+  $context  = stream_context_create(array(
+    'http' => array(
+      'method'  => 'POST',
+      'header'  => 'Content-type: application/x-www-form-urlencoded',
+      'content' => $data)
+  ));
+
+  // TODO
+  $result = file_get_contents($url, false, $context);
+
+  return true;
+}
+
+/* ***************************************************************  */

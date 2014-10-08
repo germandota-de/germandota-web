@@ -319,7 +319,7 @@ function common_html_meta_refresh($href)
 {
   if (DEBUG && DEBUG_NO_REDIRECT) return;
 
-  echo '  <meta http-equiv="refresh" content="0; url='.$href. '">';
+  echo '  <meta http-equiv="refresh" content="0; url=' .$href. '">';
   echo "\n";
 }
 
