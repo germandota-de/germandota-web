@@ -36,7 +36,7 @@ function yt_auth_print_form($submit_class, $alt, $descr, $callback,
 {
   ?><form class="yt_auth_form" method="post" target="auth" action="/<?
     echo COMMON_DIR_OAUTH2_ABS;
-  ?>" onsubmit="return auth_popup();"><?
+  ?>" onsubmit="return popup_auth();"><?
 
     oauth2_redirect_params_print(OAUTH2_PLATFORM_YOUTUBE, $callback,
                                  $args);
@@ -51,8 +51,8 @@ function yt_auth_print_form($submit_class, $alt, $descr, $callback,
 
 function yt_auth_link_get($callback, $args)
 {
-  return google_oauth2_login_url_get(_YT_AUTH_OAUTH2_SCOPE, $callback,
-                                     $args);
+  return google_oauth2_login_url_get(
+    _YT_AUTH_OAUTH2_SCOPE, OAUTH2_PLATFORM_YOUTUBE, $callback, $args);
 }
 
 /* ***************************************************************  */

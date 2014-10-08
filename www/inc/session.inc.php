@@ -25,9 +25,11 @@ define('SESSION_PRE_OAUTH2LOGIN',       'oauth2_login_');
 
 /* ***************************************************************  */
 
-function session_oauth2login_set($callback, $args)
+function session_oauth2login_set($platform, $callback, $args)
 {
-  $data = array('callback' => $callback, 'args' => $args);
+  $data = array(
+    'platform' => $platform, 'callback' => $callback, 'args' => $args
+  );
 
   $id = sha1(print_r($data, true));
   $_SESSION[SESSION_PRE_OAUTH2LOGIN .$id] = $data;
@@ -42,7 +44,7 @@ function session_oauth2login_delete($id)
   if (!isset($_SESSION[$i])) return false;
   $data = $_SESSION[$i]; unset($_SESSION[$i]);
 
-  return array($data['callback'], $data['args']);
+  return array($data['platform'], $data['callback'], $data['args']);
 }
 
 /* ***************************************************************  */

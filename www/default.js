@@ -86,7 +86,13 @@ function iframe_scroll_top()
 
 /* ***************************************************************  */
 
-function auth_popup()
+function popup_close()
+{
+  self.close();
+  return !self.closed;
+}
+
+function popup_auth()
 {
   var w = screen.availWidth * 1/2;
   var h = screen.availHeight * 3/4;

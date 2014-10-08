@@ -23,6 +23,10 @@ include_once '../inc/youtube.inc.php';
 $global_pf = isset($_POST['pf'])? trim($_POST['pf']): false;
 $global_cb = isset($_POST['cb'])? trim($_POST['cb']): false;
 
+$global_state_get = isset($_GET['state'])? trim($_GET['state']): false;
+$global_error = isset($_GET['error'])? trim($_GET['error']): false;
+$global_code = isset($_GET['code'])? trim($_GET['code']): false;
+
 /* ***************************************************************  */
 
 function _init_redirect()
@@ -50,16 +54,35 @@ function _init_redirect()
   return 'redirect';
 }
 
+function _init_error()
+{
+  global $global_state_get, $global_error;
+
+  /* Set following globals  */
+  global $global_pf, $global_cb, $global_args, $global_error_msg;
+
+  $tmp = oauth2_login_id2vars($global_state_get);
+  if (!$tmp) return false;
+  list($global_pf, $global_cb, $global_args) = $tmp;
+
+  $global_error_msg = oauth2_login_2errormsg($global_error);
+
+  return 'error';
+}
+
 /* ***************************************************************  */
 
-$global_state = false;
 if ($global_pf !== false && $global_cb !== false)
   $global_state = _init_redirect();
+else if ($global_state_get !== false && $global_error !== false)
+  $global_state = _init_error();
+else
+  $global_state = false;
 
 /* ***************************************************************  */
 
 if ($global_state == 'redirect')
-  header('Location: ' .$global_redirect_link);
+  common_http_location_write($global_redirect_link);
 
 /* ***************************************************************  */
 
@@ -67,10 +90,10 @@ include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
 
 if ($global_state == 'redirect') {
   common_print_htmltitle('Redirecting ...');
-  echo '  <meta http-equiv="refresh" content="0; url='
-    .$global_redirect_href. '">';
-  echo "\n";
-} else if ($global_state == 'auth')
+  common_html_meta_refresh($global_redirect_href);
+} else if ($global_state == 'error')
+  common_print_htmltitle('Error :( ...');
+else if ($global_state == 'auth')
   common_print_htmltitle('Authenticating ...');
 else
   common_print_htmltitle('What ???');
@@ -79,6 +102,8 @@ include_once '../themes/' .CONFIG_THEME. '/head-title.frame.inc.php';
 
 if ($global_state == 'redirect')
   common_print_title('Redirecting ...');
+else if ($global_state == 'error')
+  common_print_title('Error :( ...');
 else if ($global_state == 'auth')
   common_print_title('Authenticating ...');
 else
@@ -92,12 +117,18 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.frame.inc.php';
 
   if ($global_state == 'redirect') {
 ?>
-    <p>Redirecting you to an Authentication Server.  Please wait ...</p>
-    or <a href="<? echo $global_redirect_href; ?>">click here</a>
+    Redirecting you to an Authorization Server.  Please wait ...
+    <p><span class="oauth2_errmsg">or <a href="<?
+      echo $global_redirect_href; ?>">click here</a></span></p>
+<?
+  } else if ($global_state == 'error') {
+?>
+    Authorization Server gives an error:
+    <p><span class="oauth2_errmsg"><? _o($global_error_msg); ?></span></p>
 <?
   } else if ($global_state == 'auth') {
 ?>
-    Checking your identity using Authentication Server.  Please wait ...
+    Checking your identity using Authorization Server.  Please wait ...
 <?
   } else {
 ?>
@@ -105,6 +136,10 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.frame.inc.php';
 <?
   }
 ?>
+  </div>
+  <div class="oauth2_bottom">
+    <a class="oauth2_bottom_close" onclick="return popup_close();"<?
+    ?> href="javascript:void(0);">Close Window</a>
   </div>
 
 <?

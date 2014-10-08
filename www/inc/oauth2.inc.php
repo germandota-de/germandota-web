@@ -48,19 +48,54 @@ function oauth2_redirect_params_print($platform, $callback, $args)
 }
 
 function oauth2_login_url_get($url_pre, $client_id, $scope, $url_post,
-                              $callback, $args)
+                              $platform, $callback, $args)
 {
   /* Must be application/x-www-form-urlencoded (RFC 6749 section
    * 3.1.2.)
    */
   $redirect_uri = urlencode(_OAUTH2_REDIRECT_URI);
 
-  $id = session_oauth2login_set($callback, $args);
+  $id = session_oauth2login_set($platform, $callback, $args);
 
   return $url_pre. '?response_type=code'
     .'&client_id=' .CONFIG_GOOGLE_CLIENT_ID
     .'&redirect_uri=' .$redirect_uri .'&scope=' .$scope
     .'&state=' .$id. $url_post;
+}
+
+function oauth2_login_id2vars($id)
+{
+  return session_oauth2login_delete($id);
+}
+
+/* ***************************************************************  */
+
+function oauth2_login_2errormsg($error_resp)
+{
+  /* Possible error responses are described in RFC 6749 section
+   * 4.1.2.1.
+   */
+
+  switch ($error_resp) {
+  case 'invalid_request':
+    return 'You has been sent garbage';
+  case 'unauthorized_client':
+    return 'Authorization request denied';
+  case 'access_denied':
+    return 'Access denied';
+  case 'unsupported_response_type':
+    return 'Response type is not supported';
+  case 'invalid_scope':
+    return 'Scope is not known/supported';
+  case 'server_error':
+    return 'Authorization Server encountered an enexpected error'
+      .' (500 Internal Server Error)';
+  case 'temporarily_unavailable':
+    return 'Authorization Server seems to be overloaded'
+      .' (503 Service Unavailable)';
+  }
+
+  return $error_resp;
 }
 
 /* ***************************************************************  */
