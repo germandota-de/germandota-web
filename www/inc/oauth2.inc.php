@@ -18,6 +18,8 @@
 
 include_once dirname(__FILE__). '/common.inc.php';
 
+include_once dirname(__FILE__). '/oauth2_callbacks.inc.php';
+
 /* Specification:
  *
  * http://tools.ietf.org/html/rfc6749

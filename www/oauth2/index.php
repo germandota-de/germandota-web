@@ -20,22 +20,32 @@ include_once '../inc/common.inc.php';
 
 include_once '../inc/youtube.inc.php';
 
-$global_pf = isset($_POST['pf'])? $_POST['pf']: false;
-$global_cb = isset($_POST['cb'])? $_POST['cb']: false;
+$global_pf = isset($_POST['pf'])? trim($_POST['pf']): false;
+$global_cb = isset($_POST['cb'])? trim($_POST['cb']): false;
 
 /* ***************************************************************  */
 
-function _oauth2_init_redirect()
+function _init_redirect()
 {
-  global $global_args, $global_redirect_link;
+  global $global_pf, $global_cb;
+
+  /* Set following globals  */
+  global $global_args, $global_redirect_link, $global_redirect_href;
 
   $global_args = array();
   for ($i=0; isset($_POST['arg_' .$i]); $i++) {
-    $global_args[$i] = $_POST['arg_' .$i];
+    $global_args[$i] = trim($_POST['arg_' .$i]);
   }
 
-  // TODO
-  //$global_redirect_link = yt_auth_link_get($callback, $args);
+  if (!oauth2_callback_callable($global_pf, $global_cb, $global_args))
+    return false;
+
+  if ($global_pf == OAUTH2_PLATFORM_YOUTUBE)
+    $global_redirect_link = yt_auth_link_get($global_cb, $global_args);
+  else
+    return false;
+
+  $global_redirect_href = common_url_amp($global_redirect_link);
 
   return 'redirect';
 }
@@ -44,17 +54,23 @@ function _oauth2_init_redirect()
 
 $global_state = false;
 if ($global_pf !== false && $global_cb !== false)
-  $global_state = _oauth2_init_redirect();
+  $global_state = _init_redirect();
 
-var_dump($global_args);
+/* ***************************************************************  */
+
+if ($global_state == 'redirect')
+  header('Location: ' .$global_redirect_link);
 
 /* ***************************************************************  */
 
 include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
 
-if ($global_state == 'redirect')
+if ($global_state == 'redirect') {
   common_print_htmltitle('Redirecting ...');
-else if ($global_state == 'auth')
+  echo '  <meta http-equiv="refresh" content="0; url='
+    .$global_redirect_href. '">';
+  echo "\n";
+} else if ($global_state == 'auth')
   common_print_htmltitle('Authenticating ...');
 else
   common_print_htmltitle('What ???');
@@ -66,7 +82,7 @@ if ($global_state == 'redirect')
 else if ($global_state == 'auth')
   common_print_title('Authenticating ...');
 else
-  common_print_htmltitle('What ???');
+  common_print_title('What ???');
 
 include_once '../themes/' .CONFIG_THEME. '/title-content.frame.inc.php';
 ?>
@@ -76,7 +92,8 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.frame.inc.php';
 
   if ($global_state == 'redirect') {
 ?>
-    Redirecting you to an Authentication Server.  Please wait ...
+    <p>Redirecting you to an Authentication Server.  Please wait ...</p>
+    or <a href="<? echo $global_redirect_href; ?>">click here</a>
 <?
   } else if ($global_state == 'auth') {
 ?>
