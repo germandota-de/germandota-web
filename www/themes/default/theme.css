@@ -800,3 +800,27 @@ input:active.yt_auth_submit {
 }
 
 /* ***************************************************************  */
+
+span.oauth2_errmsg {
+  font-style: italic;
+}
+
+div.oauth2_bottom {
+  background-color: #e8e8e8;
+  margin-top: 12px;
+  padding: 3px;
+
+  text-align: center;
+}
+
+a.oauth2_bottom_close {
+  color: #906060;
+  font-weight: bold;
+  font-size: 12px;
+}
+a:hover.oauth2_bottom_close {
+  color: #a04040;
+  border-style: none;
+}
+
+/* ***************************************************************  */

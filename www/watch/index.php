@@ -187,7 +187,7 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
           ?> Views</span></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
         yt_auth_print_form('video_videoframe_table_icon', 'like',
-            'Like it!', 'yt_video_like', array($video_id),
+            'Like it!', 'video_like', array($video_id),
             '/' .COMMON_DIR_THEMECUR_IMG_ABS. 'icon_like.32.png'); ?></td>
         <td class="video_videoframe_table_small"><?
           echo number_format($glob_yt_video['statistics']['likeCount'],

@@ -69,6 +69,7 @@ foreach ($_common_files as $v) {
 }
 
 include_once COMMON_CONF_FILEROOT;
+include_once dirname(__FILE__). '/debug.inc.php';
 
 /* ***************************************************************  */
 
@@ -307,6 +308,21 @@ function common_menu_print($menu_array, $id, $entry_selected)
 
 /* ***************************************************************  */
 
-include_once dirname(__FILE__). '/debug.inc.php';
+function common_http_location_write($url)
+{
+  if (DEBUG && DEBUG_NO_REDIRECT) return;
+
+  header('Location: ' .$url);
+}
+
+function common_html_meta_refresh($href)
+{
+  if (DEBUG && DEBUG_NO_REDIRECT) return;
+
+  echo '  <meta http-equiv="refresh" content="0; url=' .$href. '">';
+  echo "\n";
+}
+
+/* ***************************************************************  */
 
 include_once dirname(__FILE__). '/session.inc.php';

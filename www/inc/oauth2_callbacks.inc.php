@@ -18,33 +18,42 @@
 
 include_once dirname(__FILE__). '/common.inc.php';
 
-session_start();
-define('SESSION_ID',                    session_id());
+define('OAUTH2_CALLBACKS_PREFIX',            'oauth2_cb_');
 
-define('SESSION_PRE_OAUTH2LOGIN',       'oauth2_login_');
+/* *******************************************************************
+ *
+ * Callback must have the form:
+ *
+ *   oauth2_cb_<platform>_<name>_<arg_count>()
+ *
+ * i.e.
+ *
+ *   oauth2_cb_youtube_video_like_1($video_id)
+ */
+
+function oauth2_cb_youtube_video_like_1($video_id)
+{
+  echo 'Hello World!';
+}
 
 /* ***************************************************************  */
 
-function session_oauth2login_set($platform, $callback, $args)
+function _oauth2_callback_2str($platform, $callback, $args)
 {
-  $data = array(
-    'platform' => $platform, 'callback' => $callback, 'args' => $args
-  );
-
-  $id = sha1(print_r($data, true));
-  $_SESSION[SESSION_PRE_OAUTH2LOGIN .$id] = $data;
-
-  return $id;
+  return OAUTH2_CALLBACKS_PREFIX .$platform. '_' .$callback. '_'
+    .count($args);
 }
 
-function session_oauth2login_delete($id)
+function oauth2_callback_callable($platform, $callback, $args)
 {
-  $i = SESSION_PRE_OAUTH2LOGIN .$id;
+  return function_exists(_oauth2_callback_2str($platform, $callback,
+                                               $args));
+}
 
-  if (!isset($_SESSION[$i])) return false;
-  $data = $_SESSION[$i]; unset($_SESSION[$i]);
-
-  return array($data['platform'], $data['callback'], $data['args']);
+function oauth2_callback_call($platform, $callback, $args)
+{
+  return call_user_func_array(_oauth2_callback_2str($platform, $callback,
+                                                    $args), $args);
 }
 
 /* ***************************************************************  */
