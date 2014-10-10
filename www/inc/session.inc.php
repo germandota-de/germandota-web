@@ -22,6 +22,7 @@ session_start();
 define('SESSION_ID',                    session_id());
 
 define('SESSION_PRE_OAUTH2LOGIN',       'oauth2_login_');
+define('SESSION_PRE_OAUTH2TOKEN',       'oauth2_token_');
 
 /* ***************************************************************  */
 
@@ -45,6 +46,28 @@ function session_oauth2login_delete($id)
   $data = $_SESSION[$i]; unset($_SESSION[$i]);
 
   return array($data['platform'], $data['callback'], $data['args']);
+}
+
+/* ***************************************************************  */
+
+function session_oauth2token_set($platform, $token_resp)
+{
+  if (!isset($token_resp['access_token'])
+      || !isset($token_resp['token_type'])
+      || !isset($token_resp['expires_in'])) return false;
+
+  $data = array('access_token' => $token_resp['access_token'],
+                'token_type' => $token_resp['token_type'],
+                'expires_in' => $token_resp['expires_in'],
+                );
+
+  $i = SESSION_PRE_OAUTH2TOKEN .$platform;
+  $_SESSION[$i]['required'] = $data;
+
+  if (isset($token_resp['refresh_token']))
+    $_SESSION[$i]['refresh_token'] = $token_resp['refresh_token'];
+
+  return true;
 }
 
 /* ***************************************************************  */

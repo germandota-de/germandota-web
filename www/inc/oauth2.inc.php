@@ -100,8 +100,8 @@ function oauth2_login_2errormsg($error_resp)
 
 /* ***************************************************************  */
 
-function oauth2_auth_post_setsession($url, $code, $client_id,
-                                     $client_secret)
+function oauth2_token_post_setsession($url, $client_id, $client_secret,
+                                      $platform, $code)
 {
   /* Must be application/x-www-form-urlencoded (RFC 6749 section
    * 4.1.3.)
@@ -119,8 +119,25 @@ function oauth2_auth_post_setsession($url, $code, $client_id,
       'content' => $data)
   ));
 
-  // TODO
-  $result = file_get_contents($url, false, $context);
+  /* Do not display $data because of the client secret  */
+  //debug_api_info_incr('cnt_oauth2_auth', 1, $data);
+  debug_api_info_incr('cnt_oauth2_auth', 1);
+
+  $json = file_get_contents($url, false, $context);
+  if (!$json) return false;
+
+  $token_resp = json_decode($json, true);
+  if (!$token_resp) return false;
+
+  /* Error response described in RFC 6749 section 5.2.
+   *
+   * We can't really catch this because the Auth Server responses with
+   * HTTP 400 (Bad Request).  But in this case file_get_contents() is
+   * returning FALSE.
+   */
+  if (isset($token_resp['error'])) return false;
+
+  if (!session_oauth2token_set($platform, $token_resp)) return false;
 
   return true;
 }

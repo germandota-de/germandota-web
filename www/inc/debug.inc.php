@@ -39,6 +39,8 @@ $_debug_api_info
           'cnt_youtube_api_v2'          => 0,
           'cnt_youtube_list'            => 0,
           'cnt_google_plus'             => 0,
+          'cnt_oauth2_auth'             => 0,
+          'cnt_youtube_auth'            => 0,
           );
 
 $_debug_stack = array();

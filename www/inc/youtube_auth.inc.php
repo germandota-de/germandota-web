@@ -56,3 +56,12 @@ function yt_auth_link_get($callback, $args)
 }
 
 /* ***************************************************************  */
+
+function yt_auth_setsession($code)
+{
+  debug_api_info_incr('cnt_youtube_auth', 1, 'code '. $code);
+
+  return google_oauth2_setsession(OAUTH2_PLATFORM_YOUTUBE, $code);
+}
+
+/* ***************************************************************  */

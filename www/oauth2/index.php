@@ -81,7 +81,9 @@ function _init_auth()
   if (!$tmp) return false;
   list($global_pf, $global_cb, $global_args) = $tmp;
 
-  // TODO: Request Access & Refresh token && set these into $_SESSION
+  if (!yt_auth_setsession($global_code)) return false;
+
+  // TODO Call callback
 
   return 'auth';
 }
@@ -152,6 +154,7 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.frame.inc.php';
   } else {
 ?>
     Do not know what you want :((
+    <p><span class="oauth2_errmsg">Cookies enabled?</span></p>
 <?
   }
 ?>
