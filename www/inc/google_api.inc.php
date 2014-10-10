@@ -33,7 +33,10 @@ define('_GOOGLE_REQUEST_DEFAULT',
         */
        );
 
-define('_GOOGLE_OAUTH2_PRE',   'https://accounts.google.com/o/oauth2/auth');
+define('_GOOGLE_OAUTH2_PRE',
+       'https://accounts.google.com/o/oauth2/auth');
+define('_GOOGLE_OAUTH2_TOKEN_PRE',
+       'https://accounts.google.com/o/oauth2/token');
 
 /* ***************************************************************  */
 
@@ -66,6 +69,15 @@ function google_oauth2_login_url_get($scope, $platform, $callback,
   //'&approval_prompt=auto&access_type=offline&login_hint=email@addre.ss',
     $platform, $callback, $args
   );
+}
+
+/* ***************************************************************  */
+
+function google_oauth2_setsession($platform, $code)
+{
+  return oauth2_token_post_setsession(_GOOGLE_OAUTH2_TOKEN_PRE,
+    CONFIG_GOOGLE_CLIENT_ID, CONFIG_GOOGLE_CLIENT_SECRET, $platform,
+    $code);
 }
 
 /* ***************************************************************  */

@@ -36,8 +36,9 @@ Hacking & contribution
 
 If you like to contribute to the origin sources then read
 
-  * hacking.utf8
+  * HACKING
 
-to understand the Git workflow which we are recommend.
+in this directory to understand the Git workflow which we are
+recommend.
 
 Thank you for using this software =D ...

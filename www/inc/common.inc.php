@@ -32,6 +32,7 @@ define('COMMON_SERVER_PROTOCOL',   isset($_SERVER['HTTPS'])
  */
 
 define('COMMON_DIR_INC',      'inc');
+define('COMMON_DIR_ERRORS',   'errors');
 define('COMMON_DIR_THEMES',   'themes');
 define('COMMON_DIR_IMG',      'img');
 define('COMMON_DIR_WATCH',    'watch');
@@ -53,7 +54,16 @@ define('COMMON_DIR_INST_ABS',
 define('COMMON_CONF_FILE',     'config.inc.php');
 define('COMMON_CONF_FILEROOT', COMMON_DIR_INSTROOT.COMMON_CONF_FILE);
 
-/* ***************************************************************  */
+define('COMMON_HTACCESS_FILE',     '.htaccess');
+define('COMMON_HTACCESS_FILEROOT',
+                            COMMON_DIR_INSTROOT.COMMON_HTACCESS_FILE);
+
+/* *******************************************************************
+ *
+ * This could be added to install script if any exist.  Do not write
+ * to files, because (Apache-)httpd does not need to have permissions
+ * to write these files.
+ */
 
 if (!file_exists(COMMON_CONF_FILEROOT)) {
   die('<font color="#ff0000">config.inc.php not found! Copy it from'
@@ -68,11 +78,27 @@ foreach ($_common_files as $v) {
   }
 }
 
+define('_COMMON_HTACCESS_ERROR_PATH',
+                           '/'.COMMON_DIR_INST_ABS.COMMON_DIR_ERRORS);
+
+if (!preg_match('@^\s*ErrorDocument\s+[0-9]{3}\s+'
+      ._COMMON_HTACCESS_ERROR_PATH. '@mi',
+      file_get_contents(COMMON_HTACCESS_FILEROOT))) {
+  die('<font color="#ff0000"><b>' .COMMON_HTACCESS_FILE
+      .':</b> <i>ErrorDocument</i> directives should look like this:<p>'
+      .'<code>ErrorDocument {xyz} ' ._COMMON_HTACCESS_ERROR_PATH
+      .'/e{xyz}.php</code></p></font>');
+}
+
 include_once COMMON_CONF_FILEROOT;
 include_once dirname(__FILE__). '/debug.inc.php';
 
 /* ***************************************************************  */
 
+define('COMMON_DIR_INC_ABS',
+  COMMON_DIR_INST_ABS.COMMON_DIR_INC .'/');
+define('COMMON_DIR_ERRORS_ABS',
+  COMMON_DIR_INST_ABS.COMMON_DIR_ERRORS .'/');
 define('COMMON_DIR_THEMECUR_ABS',
   COMMON_DIR_INST_ABS.COMMON_DIR_THEMES .'/'. CONFIG_THEME .'/');
 define('COMMON_DIR_THEMECUR_IMG_ABS',
@@ -88,7 +114,9 @@ define('COMMON_USER_NEWLINE',           "\n<br>");
 
 /* ***************************************************************  */
 
-/* Convert all characters for HTML output and return/put to output buffer.  */
+/* Convert all characters for HTML output and return/put to output
+ * buffer.
+ */
 function _o_get($str)
 {
   $result = preg_replace('/\n/isu', COMMON_USER_NEWLINE,
