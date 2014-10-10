@@ -53,7 +53,7 @@ function debug_api_info_set($prop, $val, $details='<set>')
     = $prop. '(' .$_debug_api_info[$prop]. '): ' .$details;
 }
 
-function debug_api_info_incr($prop, $val=1, $details='<incemented>')
+function debug_api_info_incr($prop, $val=1, $details='<incremented>')
 {
   global $_debug_api_info, $_debug_stack;
 
