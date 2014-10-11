@@ -103,10 +103,12 @@ table.default_table th {
 img.icon_large {
   height: 13px;
   margin-right: 3px;
+  border-radius: 0px;
 }
 img.icon_default {
   height: 10px;
   margin-right: 3px;
+  border-radius: 0px;
 }
 span.icon_text {
   display: inline-table;
@@ -294,7 +296,7 @@ table#lists_table {
   margin-right: auto;
   background-color: #c0c0c0;
 
-  width: 80%;
+  width: 90%;
 }
 tr.lists_table_tr2 {
   background-color: #b0b0b0;
@@ -313,7 +315,7 @@ td.lists_table_thumb {
   width: 1%;
 }
 img.lists_table_thumb {
-  width: 185px;
+  height: 90px;
 }
 
 td.lists_table_videocount {
@@ -333,13 +335,13 @@ td.lists_table_text {
 }
 
 a.playlist_link {
-  color: #a02020;
+  color: #907000;
   font-weight: bold;
-  font-size: 17px;
+  font-size: 12px;
 }
 a:hover.playlist_link {
   border-style: none;
-  color: #e02020;
+  color: #b09000;
 }
 
 div.lists_table_text_descr {

@@ -77,7 +77,7 @@ function yt_comments_recv($vid, $order_newest, $page)
     sprintf('videos/%s/comments', $vid), 1 + ($page-1)*YT_COMMENTS_PERPAGE,
     $page == 1? YT_COMMENTS_PERPAGE: (YT_COMMENTS_PERPAGE_NEXT+1),
     $order_newest? 'orderby=published': '');
-  if (!$result) return false;
+  if (!$result || !isset($result['feed']['entry'])) return false;
 
   $next_exist = false; $prev_exist = false;
   foreach ($result['feed']['link'] as $link) {

@@ -257,7 +257,7 @@ function yt_print_activity_link($yt_activity, $yt_channel, $blank,
 
   ?><a class="yt_activity_link"<?
     if ($blank) echo ' target="_blank"';
-  ?> title="Watch" href="<?
+  ?> href="<?
     echo $url;
   ?>"><img class="icon_default" alt="(video)" src="/<?
     echo COMMON_DIR_THEMECUR_IMG_ABS;
