@@ -29,10 +29,8 @@ $global_code = isset($_GET['code'])? trim($_GET['code']): false;
 
 /* ***************************************************************  */
 
-function _init_redirect()
+function _init_redirect($platform, $callback)
 {
-  global $global_pf, $global_cb;
-
   /* Set following globals  */
   global $global_args, $global_redirect_link, $global_redirect_href;
 
@@ -41,11 +39,11 @@ function _init_redirect()
     $global_args[$i] = trim($_POST['arg_' .$i]);
   }
 
-  if (!oauth2_callback_callable($global_pf, $global_cb, $global_args))
+  if (!oauth2_callback_callable($platform, $callback, $global_args))
     return false;
 
-  if ($global_pf == OAUTH2_PLATFORM_YOUTUBE)
-    $global_redirect_link = yt_auth_link_get($global_cb, $global_args);
+  if ($platform == OAUTH2_PLATFORM_YOUTUBE)
+    $global_redirect_link = yt_auth_link_get($callback, $global_args);
   else
     return false;
 
@@ -54,34 +52,33 @@ function _init_redirect()
   return 'redirect';
 }
 
-function _init_error()
+function _init_error($state, $error, $ignore_state=false)
 {
-  global $global_state_get, $global_error;
-
   /* Set following globals  */
-  global $global_pf, $global_cb, $global_args, $global_error_msg;
+  global $global_error_msg;
 
-  $tmp = oauth2_login_id2vars($global_state_get);
-  if (!$tmp) return false;
-  list($global_pf, $global_cb, $global_args) = $tmp;
+  if (!$ignore_state) {
+    $tmp = oauth2_login_id2vars($state);
+    if (!$tmp) return false;
+  }
 
-  $global_error_msg = oauth2_login_2errormsg($global_error);
+  $global_error_msg = oauth2_login_2errormsg($error);
 
   return 'error';
 }
 
-function _init_auth()
+function _init_auth($state, $code)
 {
-  global $global_state_get, $global_code;
-
   /* Set following globals  */
   global $global_pf, $global_cb, $global_args;
 
-  $tmp = oauth2_login_id2vars($global_state_get);
+  $tmp = oauth2_login_id2vars($state);
   if (!$tmp) return false;
   list($global_pf, $global_cb, $global_args) = $tmp;
 
-  if (!yt_auth_setsession($global_code)) return false;
+  if (!yt_auth_setsession($code))
+    return _init_error(false, 'Could not check your identity :(',
+                       true);
 
   // TODO Call callback
 
@@ -91,11 +88,11 @@ function _init_auth()
 /* ***************************************************************  */
 
 if ($global_pf !== false && $global_cb !== false)
-  $global_state = _init_redirect();
+  $global_state = _init_redirect($global_pf, $global_cb);
 else if ($global_state_get !== false && $global_error !== false)
-  $global_state = _init_error();
+  $global_state = _init_error($global_state_get, $global_error);
 else if ($global_state_get !== false && $global_code !== false)
-  $global_state = _init_auth();
+  $global_state = _init_auth($global_state_get, $global_code);
 else
   $global_state = false;
 
