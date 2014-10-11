@@ -67,8 +67,10 @@ define('CONFIG_YT_CHANNELID',      'UCeKFc-ydU9pWKa4tqK-vYSw');
  *
  * http://www.php.net/date
  */
-define('CONFIG_DATE_FORMAT',       'j. M Y');
+define('CONFIG_DATE_FORMAT',       'D, j. M y');
+define('CONFIG_DATE_LONG_FORMAT',  'l, j. F Y');
 define('CONFIG_TIME_FORMAT',       'G:i');
+define('CONFIG_TIME_LONG_FORMAT',  'G:i:s e');
 
 /* ***************************************************************  */
 

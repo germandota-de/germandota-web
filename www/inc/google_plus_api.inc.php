@@ -38,11 +38,14 @@ function gplus_api_comments_list($activity_id, $max_results)
     'activities/comments - max. results: ' .$max_results. ' - '
     .$activity_id);
 
-  return google_api_recv(
+  $result = google_api_recv(
     _GPLUS_REQUEST_METHOD_PREFIX.'activities/'.$activity_id.'/comments',
     'fields=items('
       ._GPLUS_COMMENTS_REQUEST_FIELDS. ',plusoners(totalItems))'
     .'&maxResults=' .$max_results. '&sortOrder=descending');
+  if (!$result || count($result['items']) == 0) return false;
+
+  return $result;
 }
 
 function gplus_api_activity_get($activity_id)
@@ -50,11 +53,14 @@ function gplus_api_activity_get($activity_id)
   debug_api_info_incr('cnt_google_plus', 1,
                       'activities - ' .$activity_id);
 
-  return google_api_recv(
+  $result = google_api_recv(
     _GPLUS_REQUEST_METHOD_PREFIX.'activities/'.$activity_id,
     'fields='
     ._GPLUS_COMMENTS_REQUEST_FIELDS
     .',object(replies(totalItems),plusoners(totalItems))');
+  if (!$result) return false;
+
+  return $result;
 }
 
 /* ***************************************************************  */

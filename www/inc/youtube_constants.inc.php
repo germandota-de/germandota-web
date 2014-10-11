@@ -27,7 +27,7 @@ define('YT_CHAN_ACTIV_MAXRESULTS_NEXT', 10);
 define('YT_PLVIDEOS_MAXRESULTS',        7);
 define('YT_PLVIDEOS_MAXRESULTS_HALF',   YT_PLVIDEOS_MAXRESULTS >> 1);
 
-define('_YT_RECV_PLAYLIST_50PAGES',     3);
+define('_YT_RECV_PLIST_50PAGES_LIMIT',  8);
 
 define('_YT_REQUEST_FIELDS_PAGING',
        'pageInfo,nextPageToken,prevPageToken');
