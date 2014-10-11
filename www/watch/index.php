@@ -211,8 +211,8 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
         ?></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
           ?><span class="video_videoframe_table_date"><?
-          _o(yt_str2date($glob_yt_video['snippet']['publishedAt']) .', '
-             .yt_str2time($glob_yt_video['snippet']['publishedAt']));
+          echo (yt_str2date_html($glob_yt_video['snippet']['publishedAt'])
+            .', '. yt_str2time_html($glob_yt_video['snippet']['publishedAt']));
         ?></span></td>
         <td></td>
         <td class="video_videoframe_table_small">Subscribe <?
@@ -240,10 +240,10 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
     echo ($glob_video_plposition+1).' of '
       .$glob_yt_result['pageInfo']['totalResults'];
     ?> - <span class="video_thumbs_table_top_time"><?
-    _o($glob_yt_list['snippet']['title']
-       .' ('.yt_str2date($glob_yt_list['snippet']['publishedAt'])
-       .', ' .yt_str2time($glob_yt_list['snippet']['publishedAt'])
-       .')');
+    _o($glob_yt_list['snippet']['title']);
+    echo ' ('.yt_str2date_html($glob_yt_list['snippet']['publishedAt'])
+      .', ' .yt_str2time_html($glob_yt_list['snippet']['publishedAt'])
+      .')';
     ?></span></th></tr>
   <tr>
 <?
@@ -308,7 +308,8 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
       echo ($glob_yt_plitems[$i]['snippet']['position']+1) .'.<br>';
     ?></span><?
       $cur_date = $glob_yt_plitems[$i]['snippet']['publishedAt'];
-      echo yt_str2date($cur_date) .'<br>'. yt_str2time($cur_date);
+      echo yt_str2date_html($cur_date) .'<br>'
+        .yt_str2time_html($cur_date);
     ?></th>
 <?
   } /* for ($i=0, $k=0; $i<count($glob_yt_plitems); $i++)  */

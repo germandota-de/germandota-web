@@ -94,8 +94,8 @@ function popup_close()
 
 function popup_auth()
 {
-  var w = screen.availWidth * 1/2;
-  var h = screen.availHeight * 3/4;
+  var w = 700;
+  var h = 510;
   var l = (screen.width-w)/2;
   var t = (screen.height-h)/2;
 

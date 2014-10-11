@@ -50,3 +50,8 @@ define('YT_COMMENTS_REQUEST_PREFIX', 'https://gdata.youtube.com/feeds/api/');
 define('YT_COMMENTS_SSL_CNMATCH',    '*.google.com');
 
 /* ***************************************************************  */
+
+define('_YT_AUTH_OAUTH2_SCOPE',
+       'https://www.googleapis.com/auth/youtube.readonly');
+
+/* ***************************************************************  */

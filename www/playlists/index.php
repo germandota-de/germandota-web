@@ -93,7 +93,8 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
     <td class="lists_table_videocount"><?
       _o($cur_videos_count);
     ?> Videos<p class="lists_table_videocount"><?
-      echo yt_str2date($cur_published) .'<br>'. yt_str2time($cur_published);
+      echo yt_str2date_html($cur_published) .'<br>'
+        . yt_str2time_html($cur_published);
     ?></p></td>
     <td class="lists_table_text"><a class="playlist_link"<?
     ?> title="Watch playlist" href="../watch/?list=<?

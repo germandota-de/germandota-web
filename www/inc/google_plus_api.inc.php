@@ -64,7 +64,7 @@ function gplus_print_profilelink($actor)
   ?><a class="gplus_profilelink" target="_blank"<?
   ?> href="https://plus.google.com/<?
     echo $actor['id'];
-  ?>" title="View this profile at plus.google.com"><img<?
+  ?>" title="View this profile at Google+"><img<?
   ?> class="gplus_profilelink" alt="(avatar)" src="<?
     echo common_url_amp($actor['image']['url']);
   ?>"><?

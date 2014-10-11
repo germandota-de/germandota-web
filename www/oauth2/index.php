@@ -132,7 +132,7 @@ else
 include_once '../themes/' .CONFIG_THEME. '/title-content.frame.inc.php';
 ?>
 
-  <div class="warning">
+  <div id="oauth2_main">
 <?
 
   if ($global_state == 'redirect') {
@@ -159,8 +159,8 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.frame.inc.php';
   }
 ?>
   </div>
-  <div class="oauth2_bottom">
-    <a class="oauth2_bottom_close" onclick="return popup_close();"<?
+  <div id="oauth2_bottom">
+    <a id="oauth2_bottom_close" onclick="return popup_close();"<?
     ?> href="javascript:void(0);">Close Window</a>
   </div>
 

@@ -801,24 +801,37 @@ input:active.yt_auth_submit {
 
 /* ***************************************************************  */
 
+div#oauth2_main {
+  margin-left: auto;
+  margin-right: auto;
+  width: 80%;
+
+  background-color: #f8f8f8;
+  border: 1px solid #d0d0d0;
+  padding: 20px;
+
+  text-align: center;
+  font-size: 14px;
+}
+
 span.oauth2_errmsg {
   font-style: italic;
 }
 
-div.oauth2_bottom {
+div#oauth2_bottom {
   background-color: #e8e8e8;
-  margin-top: 12px;
-  padding: 3px;
+  margin-top: 20px;
+  padding: 8px;
 
   text-align: center;
 }
 
-a.oauth2_bottom_close {
+a#oauth2_bottom_close {
   color: #906060;
   font-weight: bold;
   font-size: 12px;
 }
-a:hover.oauth2_bottom_close {
+a:hover#oauth2_bottom_close {
   color: #a04040;
   border-style: none;
 }

@@ -196,7 +196,8 @@ function yt_comments_print_comment($comment, $more_link, $more_target,
   ?>"></a><span class="comments_author"><?
     gplus_print_profilelink($comment['actor']);
   ?></span><span class="comments_date"><?
-    _o(yt_str2date($published) .', '. yt_str2time($published));
+    echo yt_str2date_html($published) .', '
+      . yt_str2time_html($published);
 
     if ($published != $updated) echo ' (updated)';
 
