@@ -50,7 +50,7 @@ function yt_recv_playlists($page_token, $plid='')
       .',snippet(publishedAt,title,description,thumbnails/medium/url))'
     .($plid? '&id=' .$plid: '&channelId=' .CONFIG_YT_CHANNELID)
     .'&maxResults=' .$max_result .'&pageToken=' .$page_token);
-  if (!$result) return false;
+  if (!$result || count($result['items']) == 0) return false;
 
   return $result;
 }
@@ -58,7 +58,7 @@ function yt_recv_playlist_short($plid)
 {
   $result = _yt_api_list('playlists', 'snippet',
     'fields=items(snippet(publishedAt,title))&id=' .$plid);
-  if (!$result) return false;
+  if (!$result || count($result['items']) == 0) return false;
 
   return $result;
 }
@@ -76,7 +76,7 @@ function yt_recv_playlist_items($playlist_id, $page_token='')
       .',position))'
     .'&playlistId=' .$playlist_id. '&maxResults=' .YT_PLVIDEOS_MAXRESULTS
     .'&pageToken=' .$page_token);
-  if (!$result) return false;
+  if (!$result || count($result['items']) == 0) return false;
 
   return array(
     'correction' => -YT_PLVIDEOS_MAXRESULTS_HALF,
@@ -100,11 +100,11 @@ function yt_recv_playlist_items_video($playlist_id, $video_id)
    */
 
   $position = 0;
-  for ($i=0, $i_page = ''; $i<_YT_RECV_PLAYLIST_50PAGES; $i++) {
+  for ($i=0, $i_page = ''; $i<_YT_RECV_PLIST_50PAGES_LIMIT; $i++) {
     $result = _yt_api_list('playlistItems', 'snippet',
       'fields=nextPageToken,items/snippet(position,resourceId/videoId)'
       .'&playlistId=' .$playlist_id. '&maxResults=50&pageToken=' .$i_page);
-    if (!$result) return false;
+    if (!$result || count($result['items']) == 0) return false;
 
     foreach ($result['items'] as $plitem) {
       if ($plitem['snippet']['resourceId']['videoId'] == $video_id) {
@@ -113,6 +113,7 @@ function yt_recv_playlist_items_video($playlist_id, $video_id)
       }
     }
 
+    if (!isset($result['nextPageToken'])) return false;
     $i_page = $result['nextPageToken'];
   }
 
@@ -156,7 +157,7 @@ function yt_recv_video($vid)
       .'snippet(publishedAt,channelId,channelTitle,title,description)'
       .',contentDetails(duration),statistics(viewCount,likeCount'
       .',dislikeCount,commentCount))&id=' .$vid);
-  if (!$result) return false;
+  if (!$result || count($result['items']) == 0) return false;
 
   return $result;
 }
@@ -169,7 +170,7 @@ function yt_recv_channel($chan_id)
     'fields=items('
       .'snippet(title,description,thumbnails/medium)'
     .')&id=' .$chan_id);
-  if (!$result) return false;
+  if (!$result || count($result['items']) == 0) return false;
 
   return $result;
 }
@@ -224,7 +225,7 @@ function yt_recv_chan_activity($page_token)
         .')'
       .')&channelId=' .CONFIG_YT_CHANNELID
     .'&maxResults=' .$max_result. '&pageToken=' .$page_token);
-  if (!$result) return false;
+  if (!$result || count($result['items']) == 0) return false;
 
   return $result;
 }

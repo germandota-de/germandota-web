@@ -23,32 +23,48 @@ include_once dirname(__FILE__). '/youtube_constants.inc.php';
 
 define('_YT_DAY_IN_SECS',               24*3600);
 
-function yt_str2date($yt_time_str)
+/* Without the weekday that is same as today  */
+define('_YT_WEEK_IN_SECS',              6*_YT_DAY_IN_SECS);
+
+function yt_str2date_html($yt_time_str)
 {
   $stamp = strtotime($yt_time_str, 0);
+  $cur_time = time();
 
-  if (!$stamp) return '-no date-';
+  $title = '-no date-'; $text = $title;
+  if ($stamp) {
+    $date_str = date(CONFIG_DATE_FORMAT, $stamp);
+    $title = date(CONFIG_DATE_LONG_FORMAT, $stamp);
 
-  $result = date(CONFIG_DATE_FORMAT, $stamp);
-  if ($result == date(CONFIG_DATE_FORMAT)) return 'today';
-  if ($result == date(CONFIG_DATE_FORMAT, time()-_YT_DAY_IN_SECS))
-    return 'yesterday';
+    if ($date_str == date(CONFIG_DATE_FORMAT))
+      $text = 'today';
+    else if ($date_str == date(CONFIG_DATE_FORMAT, $cur_time-_YT_DAY_IN_SECS))
+      $text = 'yesterday';
+    else if ($stamp + _YT_WEEK_IN_SECS > $cur_time)
+      $text = date('l', $stamp);
+    else
+      $text = $date_str;
+  }
 
-  return $result;
+  return '<span title="' .$title. '">' .$text. '</span>';
 }
-function yt_str2time($yt_time_str)
+function yt_str2time_html($yt_time_str)
 {
   $stamp = strtotime($yt_time_str, 0);
 
-  if (!$stamp) return '-timeless-';
+  $title =  '-timeless-'; $text = $title;
+  if ($stamp) {
+    $time_str = date(CONFIG_TIME_FORMAT, $stamp);
+    $title = date(CONFIG_TIME_LONG_FORMAT, $stamp);
 
-  $result = date(CONFIG_TIME_FORMAT, $stamp);
-  $diff = time() - $stamp;
-  if ($diff < 60) return floor($diff) .' seconds ago';
-  if ($diff < 3600) return floor($diff/60) .' minutes ago';
-  if ($diff < 24*3600) return floor($diff/3600) .' hours ago';
+    $diff = time() - $stamp;
+    if ($diff < 60) $text = floor($diff) .' seconds ago';
+    else if ($diff < 3600) $text = floor($diff/60) .' minutes ago';
+    else if ($diff < 24*3600) $text = floor($diff/3600) .' hours ago';
+    else $text = $time_str;
+  }
 
-  return $result;
+  return '<span title="' .$title. '">' .$text. '</span>';
 }
 
 function yt_get_likedlist_plid()
@@ -237,32 +253,30 @@ function yt_activity_url($yt_activity)
 function yt_print_activity_link($yt_activity, $yt_channel, $blank,
                                 $url)
 {
+  $item = $yt_channel? $yt_channel: $yt_activity;
+
   ?><a class="yt_activity_link"<?
     if ($blank) echo ' target="_blank"';
-  ?> title="Watch it!" href="<?
+  ?> href="<?
     echo $url;
   ?>"><img class="icon_default" alt="(video)" src="/<?
     echo COMMON_DIR_THEMECUR_IMG_ABS;
   ?>icon_video.32.png"><span class="icon_text"><?
-    if ($yt_channel)
-      _o($yt_channel['snippet']['title']);
-    else
-      _o($yt_activity['snippet']['title']);
+    _o($item['snippet']['title']);
   ?></span></a><?
 }
 
 function yt_print_activity_thumblink($yt_activity, $yt_channel, $blank,
                                      $url)
 {
+  $item = $yt_channel? $yt_channel: $yt_activity;
+
   ?><a class="img_link"<?
     if ($blank) echo ' target="_blank"';
-  ?> title="Watch it!" href="<?
+  ?> title="<?_o($item['snippet']['title']); ?>" href="<?
     echo $url;
   ?>"><img class="yt_activity_thumb" alt="(thumb)" src="<?
-    if ($yt_channel)
-      echo $yt_channel['snippet']['thumbnails']['medium']['url'];
-    else
-      echo $yt_activity['snippet']['thumbnails']['medium']['url'];
+    echo $item['snippet']['thumbnails']['medium']['url'];
   ?>"></a><?
 }
 

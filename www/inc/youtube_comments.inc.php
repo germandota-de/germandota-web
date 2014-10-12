@@ -77,7 +77,7 @@ function yt_comments_recv($vid, $order_newest, $page)
     sprintf('videos/%s/comments', $vid), 1 + ($page-1)*YT_COMMENTS_PERPAGE,
     $page == 1? YT_COMMENTS_PERPAGE: (YT_COMMENTS_PERPAGE_NEXT+1),
     $order_newest? 'orderby=published': '');
-  if (!$result) return false;
+  if (!$result || !isset($result['feed']['entry'])) return false;
 
   $next_exist = false; $prev_exist = false;
   foreach ($result['feed']['link'] as $link) {
@@ -196,7 +196,8 @@ function yt_comments_print_comment($comment, $more_link, $more_target,
   ?>"></a><span class="comments_author"><?
     gplus_print_profilelink($comment['actor']);
   ?></span><span class="comments_date"><?
-    _o(yt_str2date($published) .', '. yt_str2time($published));
+    echo yt_str2date_html($published) .', '
+      . yt_str2time_html($published);
 
     if ($published != $updated) echo ' (updated)';
 

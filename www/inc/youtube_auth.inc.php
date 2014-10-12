@@ -26,9 +26,6 @@ include_once dirname(__FILE__). '/google_api.inc.php';
  * https://developers.google.com/youtube/v3/guides/authentication#server-side-apps
  */
 
-define('_YT_AUTH_OAUTH2_SCOPE',
-       'https://www.googleapis.com/auth/youtube.readonly');
-
 /* ***************************************************************  */
 
 function yt_auth_print_form($submit_class, $alt, $descr, $callback,

@@ -72,8 +72,8 @@ include_once 'themes/' .CONFIG_THEME. '/title-content.inc.php';
                                   $cur_url);
     ?></td>
     <td class="activity_table_date"><?
-      echo yt_str2date($cur_published) .'<br>'
-        .yt_str2time($cur_published);
+      echo yt_str2date_html($cur_published) .'<br>'
+        .yt_str2time_html($cur_published);
     ?><div class="activity_table_kind"><?
       yt_printshort_activity_type($cur_selected);
     ?></div></td>
