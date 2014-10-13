@@ -40,16 +40,90 @@ define('_GOOGLE_OAUTH2_TOKEN_PRE',
 
 /* ***************************************************************  */
 
-function google_api_recv($method, $params)
+function _google_api_http_get_authcontext($auth_platform=false)
+{
+  $header = '';
+
+  if ($auth_platform) {
+    $tmp = oauth2_token_get($auth_platform);
+    if (!$tmp) return NULL;
+    list($token_type, $access_token) = $tmp;
+
+    $header .= 'Authorization: Bearer ' .$access_token;
+  }
+
+  $http = array('method' => 'GET');
+  if ($header != '') $http['header'] = $header;
+
+  return stream_context_create(array(
+    'http' => $http
+  ));
+}
+
+function _google_api_http_post_authcontext(
+  $auth_platform=false, $content_type=false, $content=NULL)
+{
+  $header = $content_type
+    ? 'Content-type: ' .$content_type
+    : 'Content-type: application/x-www-form-urlencoded';
+
+  if ($auth_platform) {
+    $tmp = oauth2_token_get($auth_platform);
+    if (!$tmp) return NULL;
+    list($token_type, $access_token) = $tmp;
+
+    $header .= "\nAuthorization: Bearer " .$access_token;
+  }
+
+  // TODO ...
+
+  $http = array('method' => 'POST');
+  if ($content_type && $content) $http['content'] = $content;
+  else $header .= "\nLength: 0";
+
+  $http['header'] = $header;
+
+  return stream_context_create(array(
+    'http' => $http
+  ));
+}
+
+/* ***************************************************************  */
+
+function google_api_recv($method, $params, $auth_platform=false)
 {
   $request = _GOOGLE_REQUEST_PREFIX .'/'. $method
     ._GOOGLE_REQUEST_DEFAULT. '&' .$params;
+
+  $context = _google_api_http_get_authcontext($auth_platform);
 
   /* Do not display $request because of the API key  */
   //debug_api_info_incr('cnt_google_api', 1, $request);
   debug_api_info_incr('cnt_google_api', 1);
 
-  $json = file_get_contents($request);
+  $json = file_get_contents($request, false, $context);
+  if (!$json) return false;
+
+  $result = json_decode($json, true);
+  if (!$result) return false;
+
+  return $result;
+}
+
+function google_api_post($method, $params, $content_type=false,
+                         $content=NULL, $auth_platform=false)
+{
+  $request = _GOOGLE_REQUEST_PREFIX .'/'. $method
+    ._GOOGLE_REQUEST_DEFAULT. '&' .$params;
+
+  $context = _google_api_http_post_authcontext($auth_platform,
+                                               $content_type, $content);
+
+  /* Do not display $request because of the API key  */
+  //debug_api_info_incr('cnt_google_api', 1, $request);
+  debug_api_info_incr('cnt_google_api', 1);
+
+  $json = file_get_contents($request, false, $context);
   if (!$json) return false;
 
   $result = json_decode($json, true);

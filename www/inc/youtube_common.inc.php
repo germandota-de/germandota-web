@@ -112,7 +112,7 @@ function yt_print_chanlink($chan_name, $chan_id)
   ?><a class="yt_channellink" target="_blank"<?
   ?> href="https://www.youtube.com/channel/<?
     echo $chan_id;
-  ?>" title="View this channel at youtube.com"><?
+  ?>" title="View this channel at Youtube"><?
     _o($chan_name);
   ?></a><?
 }

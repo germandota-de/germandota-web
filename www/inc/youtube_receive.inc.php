@@ -37,6 +37,14 @@ function _yt_api_list($method, $part, $params='')
     'part=' .$part. ($params == ''? '': '&' .$params));
 }
 
+function _yt_api_rate($item, $params)
+{
+  debug_api_info_incr('cnt_youtube_rate', 1, $item .' - '. $params);
+
+  return google_api_post(_YT_REQUEST_METHOD_PREFIX .$item. '/rate',
+                         $params, false, NULL, OAUTH2_PLATFORM_YOUTUBE);
+}
+
 /* ***************************************************************  */
 
 function yt_recv_playlists($page_token, $plid='')
@@ -160,6 +168,13 @@ function yt_recv_video($vid)
   if (!$result || count($result['items']) == 0) return false;
 
   return $result;
+}
+
+function yt_recv_video_rate($vid, $rate)
+{
+  $result = _yt_api_rate('videos', 'id='. $vid .'&rating=' .$rate);
+
+  return $result === '';
 }
 
 /* ***************************************************************  */

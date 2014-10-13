@@ -140,7 +140,7 @@ function _page_td($token_name, $dir_str, $i_playlist, $text)
 }
 
 /* ***************************************************************  */
-
+var_dump(yt_recv_video_rate('enYbciOKh_s', 'like'));
 include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
 ?>
 

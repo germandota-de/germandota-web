@@ -112,7 +112,7 @@ function oauth2_token_post_setsession($url, $client_id, $client_secret,
     .$client_secret. '&redirect_uri=' .$redirect_uri
     .'&grant_type=authorization_code';
 
-  $context  = stream_context_create(array(
+  $context = stream_context_create(array(
     'http' => array(
       'method'  => 'POST',
       'header'  => 'Content-type: application/x-www-form-urlencoded',
@@ -123,6 +123,7 @@ function oauth2_token_post_setsession($url, $client_id, $client_secret,
   //debug_api_info_incr('cnt_oauth2_auth', 1, $data);
   debug_api_info_incr('cnt_oauth2_auth', 1);
 
+  $time_stamp = time();
   $json = file_get_contents($url, false, $context);
   if (!$json) return false;
 
@@ -137,9 +138,32 @@ function oauth2_token_post_setsession($url, $client_id, $client_secret,
    */
   if (isset($token_resp['error'])) return false;
 
-  if (!session_oauth2token_set($platform, $token_resp)) return false;
+  if (!session_oauth2token_set($platform, $time_stamp, $token_resp))
+    return false;
 
   return true;
+}
+
+/* ***************************************************************  */
+
+define('_OAUTH2_TOKEN_GET_DELTA_S',          10);
+function oauth2_token_get($platform)
+{
+  $tmp = session_oauth2token_get($platform);
+  if (!$tmp) return false;
+  list($required, $refresh_token) = $tmp;
+
+  /* Access Token expired?  */
+  if ($required['time_stamp'] + $required['expires_in']
+      - _OAUTH2_TOKEN_GET_DELTA_S > time())
+    return array($required['token_type'], $required['access_token']);
+
+  if ($refresh_token) {
+    // TODO: Refresh Access Token && Return it
+    return false;
+  }
+
+  return false;
 }
 
 /* ***************************************************************  */
