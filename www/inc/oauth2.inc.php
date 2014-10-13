@@ -47,8 +47,8 @@ function oauth2_redirect_params_print($platform, $callback, $args)
   }
 }
 
-function oauth2_login_url_get($url_pre, $client_id, $scope, $url_post,
-                              $platform, $callback, $args)
+function oauth2_login_urlget_setsession(
+  $url_pre, $client_id, $scope, $url_post, $platform, $callback, $args)
 {
   /* Must be application/x-www-form-urlencoded (RFC 6749 section
    * 3.1.2.)

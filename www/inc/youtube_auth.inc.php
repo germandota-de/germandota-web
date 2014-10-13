@@ -46,9 +46,9 @@ function yt_auth_print_form($submit_class, $alt, $descr, $callback,
 
 /* ***************************************************************  */
 
-function yt_auth_link_get($callback, $args)
+function yt_auth_urlget_setsession($callback, $args)
 {
-  return google_oauth2_login_url_get(
+  return google_oauth2_urlget_setsession(
     _YT_AUTH_OAUTH2_SCOPE, OAUTH2_PLATFORM_YOUTUBE, $callback, $args);
 }
 

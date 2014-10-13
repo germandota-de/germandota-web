@@ -25,15 +25,23 @@ define('OAUTH2_CALLBACKS_PREFIX',            'oauth2_cb_');
  * Callback must have the form:
  *
  *   oauth2_cb_<platform>_<name>_<arg_count>()
- *
  * i.e.
- *
  *   oauth2_cb_youtube_video_like_1($video_id)
+ *
+ * Returning must be FALSE on error or on success
+ *
+ *   array($title, $html_output, $js_onload);
  */
 
 function oauth2_cb_youtube_video_like_1($video_id)
 {
-  echo 'Hello World!';
+  $title = 'Hello World!';
+  $html_output = '<a href="..">It wörks!</a>';
+  $js_onload = <<<EOS
+    //popup_close();
+EOS;
+
+  return array($title, $html_output, $js_onload);
 }
 
 /* ***************************************************************  */
@@ -50,6 +58,7 @@ function oauth2_callback_callable($platform, $callback, $args)
                                                $args));
 }
 
+/* Returns FALSE on any error  */
 function oauth2_callback_call($platform, $callback, $args)
 {
   return call_user_func_array(_oauth2_callback_2str($platform, $callback,
