@@ -75,16 +75,13 @@ function _google_api_http_post_authcontext(
     $header .= "\nAuthorization: Bearer " .$access_token;
   }
 
-  // TODO ...
-
-  $http = array('method' => 'POST');
-  if ($content_type && $content) $http['content'] = $content;
-  else $header .= "\nLength: 0";
-
-  $http['header'] = $header;
+  if (!$content) $content = "\n";
 
   return stream_context_create(array(
-    'http' => $http
+    'http' => array(
+      'method'  => 'POST',
+      'header'  => $header,
+      'content' => $content)
   ));
 }
 
@@ -102,6 +99,7 @@ function google_api_recv($method, $params, $auth_platform=false)
   debug_api_info_incr('cnt_google_api', 1);
 
   $json = file_get_contents($request, false, $context);
+  if ($json === '') return "\n";
   if (!$json) return false;
 
   $result = json_decode($json, true);
@@ -124,6 +122,7 @@ function google_api_post($method, $params, $content_type=false,
   debug_api_info_incr('cnt_google_api', 1);
 
   $json = file_get_contents($request, false, $context);
+  if ($json === '') return "\n";
   if (!$json) return false;
 
   $result = json_decode($json, true);

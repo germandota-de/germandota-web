@@ -93,7 +93,15 @@ if (!preg_match('@^\s*ErrorDocument\s+[0-9]{3}\s+'
 include_once COMMON_CONF_FILEROOT;
 include_once dirname(__FILE__). '/debug.inc.php';
 
-/* ***************************************************************  */
+if (CONFIG_GOOGLE_APIKEY == '')
+  die('CONFIG_GOOGLE_APIKEY not configured!');
+if (CONFIG_GOOGLE_CLIENT_ID == '')
+  die('CONFIG_GOOGLE_CLIENT_ID not configured!');
+if (CONFIG_GOOGLE_CLIENT_SECRET == '')
+  die('CONFIG_GOOGLE_CLIENT_SECRET not configured!');
+
+/* End of install stuff
+ * ***************************************************************  */
 
 define('COMMON_DIR_INC_ABS',
   COMMON_DIR_INST_ABS.COMMON_DIR_INC .'/');

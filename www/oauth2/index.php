@@ -114,8 +114,8 @@ if ($global_state == 'redirect') {
   common_print_htmltitle('Error :( ...');
 else if ($global_state == 'auth') {
   common_print_htmltitle($global_title);
-  echo '  <script type="text/javascript">' .$global_js_onload
-    ."</script>\n";
+  echo "  <script type=\"text/javascript\">\n" .$global_js_onload
+    ."\n  </script>\n";
 } else
   common_print_htmltitle('What ???');
 

@@ -45,13 +45,6 @@ define('CONFIG_GOOGLE_CLIENT_ID',
 define('CONFIG_GOOGLE_CLIENT_SECRET',
   '');
 
-if (CONFIG_GOOGLE_APIKEY == '')
-  die('CONFIG_GOOGLE_APIKEY not configured!');
-if (CONFIG_GOOGLE_CLIENT_ID == '')
-  die('CONFIG_GOOGLE_CLIENT_ID not configured!');
-if (CONFIG_GOOGLE_CLIENT_SECRET == '')
-  die('CONFIG_GOOGLE_CLIENT_SECRET not configured!');
-
 /* Youtube API request:
  *
  * https://www.googleapis.com/youtube/v3/channels?key={API_KEY} \
@@ -67,10 +60,16 @@ define('CONFIG_YT_CHANNELID',      'UCeKFc-ydU9pWKa4tqK-vYSw');
  *
  * http://www.php.net/date
  */
-define('CONFIG_DATE_FORMAT',       'D, j. M y');
-define('CONFIG_DATE_LONG_FORMAT',  'l, j. F Y');
-define('CONFIG_TIME_FORMAT',       'G:i');
-define('CONFIG_TIME_LONG_FORMAT',  'G:i:s e');
+define('CONFIG_DATE_FORMAT',            'D, j. M y');
+define('CONFIG_DATE_LONG_FORMAT',       'l, j. F Y');
+define('CONFIG_TIME_FORMAT',            'G:i');
+define('CONFIG_TIME_LONG_FORMAT',       'G:i:s e');
+
+/* Format large numbers like `2.357,23'
+ */
+define('CONFIG_NUMBERS_LOCALE',         'de'); /* For EN: 'en'  */
+define('CONFIG_NUMBERS_THOUSANDS',      '.');  /* For EN: ','   */
+define('CONFIG_NUMBERS_POINT',          ',');  /* For EN: '.'   */
 
 /* ***************************************************************  */
 

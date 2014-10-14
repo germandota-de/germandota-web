@@ -174,7 +174,7 @@ function yt_recv_video_rate($vid, $rate)
 {
   $result = _yt_api_rate('videos', 'id='. $vid .'&rating=' .$rate);
 
-  return $result === '';
+  return $result !== false;
 }
 
 /* ***************************************************************  */
