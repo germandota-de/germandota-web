@@ -183,23 +183,24 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
           ?><span class="video_videoframe_table_stats"><?
           echo number_format($glob_yt_video['statistics']['viewCount'],
-                             0, ',', '.');
+                   0, CONFIG_NUMBERS_POINT, CONFIG_NUMBERS_THOUSANDS);
           ?> Views</span></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
         yt_auth_print_form('video_videoframe_table_icon', 'like',
-            'Like it!', 'video_like', array($video_id),
+            'I like it', 'video_like', array($video_id),
             '/' .COMMON_DIR_THEMECUR_IMG_ABS. 'icon_like.32.png'); ?></td>
-        <td class="video_videoframe_table_small"><?
+        <td class="video_videoframe_table_small"><span<?
+          ?> id="js_yt_video_like_<? echo $video_id; ?>"><?
           echo number_format($glob_yt_video['statistics']['likeCount'],
-                             0, ',', '.');
-        ?></td>
+                   0, CONFIG_NUMBERS_POINT, CONFIG_NUMBERS_THOUSANDS);
+        ?></span></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
           ?><img class="video_videoframe_table_icon" alt="(comments)"<?
           ?> src="/<?
             echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_comment.32.png"></td>
         <td class="video_videoframe_table_small"><?
           echo number_format($glob_yt_video['statistics']['commentCount'],
-                             0, ',', '.');
+                   0, CONFIG_NUMBERS_POINT, CONFIG_NUMBERS_THOUSANDS);
         ?></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
           ?><img class="video_videoframe_table_icon" alt="(dislikes)"<?
@@ -207,7 +208,7 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
             echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_dislike.32.png"></td>
         <td class="video_videoframe_table_small"><?
           echo number_format($glob_yt_video['statistics']['dislikeCount'],
-                             0, ',', '.');
+                   0, CONFIG_NUMBERS_POINT, CONFIG_NUMBERS_THOUSANDS);
         ?></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
           ?><span class="video_videoframe_table_date"><?

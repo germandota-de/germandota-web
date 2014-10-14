@@ -50,15 +50,23 @@ function session_oauth2login_delete($id)
 
 /* ***************************************************************  */
 
-function session_oauth2token_set($platform, $token_resp)
+define('_SESSION_OAUTH2TOKEN_SET_EXPIRESDEF_S',   '900');
+function session_oauth2token_set($platform, $time_stamp, $token_resp)
 {
   if (!isset($token_resp['access_token'])
-      || !isset($token_resp['token_type'])
-      || !isset($token_resp['expires_in'])) return false;
+      || !isset($token_resp['token_type'])) return false;
+
+  /* We are currently only support tokens of type 'Bearer'  */
+  if ($token_resp['token_type'] != 'Bearer') return false;
+
+  /* EXPIRES_IN is optional, see RFC 6749 section 4.2.2.  */
+  $expires_in = isset($token_resp['expires_in'])
+    ? $token_resp['expires_in']: _SESSION_OAUTH2TOKEN_SET_EXPIRESDEF_S;
 
   $data = array('access_token' => $token_resp['access_token'],
                 'token_type' => $token_resp['token_type'],
-                'expires_in' => $token_resp['expires_in'],
+                'expires_in' => $expires_in,
+                'time_stamp' => $time_stamp,
                 );
 
   $i = SESSION_PRE_OAUTH2TOKEN .$platform;
@@ -68,6 +76,19 @@ function session_oauth2token_set($platform, $token_resp)
     $_SESSION[$i]['refresh_token'] = $token_resp['refresh_token'];
 
   return true;
+}
+
+function session_oauth2token_get($platform)
+{
+  $i = SESSION_PRE_OAUTH2TOKEN .$platform;
+
+  if (!isset($_SESSION[$i])) return false;
+  $required = $_SESSION[$i]['required'];
+
+  $refresh_token = isset($_SESSION[$i]['refresh_token'])
+    ? $_SESSION[$i]['refresh_token']: false;
+
+  return array($required, $refresh_token);
 }
 
 /* ***************************************************************  */

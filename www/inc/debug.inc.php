@@ -37,8 +37,11 @@ function debug_api_info_print($prop=false) {}
 $_debug_api_info
   = array('cnt_google_api'              => 0,
           'cnt_youtube_api_v2'          => 0,
+          '---'                         => 0,
           'cnt_youtube_list'            => 0,
+          'cnt_youtube_rate'            => 0,
           'cnt_google_plus'             => 0,
+          '+++'                         => 0,
           'cnt_oauth2_auth'             => 0,
           'cnt_youtube_auth'            => 0,
           );

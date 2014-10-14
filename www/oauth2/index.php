@@ -43,7 +43,8 @@ function _init_redirect($platform, $callback)
     return false;
 
   if ($platform == OAUTH2_PLATFORM_YOUTUBE)
-    $global_redirect_link = yt_auth_link_get($callback, $global_args);
+    $global_redirect_link = yt_auth_urlget_setsession($callback,
+                                                      $global_args);
   else
     return false;
 
@@ -70,17 +71,18 @@ function _init_error($state, $error, $ignore_state=false)
 function _init_auth($state, $code)
 {
   /* Set following globals  */
-  global $global_pf, $global_cb, $global_args;
+  global $global_title, $global_html_output, $global_js_onload;
 
   $tmp = oauth2_login_id2vars($state);
   if (!$tmp) return false;
-  list($global_pf, $global_cb, $global_args) = $tmp;
+  list($platform, $callback, $args) = $tmp;
 
   if (!yt_auth_setsession($code))
-    return _init_error(false, 'Could not check your identity :(',
-                       true);
+    return _init_error(false, 'Could not check your identity :(', true);
 
-  // TODO Call callback
+  $tmp = oauth2_callback_call($platform, $callback, $args);
+  if (!$tmp) return false;
+  list($global_title, $global_html_output, $global_js_onload) = $tmp;
 
   return 'auth';
 }
@@ -110,9 +112,11 @@ if ($global_state == 'redirect') {
   common_html_meta_refresh($global_redirect_href);
 } else if ($global_state == 'error')
   common_print_htmltitle('Error :( ...');
-else if ($global_state == 'auth')
-  common_print_htmltitle('Authenticating ...');
-else
+else if ($global_state == 'auth') {
+  common_print_htmltitle($global_title);
+  echo "  <script type=\"text/javascript\">\n" .$global_js_onload
+    ."\n  </script>\n";
+} else
   common_print_htmltitle('What ???');
 
 include_once '../themes/' .CONFIG_THEME. '/head-title.frame.inc.php';
@@ -122,7 +126,7 @@ if ($global_state == 'redirect')
 else if ($global_state == 'error')
   common_print_title('Error :( ...');
 else if ($global_state == 'auth')
-  common_print_title('Authenticating ...');
+  common_print_title($global_title);
 else
   common_print_title('What ???');
 
@@ -144,10 +148,7 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.frame.inc.php';
     <p><span class="oauth2_errmsg"><? _o($global_error_msg); ?></span></p>
 <?
   } else if ($global_state == 'auth') {
-?>
-    Checking your identity using Authorization Server.  Please wait ...
-    <p><span class="oauth2_errmsg">Not implemented</span></p>
-<?
+    _o_html('    ' .$global_html_output. "\n");
   } else {
 ?>
     Do not know what you want :((
