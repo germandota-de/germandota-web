@@ -67,7 +67,7 @@ if (common_server_is_localhost()  /* For development purposes  */
         && $glob_servername == common_url2hostname($_SERVER['HTTP_REFERER']))) {
   $glob_comments = yt_comments_recv($video_id, $order == 'newest',
                                     $page);
-  $glob_aid = $glob_comments['activityId'];
+  $glob_aid = $glob_comments? $glob_comments['activityId']: false;
 } else {
   $glob_comments = false;
   $glob_aid = false;
@@ -92,10 +92,10 @@ $glob_comments_order = array(
 
 include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
 common_print_htmltitle('Comments (' .$glob_comments['totalResults']. ')');
-include_once '../themes/' .CONFIG_THEME. '/head-title.comments.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/head-title.frame.inc.php';
 common_menu_print($glob_comments_order, 'comments_order', $order);
 common_print_title('Comments (' .$glob_comments['totalResults']. ')', true);
-include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/title-content.frame.inc.php';
 ?>
 
   <table id="comments_table">
@@ -112,7 +112,7 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
 <?
   } // if ($page != 1)
 
-  for ($i=0; $i<count($glob_aid); $i++) {
+  for ($i=0; $glob_aid && $i<count($glob_aid); $i++) {
     $cur_comment = yt_comments_recv_comment($glob_aid[$i]);
     $cur_cid = $cur_comment['id'];
 ?>
@@ -185,4 +185,4 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.comments.inc.php';
   </table>
 
 <?
-include_once '../themes/' .CONFIG_THEME. '/content-end.comments.inc.php';
+include_once '../themes/' .CONFIG_THEME. '/content-end.frame.inc.php';

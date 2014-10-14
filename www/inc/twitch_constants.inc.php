@@ -16,9 +16,3 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('COMMON_EXIST')) exit();
-
-?>  <!-- begin of title-content -->
-    </div>
-    <div id="theme_content">
-  <!-- end of title-content -->

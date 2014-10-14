@@ -19,3 +19,4 @@
 include_once dirname(__FILE__). '/youtube_receive.inc.php';
 include_once dirname(__FILE__). '/youtube_common.inc.php';
 include_once dirname(__FILE__). '/youtube_comments.inc.php';
+include_once dirname(__FILE__). '/youtube_auth.inc.php';

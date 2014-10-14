@@ -27,9 +27,23 @@
  *   2. APIs -> 'Google+ API' set to ON
  *
  *   3. Credentials -> Public API access -> Server key
+ *
+ *   4. Credentials -> OAuth -> Web application
+ *
+ *        * Authorized JavaScript origins:
+ *          <leave blank>
+ *
+ *        * Authorized redirect URI (for every reachabel (sub-)domain):
+ *            http[s]://www.<your-domain.com>/oauth2/
+ *          or
+ *            http[s]://www.<your-domain.com>/<install_dir>/oauth2/
  */
-define('CONFIG_YT_APIKEY', '');
-if (CONFIG_YT_APIKEY == '') die('CONFIG_YT_APIKEY not configured!');
+define('CONFIG_GOOGLE_APIKEY',
+  '');
+define('CONFIG_GOOGLE_CLIENT_ID',
+  '');
+define('CONFIG_GOOGLE_CLIENT_SECRET',
+  '');
 
 /* Youtube API request:
  *
@@ -46,8 +60,16 @@ define('CONFIG_YT_CHANNELID',      'UCeKFc-ydU9pWKa4tqK-vYSw');
  *
  * http://www.php.net/date
  */
-define('CONFIG_DATE_FORMAT',       'j. M Y');
-define('CONFIG_TIME_FORMAT',       'G:i');
+define('CONFIG_DATE_FORMAT',            'D, j. M y');
+define('CONFIG_DATE_LONG_FORMAT',       'l, j. F Y');
+define('CONFIG_TIME_FORMAT',            'G:i');
+define('CONFIG_TIME_LONG_FORMAT',       'G:i:s e');
+
+/* Format large numbers like `2.357,23'
+ */
+define('CONFIG_NUMBERS_LOCALE',         'de'); /* For EN: 'en'  */
+define('CONFIG_NUMBERS_THOUSANDS',      '.');  /* For EN: ','   */
+define('CONFIG_NUMBERS_POINT',          ',');  /* For EN: '.'   */
 
 /* ***************************************************************  */
 

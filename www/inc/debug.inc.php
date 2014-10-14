@@ -21,6 +21,7 @@ define('DEBUG',                         false);
 /* ***************************************************************  */
 
 define('DEBUG_DETAILS',                 true);
+define('DEBUG_NO_REDIRECT',             true);
 
 /* ***************************************************************  */
 
@@ -36,8 +37,13 @@ function debug_api_info_print($prop=false) {}
 $_debug_api_info
   = array('cnt_google_api'              => 0,
           'cnt_youtube_api_v2'          => 0,
+          '---'                         => 0,
           'cnt_youtube_list'            => 0,
+          'cnt_youtube_rate'            => 0,
           'cnt_google_plus'             => 0,
+          '+++'                         => 0,
+          'cnt_oauth2_auth'             => 0,
+          'cnt_youtube_auth'            => 0,
           );
 
 $_debug_stack = array();
@@ -52,7 +58,7 @@ function debug_api_info_set($prop, $val, $details='<set>')
     = $prop. '(' .$_debug_api_info[$prop]. '): ' .$details;
 }
 
-function debug_api_info_incr($prop, $val=1, $details='<incemented>')
+function debug_api_info_incr($prop, $val=1, $details='<incremented>')
 {
   global $_debug_api_info, $_debug_stack;
 

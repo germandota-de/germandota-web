@@ -183,23 +183,24 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
           ?><span class="video_videoframe_table_stats"><?
           echo number_format($glob_yt_video['statistics']['viewCount'],
-                             0, ',', '.');
+                   0, CONFIG_NUMBERS_POINT, CONFIG_NUMBERS_THOUSANDS);
           ?> Views</span></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
-          ?><img class="video_videoframe_table_icon" alt="(likes)"<?
-          ?> src="/<?
-            echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_like.32.png"></td>
-        <td class="video_videoframe_table_small"><?
+        yt_auth_print_form('video_videoframe_table_icon', 'like',
+            'I like it', 'video_like', array($video_id),
+            '/' .COMMON_DIR_THEMECUR_IMG_ABS. 'icon_like.32.png'); ?></td>
+        <td class="video_videoframe_table_small"><span<?
+          ?> id="js_yt_video_like_<? echo $video_id; ?>"><?
           echo number_format($glob_yt_video['statistics']['likeCount'],
-                             0, ',', '.');
-        ?></td>
+                   0, CONFIG_NUMBERS_POINT, CONFIG_NUMBERS_THOUSANDS);
+        ?></span></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
           ?><img class="video_videoframe_table_icon" alt="(comments)"<?
           ?> src="/<?
             echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_comment.32.png"></td>
         <td class="video_videoframe_table_small"><?
           echo number_format($glob_yt_video['statistics']['commentCount'],
-                             0, ',', '.');
+                   0, CONFIG_NUMBERS_POINT, CONFIG_NUMBERS_THOUSANDS);
         ?></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
           ?><img class="video_videoframe_table_icon" alt="(dislikes)"<?
@@ -207,12 +208,12 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
             echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_dislike.32.png"></td>
         <td class="video_videoframe_table_small"><?
           echo number_format($glob_yt_video['statistics']['dislikeCount'],
-                             0, ',', '.');
+                   0, CONFIG_NUMBERS_POINT, CONFIG_NUMBERS_THOUSANDS);
         ?></td>
         <td class="video_videoframe_table_small">&nbsp;&nbsp;&nbsp;<?
           ?><span class="video_videoframe_table_date"><?
-          _o(yt_str2date($glob_yt_video['snippet']['publishedAt']) .', '
-             .yt_str2time($glob_yt_video['snippet']['publishedAt']));
+          echo (yt_str2date_html($glob_yt_video['snippet']['publishedAt'])
+            .', '. yt_str2time_html($glob_yt_video['snippet']['publishedAt']));
         ?></span></td>
         <td></td>
         <td class="video_videoframe_table_small">Subscribe <?
@@ -240,10 +241,10 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
     echo ($glob_video_plposition+1).' of '
       .$glob_yt_result['pageInfo']['totalResults'];
     ?> - <span class="video_thumbs_table_top_time"><?
-    _o($glob_yt_list['snippet']['title']
-       .' ('.yt_str2date($glob_yt_list['snippet']['publishedAt'])
-       .', ' .yt_str2time($glob_yt_list['snippet']['publishedAt'])
-       .')');
+    _o($glob_yt_list['snippet']['title']);
+    echo ' ('.yt_str2date_html($glob_yt_list['snippet']['publishedAt'])
+      .', ' .yt_str2time_html($glob_yt_list['snippet']['publishedAt'])
+      .')';
     ?></span></th></tr>
   <tr>
 <?
@@ -308,7 +309,8 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
       echo ($glob_yt_plitems[$i]['snippet']['position']+1) .'.<br>';
     ?></span><?
       $cur_date = $glob_yt_plitems[$i]['snippet']['publishedAt'];
-      echo yt_str2date($cur_date) .'<br>'. yt_str2time($cur_date);
+      echo yt_str2date_html($cur_date) .'<br>'
+        .yt_str2time_html($cur_date);
     ?></th>
 <?
   } /* for ($i=0, $k=0; $i<count($glob_yt_plitems); $i++)  */
