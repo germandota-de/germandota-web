@@ -125,7 +125,6 @@ function oauth2_token_post_setsession($url, $client_id, $client_secret,
 
   $time_stamp = time();
   $json = file_get_contents($url, false, $context);
-  if ($json === '') return "\n";
   if (!$json) return false;
 
   $token_resp = json_decode($json, true);

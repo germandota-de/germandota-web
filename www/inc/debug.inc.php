@@ -22,6 +22,7 @@ define('DEBUG',                         false);
 
 define('DEBUG_DETAILS',                 true);
 define('DEBUG_NO_REDIRECT',             true);
+define('DEBUG_NO_JS_ONLOAD',            true);
 
 /* ***************************************************************  */
 
