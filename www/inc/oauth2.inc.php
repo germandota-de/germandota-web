@@ -100,17 +100,19 @@ function oauth2_login_2errormsg($error_resp)
 
 /* ***************************************************************  */
 
-function oauth2_token_post_setsession($url, $client_id, $client_secret,
-                                      $platform, $code)
+function __oauth2_token_post_setsession($auth_array, $code,
+                                        $code_is_refreshtoken)
 {
   /* Must be application/x-www-form-urlencoded (RFC 6749 section
    * 4.1.3.)
    */
   $redirect_uri = urlencode(_OAUTH2_REDIRECT_URI);
 
-  $data = 'code=' .$code. '&client_id=' .$client_id. '&client_secret='
-    .$client_secret. '&redirect_uri=' .$redirect_uri
-    .'&grant_type=authorization_code';
+  if ($code_is_refreshtoken) echo 'Hello World!';  // TODO
+
+  $data = 'code=' .$code. '&client_id=' .$auth_array['client_id']
+    .'&client_secret=' .$auth_array['client_secret']. '&redirect_uri='
+    .$redirect_uri. '&grant_type=authorization_code';
 
   $context = stream_context_create(array(
     'http' => array(
@@ -124,7 +126,7 @@ function oauth2_token_post_setsession($url, $client_id, $client_secret,
   debug_api_info_incr('cnt_oauth2_auth', 1);
 
   $time_stamp = time();
-  $json = file_get_contents($url, false, $context);
+  $json = file_get_contents($auth_array['url_token'], false, $context);
   if (!$json) return false;
 
   $token_resp = json_decode($json, true);
@@ -138,18 +140,29 @@ function oauth2_token_post_setsession($url, $client_id, $client_secret,
    */
   if (isset($token_resp['error'])) return false;
 
-  if (!session_oauth2token_set($platform, $time_stamp, $token_resp))
-    return false;
+  if (!session_oauth2token_set($auth_array['platform'], $time_stamp,
+                               $token_resp)) return false;
 
   return true;
+}
+
+function oauth2_token_post_setsession($auth_array, $code)
+{
+  return __oauth2_token_post_setsession($auth_array, $code, false);
+}
+
+function _oauth2_refresh_post_setsession($auth_array, $refresh_token)
+{
+  return __oauth2_token_post_setsession($auth_array, $refresh_token,
+                                        true);
 }
 
 /* ***************************************************************  */
 
 define('_OAUTH2_TOKEN_GET_DELTA_S',          10);
-function oauth2_token_get($platform)
+function oauth2_token_get($auth_array)
 {
-  $tmp = session_oauth2token_get($platform);
+  $tmp = session_oauth2token_get($auth_array['platform']);
   if (!$tmp) return false;
   list($required, $refresh_token) = $tmp;
 
@@ -158,12 +171,9 @@ function oauth2_token_get($platform)
       - _OAUTH2_TOKEN_GET_DELTA_S > time())
     return array($required['token_type'], $required['access_token']);
 
-  if ($refresh_token) {
-    // TODO: Refresh Access Token && Return it
-    return false;
-  }
+  if (!$refresh_token) return false;
 
-  return false;
+  return _oauth2_refresh_post_setsession($auth_array, $refresh_token);
 }
 
 /* ***************************************************************  */

@@ -40,20 +40,31 @@ define('_GOOGLE_OAUTH2_TOKEN_PRE',
 
 /* ***************************************************************  */
 
+function _google_oautharray_new($platform)
+{
+  return array('url_token' => _GOOGLE_OAUTH2_TOKEN_PRE,
+               'client_id' => CONFIG_GOOGLE_CLIENT_ID,
+               'client_secret' => CONFIG_GOOGLE_CLIENT_SECRET,
+               'platform' => $platform
+               );
+}
+
+/* ***************************************************************  */
+
 function _google_api_http_get_authcontext($auth_platform=false)
 {
-  $header = '';
+  $header = false;
 
   if ($auth_platform) {
-    $tmp = oauth2_token_get($auth_platform);
+    $tmp = oauth2_token_get(_google_oautharray_new($auth_platform));
     if (!$tmp) return NULL;
     list($token_type, $access_token) = $tmp;
 
-    $header .= 'Authorization: Bearer ' .$access_token;
+    $header = 'Authorization: Bearer ' .$access_token;
   }
 
   $http = array('method' => 'GET');
-  if ($header != '') $http['header'] = $header;
+  if ($header) $http['header'] = $header;
 
   return stream_context_create(array(
     'http' => $http
@@ -68,7 +79,7 @@ function _google_api_http_post_authcontext(
     : 'Content-type: application/x-www-form-urlencoded';
 
   if ($auth_platform) {
-    $tmp = oauth2_token_get($auth_platform);
+    $tmp = oauth2_token_get(_google_oautharray_new($auth_platform));
     if (!$tmp) return NULL;
     list($token_type, $access_token) = $tmp;
 
@@ -148,9 +159,8 @@ function google_oauth2_urlget_setsession($scope, $platform, $callback,
 
 function google_oauth2_setsession($platform, $code)
 {
-  return oauth2_token_post_setsession(_GOOGLE_OAUTH2_TOKEN_PRE,
-    CONFIG_GOOGLE_CLIENT_ID, CONFIG_GOOGLE_CLIENT_SECRET, $platform,
-    $code);
+  return oauth2_token_post_setsession(
+                            _google_oautharray_new($platform), $code);
 }
 
 /* ***************************************************************  */
