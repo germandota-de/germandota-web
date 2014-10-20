@@ -108,11 +108,17 @@ function __oauth2_token_post_setsession($auth_array, $code,
    */
   $redirect_uri = urlencode(_OAUTH2_REDIRECT_URI);
 
-  if ($code_is_refreshtoken) echo 'Hello World!';  // TODO
+  if ($code_is_refreshtoken) {
+    $grant_type = 'refresh_token';
+    $auth_param = 'refresh_token=' .$code;
+  } else {
+    $grant_type = 'authorization_code';
+    $auth_param = 'code=' .$code;
+  }
 
-  $data = 'code=' .$code. '&client_id=' .$auth_array['client_id']
+  $data = $auth_param. '&client_id=' .$auth_array['client_id']
     .'&client_secret=' .$auth_array['client_secret']. '&redirect_uri='
-    .$redirect_uri. '&grant_type=authorization_code';
+    .$redirect_uri. '&grant_type=' .$grant_type;
 
   $context = stream_context_create(array(
     'http' => array(
@@ -168,12 +174,18 @@ function oauth2_token_get($auth_array)
 
   /* Access Token expired?  */
   if ($required['time_stamp'] + $required['expires_in']
-      - _OAUTH2_TOKEN_GET_DELTA_S > time())
-    return array($required['token_type'], $required['access_token']);
+      - _OAUTH2_TOKEN_GET_DELTA_S < time()) {
 
-  if (!$refresh_token) return false;
+    if (!$refresh_token
+        || !_oauth2_refresh_post_setsession($auth_array, $refresh_token))
+      return false;
 
-  return _oauth2_refresh_post_setsession($auth_array, $refresh_token);
+    $tmp = session_oauth2token_get($auth_array['platform']);
+    if (!$tmp) return false;
+    list($required, $refresh_token) = $tmp;
+  }
+
+  return array($required['token_type'], $required['access_token']);
 }
 
 /* ***************************************************************  */
