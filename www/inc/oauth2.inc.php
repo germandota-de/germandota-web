@@ -154,27 +154,46 @@ function __oauth2_token_post_setsession($auth_array, $code,
 
 function oauth2_token_post_setsession($auth_array, $code)
 {
+  debug_api_info_incr('cnt_' .$auth_array['platform']. '_auth', 1,
+                      'code '. $code);
+
   return __oauth2_token_post_setsession($auth_array, $code, false);
 }
 
 function _oauth2_refresh_post_setsession($auth_array, $refresh_token)
 {
+  debug_api_info_incr('cnt_' .$auth_array['platform']. '_refresh', 1,
+                      'refresh_token '. $refresh_token);
+
   return __oauth2_token_post_setsession($auth_array, $refresh_token,
                                         true);
 }
 
 /* ***************************************************************  */
 
-define('_OAUTH2_TOKEN_GET_DELTA_S',          10);
+define('_OAUTH2_ACCESSTOKEN_EXPIRED_DELTA_S',     10);
+function _oauth2_accesstoken_expired($token_required)
+{
+  return $token_required['time_stamp'] + $token_required['expires_in']
+    - _OAUTH2_ACCESSTOKEN_EXPIRED_DELTA_S < time();
+}
+
+function oauth2_logged_in($platform)
+{
+  $tmp = session_oauth2token_get($platform);
+  if (!$tmp) return false;
+  list($required, $refresh_token) = $tmp;
+
+  return $refresh_token !== false;
+}
+
 function oauth2_token_get($auth_array)
 {
   $tmp = session_oauth2token_get($auth_array['platform']);
   if (!$tmp) return false;
   list($required, $refresh_token) = $tmp;
 
-  /* Access Token expired?  */
-  if ($required['time_stamp'] + $required['expires_in']
-      - _OAUTH2_TOKEN_GET_DELTA_S < time()) {
+  if (_oauth2_accesstoken_expired($required)) {
 
     if (!$refresh_token
         || !_oauth2_refresh_post_setsession($auth_array, $refresh_token))

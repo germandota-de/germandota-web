@@ -29,30 +29,6 @@ $global_code = isset($_GET['code'])? trim($_GET['code']): false;
 
 /* ***************************************************************  */
 
-function _init_redirect($platform, $callback)
-{
-  /* Set following globals  */
-  global $global_args, $global_redirect_link, $global_redirect_href;
-
-  $global_args = array();
-  for ($i=0; isset($_POST['arg_' .$i]); $i++) {
-    $global_args[$i] = trim($_POST['arg_' .$i]);
-  }
-
-  if (!oauth2_callback_callable($platform, $callback, $global_args))
-    return false;
-
-  if ($platform == OAUTH2_PLATFORM_YOUTUBE)
-    $global_redirect_link = yt_auth_urlget_setsession($callback,
-                                                      $global_args);
-  else
-    return false;
-
-  $global_redirect_href = common_url_amp($global_redirect_link);
-
-  return 'redirect';
-}
-
 function _init_error($state, $error, $ignore_state=false)
 {
   /* Set following globals  */
@@ -68,23 +44,61 @@ function _init_error($state, $error, $ignore_state=false)
   return 'error';
 }
 
-function _init_auth($state, $code)
+function _init_auth($state, $code,
+                    $platform=false, $callback=false, $args=false)
 {
   /* Set following globals  */
   global $global_title, $global_html_output, $global_js_onload;
 
-  $tmp = oauth2_login_id2vars($state);
-  if (!$tmp) return false;
-  list($platform, $callback, $args) = $tmp;
+  if (!$platform || !$callback || !$args) {
+    $tmp = oauth2_login_id2vars($state);
+    if (!$tmp) return false;
+    list($platform, $callback, $args) = $tmp;
 
-  if (!yt_auth_setsession($code))
-    return _init_error(false, 'Could not check your identity :(', true);
+    /* Do only send code request if $state is valid  */
+    if ($platform == OAUTH2_PLATFORM_YOUTUBE)
+      $session_result = yt_auth_setsession($code);
+    else
+      return false;
+
+    if (!$session_result)
+      return _init_error(false, 'Could not check your identity :(', true);
+  }
 
   $tmp = oauth2_callback_call($platform, $callback, $args);
   if (!$tmp) return false;
   list($global_title, $global_html_output, $global_js_onload) = $tmp;
 
   return 'auth';
+}
+
+function _init_redirect($platform, $callback)
+{
+  /* Set following globals  */
+  global $global_args, $global_redirect_link, $global_redirect_href;
+
+  $global_args = array();
+  for ($i=0; isset($_POST['arg_' .$i]); $i++) {
+    $global_args[$i] = trim($_POST['arg_' .$i]);
+  }
+
+  if (oauth2_logged_in($platform))
+    return _init_auth(false, false, $platform, $callback, $global_args);
+
+  /* ---  */
+
+  if (!oauth2_callback_callable($platform, $callback, $global_args))
+    return false;
+
+  if ($platform == OAUTH2_PLATFORM_YOUTUBE)
+    $global_redirect_link = yt_auth_urlget_setsession($callback,
+                                                      $global_args);
+  else
+    return false;
+
+  $global_redirect_href = common_url_amp($global_redirect_link);
+
+  return 'redirect';
 }
 
 /* ***************************************************************  */
