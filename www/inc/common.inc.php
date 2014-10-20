@@ -359,6 +359,14 @@ function common_html_meta_refresh($href)
   echo "\n";
 }
 
+function common_html_js_onload($js_code)
+{
+  if (DEBUG && DEBUG_NO_JS_ONLOAD) return;
+
+  echo "  <script type=\"text/javascript\">\n" .$js_code
+    ."\n  </script>\n";
+}
+
 /* ***************************************************************  */
 
 include_once dirname(__FILE__). '/session.inc.php';

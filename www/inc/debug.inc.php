@@ -22,6 +22,7 @@ define('DEBUG',                         false);
 
 define('DEBUG_DETAILS',                 true);
 define('DEBUG_NO_REDIRECT',             true);
+define('DEBUG_NO_JS_ONLOAD',            true);
 
 /* ***************************************************************  */
 
@@ -44,6 +45,7 @@ $_debug_api_info
           '+++'                         => 0,
           'cnt_oauth2_auth'             => 0,
           'cnt_youtube_auth'            => 0,
+          'cnt_youtube_refresh'         => 0,
           );
 
 $_debug_stack = array();
