@@ -40,7 +40,7 @@ function oauth2_cb_youtube_video_like_1($video_id)
   $thousands = CONFIG_NUMBERS_THOUSANDS;
   $locale = CONFIG_NUMBERS_LOCALE;
 
-  if (yt_recv_video_rate($video_id, 'like')) {
+  if (yt_recv_video_rate_auth($video_id, 'like')) {
     $title = 'Liked :D';
     $html_output = 'Yeeah you like it xD ...';
     $js_onload = <<<EOS

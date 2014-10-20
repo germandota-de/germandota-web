@@ -104,7 +104,7 @@ function popup_auth()
     + ",height=" + h
     + ",left=" + l
     + ",top=" + t
-    + ",menubar=no,resizable=yes,scrollbars=no,status=no"
+    + ",menubar=no,resizable=yes,scrollbars=yes,status=no"
     + ",toolbar=no,location=no";
 
   var pwindow = window.open('about:blank', 'auth', width_height);

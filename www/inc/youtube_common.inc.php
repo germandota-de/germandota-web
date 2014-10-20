@@ -288,24 +288,24 @@ function yt_printshort_activity_type($activ_selected)
     $cur_activity = $activ_selected[$i];
     $type = $cur_activity['snippet']['type'];
     if ($type == 'upload') {
-      ?><img class="yt_activity_type" alt="Uploaded"<?
-      ?> title="Uploaded" src="/<?
+      ?><img class="yt_activity_type" alt="uploaded"<?
+      ?> title="uploaded" src="/<?
         echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_upload.32.png"><?
     } else if ($type == 'like') {
-      ?><img class="yt_activity_type" alt="Liked"<?
-      ?> title="Liked" src="/<?
+      ?><img class="yt_activity_type" alt="liked"<?
+      ?> title="liked" src="/<?
         echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_like.32.png"><?
     } else if ($type == 'favorite') {
-      ?><img class="yt_activity_type" alt="Favorited"<?
-      ?> title="Favorited" src="/<?
+      ?><img class="yt_activity_type" alt="favorited"<?
+      ?> title="favorited" src="/<?
         echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_favorite.32.png"><?
     } else if ($type == 'comment') {
-      ?><img class="yt_activity_type" alt="Commented"<?
-      ?> title="Commented" src="/<?
+      ?><img class="yt_activity_type" alt="commented"<?
+      ?> title="commented" src="/<?
         echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_comment.32.png"><?
     } else if ($type == 'subscription') {
-      ?><img class="yt_activity_type" alt="Subscribed"<?
-      ?> title="Subscribed" src="/<?
+      ?><img class="yt_activity_type" alt="subscribed"<?
+      ?> title="subscribed" src="/<?
         echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_subscribe.32.png"><?
     } else if ($type == 'playlistItem') {
       list($blank, $url) = yt_activity_url($cur_activity);
@@ -313,7 +313,7 @@ function yt_printshort_activity_type($activ_selected)
       ?><a class="img_link"<?
         if ($blank) echo ' target="_blank"';
       ?> title="Watch in playlist!" href="<? echo $url; ?>"><?
-      ?><img class="yt_activity_type" alt="Playlist"<?
+      ?><img class="yt_activity_type" alt="playlist"<?
       ?> title="Added to playlist" src="/<?
         echo COMMON_DIR_THEMECUR_IMG_ABS; ?>icon_playlist_add.35.32.png"><?
       ?></a><?

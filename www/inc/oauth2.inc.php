@@ -100,17 +100,25 @@ function oauth2_login_2errormsg($error_resp)
 
 /* ***************************************************************  */
 
-function oauth2_token_post_setsession($url, $client_id, $client_secret,
-                                      $platform, $code)
+function __oauth2_token_post_setsession($auth_array, $code,
+                                        $code_is_refreshtoken)
 {
   /* Must be application/x-www-form-urlencoded (RFC 6749 section
    * 4.1.3.)
    */
   $redirect_uri = urlencode(_OAUTH2_REDIRECT_URI);
 
-  $data = 'code=' .$code. '&client_id=' .$client_id. '&client_secret='
-    .$client_secret. '&redirect_uri=' .$redirect_uri
-    .'&grant_type=authorization_code';
+  if ($code_is_refreshtoken) {
+    $grant_type = 'refresh_token';
+    $auth_param = 'refresh_token=' .$code;
+  } else {
+    $grant_type = 'authorization_code';
+    $auth_param = 'code=' .$code;
+  }
+
+  $data = $auth_param. '&client_id=' .$auth_array['client_id']
+    .'&client_secret=' .$auth_array['client_secret']. '&redirect_uri='
+    .$redirect_uri. '&grant_type=' .$grant_type;
 
   $context = stream_context_create(array(
     'http' => array(
@@ -124,8 +132,7 @@ function oauth2_token_post_setsession($url, $client_id, $client_secret,
   debug_api_info_incr('cnt_oauth2_auth', 1);
 
   $time_stamp = time();
-  $json = file_get_contents($url, false, $context);
-  if ($json === '') return "\n";
+  $json = file_get_contents($auth_array['url_token'], false, $context);
   if (!$json) return false;
 
   $token_resp = json_decode($json, true);
@@ -139,32 +146,65 @@ function oauth2_token_post_setsession($url, $client_id, $client_secret,
    */
   if (isset($token_resp['error'])) return false;
 
-  if (!session_oauth2token_set($platform, $time_stamp, $token_resp))
-    return false;
+  if (!session_oauth2token_set($auth_array['platform'], $time_stamp,
+                               $token_resp)) return false;
 
   return true;
 }
 
+function oauth2_token_post_setsession($auth_array, $code)
+{
+  debug_api_info_incr('cnt_' .$auth_array['platform']. '_auth', 1,
+                      'code '. $code);
+
+  return __oauth2_token_post_setsession($auth_array, $code, false);
+}
+
+function _oauth2_refresh_post_setsession($auth_array, $refresh_token)
+{
+  debug_api_info_incr('cnt_' .$auth_array['platform']. '_refresh', 1,
+                      'refresh_token '. $refresh_token);
+
+  return __oauth2_token_post_setsession($auth_array, $refresh_token,
+                                        true);
+}
+
 /* ***************************************************************  */
 
-define('_OAUTH2_TOKEN_GET_DELTA_S',          10);
-function oauth2_token_get($platform)
+define('_OAUTH2_ACCESSTOKEN_EXPIRED_DELTA_S',     10);
+function _oauth2_accesstoken_expired($token_required)
+{
+  return $token_required['time_stamp'] + $token_required['expires_in']
+    - _OAUTH2_ACCESSTOKEN_EXPIRED_DELTA_S < time();
+}
+
+function oauth2_logged_in($platform)
 {
   $tmp = session_oauth2token_get($platform);
   if (!$tmp) return false;
   list($required, $refresh_token) = $tmp;
 
-  /* Access Token expired?  */
-  if ($required['time_stamp'] + $required['expires_in']
-      - _OAUTH2_TOKEN_GET_DELTA_S > time())
-    return array($required['token_type'], $required['access_token']);
+  return $refresh_token !== false;
+}
 
-  if ($refresh_token) {
-    // TODO: Refresh Access Token && Return it
-    return false;
+function oauth2_token_get($auth_array)
+{
+  $tmp = session_oauth2token_get($auth_array['platform']);
+  if (!$tmp) return false;
+  list($required, $refresh_token) = $tmp;
+
+  if (_oauth2_accesstoken_expired($required)) {
+
+    if (!$refresh_token
+        || !_oauth2_refresh_post_setsession($auth_array, $refresh_token))
+      return false;
+
+    $tmp = session_oauth2token_get($auth_array['platform']);
+    if (!$tmp) return false;
+    list($required, $refresh_token) = $tmp;
   }
 
-  return false;
+  return array($required['token_type'], $required['access_token']);
 }
 
 /* ***************************************************************  */
