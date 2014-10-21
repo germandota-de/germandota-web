@@ -184,7 +184,8 @@ function oauth2_logged_in($platform)
   if (!$tmp) return false;
   list($required, $refresh_token) = $tmp;
 
-  return $refresh_token !== false;
+  return !_oauth2_accesstoken_expired($required)
+    || $refresh_token !== false;
 }
 
 function oauth2_token_get($auth_array)

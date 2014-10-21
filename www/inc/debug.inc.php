@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-define('DEBUG',                         false);
+define('DEBUG',                         true);
 
 /* ***************************************************************  */
 
@@ -36,7 +36,8 @@ function debug_api_info_print($prop=false) {}
 /* ***************************************************************  */
 
 $_debug_api_info
-  = array('cnt_google_api'              => 0,
+  = array('cnt_http'                    => 0,
+          'cnt_google_api'              => 0,
           'cnt_youtube_api_v2'          => 0,
           '---'                         => 0,
           'cnt_youtube_list'            => 0,

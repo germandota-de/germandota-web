@@ -51,49 +51,18 @@ function _google_oautharray_new($platform)
 
 /* ***************************************************************  */
 
-function _google_api_http_get_authcontext($auth_platform=false)
+function _google_api_httpheader_auth(&$header, $auth_platform=false)
 {
-  $header = false;
-
   if ($auth_platform) {
     $tmp = oauth2_token_get(_google_oautharray_new($auth_platform));
     if (!$tmp) return NULL;
     list($token_type, $access_token) = $tmp;
 
-    $header = 'Authorization: Bearer ' .$access_token;
+    if ($token_type != 'Bearer')
+      error_log('Google OAuth: Token type not supported: `'
+                .$token_type.'\'');
+    $header[count($header)] = 'Authorization: Bearer ' .$access_token;
   }
-
-  $http = array('method' => 'GET');
-  if ($header) $http['header'] = $header;
-
-  return stream_context_create(array(
-    'http' => $http
-  ));
-}
-
-function _google_api_http_post_authcontext(
-  $auth_platform=false, $content_type=false, $content=NULL)
-{
-  $header = $content_type
-    ? 'Content-type: ' .$content_type
-    : 'Content-type: application/x-www-form-urlencoded';
-
-  if ($auth_platform) {
-    $tmp = oauth2_token_get(_google_oautharray_new($auth_platform));
-    if (!$tmp) return NULL;
-    list($token_type, $access_token) = $tmp;
-
-    $header .= "\nAuthorization: Bearer " .$access_token;
-  }
-
-  if (!$content) $content = "\n";
-
-  return stream_context_create(array(
-    'http' => array(
-      'method'  => 'POST',
-      'header'  => $header,
-      'content' => $content)
-  ));
 }
 
 /* ***************************************************************  */
@@ -103,15 +72,16 @@ function google_api_recv($method, $params, $auth_platform=false)
   $request = _GOOGLE_REQUEST_PREFIX .'/'. $method
     ._GOOGLE_REQUEST_DEFAULT. '&' .$params;
 
-  $context = _google_api_http_get_authcontext($auth_platform);
+  $header = array();
+  _google_api_httpheader_auth($header, $auth_platform);
 
   /* Do not display $request because of the API key  */
   //debug_api_info_incr('cnt_google_api', 1, $request);
   debug_api_info_incr('cnt_google_api', 1);
 
-  $json = file_get_contents($request, false, $context);
-  if ($json === '') return "\n";
-  if (!$json) return false;
+  $tmp = http_receive($request, 'GET', $header);
+  if (!$tmp) return false;
+  list($json, $status) = $tmp;
 
   $result = json_decode($json, true);
   if (!$result) return false;
@@ -120,21 +90,27 @@ function google_api_recv($method, $params, $auth_platform=false)
 }
 
 function google_api_post($method, $params, $content_type=false,
-                         $content=NULL, $auth_platform=false)
+                         $content=false, $auth_platform=false)
 {
   $request = _GOOGLE_REQUEST_PREFIX .'/'. $method
     ._GOOGLE_REQUEST_DEFAULT. '&' .$params;
 
-  $context = _google_api_http_post_authcontext($auth_platform,
-                                               $content_type, $content);
+  $header = array(
+                  $content_type
+                  ? 'Content-Type: ' .$content_type
+                  : 'Content-Type: application/x-www-form-urlencoded'
+  );
+  _google_api_httpheader_auth($header, $auth_platform);
 
   /* Do not display $request because of the API key  */
   //debug_api_info_incr('cnt_google_api', 1, $request);
   debug_api_info_incr('cnt_google_api', 1);
 
-  $json = file_get_contents($request, false, $context);
-  if ($json === '') return "\n";
-  if (!$json) return false;
+  $tmp = http_receive($request, 'POST', $header, $content);
+  if (!$tmp) return false;
+  list($json, $status) = $tmp;
+  // TODO: $json is '' if $status == 204 ...
+  // TODO: replace all file_get_contents ...
 
   $result = json_decode($json, true);
   if (!$result) return false;

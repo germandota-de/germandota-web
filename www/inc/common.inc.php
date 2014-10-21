@@ -369,4 +369,5 @@ function common_html_js_onload($js_code)
 
 /* ***************************************************************  */
 
+include_once dirname(__FILE__). '/http.inc.php';
 include_once dirname(__FILE__). '/session.inc.php';
