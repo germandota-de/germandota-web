@@ -57,10 +57,9 @@ function _yt_comments_apiv2_list($method, $start_index, $max_results,
                       $method .' - index ' .$start_index. '..'
                       .($start_index+$max_results). ' - ' .$params);
 
-  $json = file_get_contents($request, false, stream_context_create(
-    array('ssl' => array('CN_match' => YT_COMMENTS_SSL_CNMATCH))
-  ));
-  if (!$json) return false;
+  $tmp = http_receive($request);
+  if (!$tmp) return false;
+  list($json, $status) = $tmp;
 
   $result = json_decode($json, true);
   if (!$result) return false;

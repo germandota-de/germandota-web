@@ -76,8 +76,7 @@ function google_api_recv($method, $params, $auth_platform=false)
   _google_api_httpheader_auth($header, $auth_platform);
 
   /* Do not display $request because of the API key  */
-  //debug_api_info_incr('cnt_google_api', 1, $request);
-  debug_api_info_incr('cnt_google_api', 1);
+  debug_api_info_incr('cnt_google_api', 1, 'method: ' .$method);
 
   $tmp = http_receive($request, 'GET', $header);
   if (!$tmp) return false;
@@ -100,8 +99,7 @@ function google_api_post($method, $params, $content=false,
   _google_api_httpheader_auth($header, $auth_platform);
 
   /* Do not display $request because of the API key  */
-  //debug_api_info_incr('cnt_google_api', 1, $request);
-  debug_api_info_incr('cnt_google_api', 1);
+  debug_api_info_incr('cnt_google_api', 1, 'method: ' .$method);
 
   $tmp = http_receive($request, 'POST', $header, $content,
                       $content_type);

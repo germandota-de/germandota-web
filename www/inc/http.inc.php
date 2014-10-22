@@ -28,7 +28,8 @@ function http_receive($url, $method='GET', $header=array(), $content='',
     : 'application/x-www-form-urlencoded';
 
   debug_api_info_incr('cnt_http', 1,
-                      $method .' Content-Length: ' .$content_length);
+                      $method .' Content-Length: ' .$content_length
+                      .' Content-Type: '. $content_type);
 
   $curl_method_val = true;
   switch ($method) {
@@ -53,6 +54,8 @@ function http_receive($url, $method='GET', $header=array(), $content='',
   $curl_options = array(CURLOPT_URL => $url,
                         CURLOPT_RETURNTRANSFER => true,
                         CURLOPT_TIMEOUT => HTTP_TIMEOUT_S,
+                        CURLOPT_SSL_VERIFYPEER => true,
+                        CURLOPT_SSL_VERIFYHOST => 2,
                         $curl_method => $curl_method_val,
                         );
   if (count($header) != 0) $curl_options[CURLOPT_HTTPHEADER] = $header;

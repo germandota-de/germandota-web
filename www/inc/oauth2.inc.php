@@ -120,20 +120,15 @@ function __oauth2_token_post_setsession($auth_array, $code,
     .'&client_secret=' .$auth_array['client_secret']. '&redirect_uri='
     .$redirect_uri. '&grant_type=' .$grant_type;
 
-  $context = stream_context_create(array(
-    'http' => array(
-      'method'  => 'POST',
-      'header'  => 'Content-type: application/x-www-form-urlencoded',
-      'content' => $data)
-  ));
-
   /* Do not display $data because of the client secret  */
-  //debug_api_info_incr('cnt_oauth2_auth', 1, $data);
-  debug_api_info_incr('cnt_oauth2_auth', 1);
+  debug_api_info_incr('cnt_oauth2_auth', 1,
+    'Platform: ' .$auth_array['platform']. ' - Refresh-Token: '
+    . ($code_is_refreshtoken? 'yes': 'no'));
 
   $time_stamp = time();
-  $json = file_get_contents($auth_array['url_token'], false, $context);
-  if (!$json) return false;
+  $tmp = http_receive($auth_array['url_token'], 'POST', array(), $data);
+  if (!$tmp) return false;
+  list($json, $status) = $tmp;
 
   $token_resp = json_decode($json, true);
   if (!$token_resp) return false;
@@ -154,16 +149,14 @@ function __oauth2_token_post_setsession($auth_array, $code,
 
 function oauth2_token_post_setsession($auth_array, $code)
 {
-  debug_api_info_incr('cnt_' .$auth_array['platform']. '_auth', 1,
-                      'code '. $code);
+  debug_api_info_incr('cnt_' .$auth_array['platform']. '_auth', 1);
 
   return __oauth2_token_post_setsession($auth_array, $code, false);
 }
 
 function _oauth2_refresh_post_setsession($auth_array, $refresh_token)
 {
-  debug_api_info_incr('cnt_' .$auth_array['platform']. '_refresh', 1,
-                      'refresh_token '. $refresh_token);
+  debug_api_info_incr('cnt_' .$auth_array['platform']. '_refresh', 1);
 
   return __oauth2_token_post_setsession($auth_array, $refresh_token,
                                         true);

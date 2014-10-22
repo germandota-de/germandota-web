@@ -42,16 +42,12 @@ define('YT_COMMENTS_PERPAGE_NEXT',      10);
 define('YT_COMMENTS_PXPERCOMMENT',      100);
 define('YT_COMMENTS_OFFSET_PX',         200);
 
-/* HTTPS:
- *
- * Peer certificate CN=`*.google.com' did not match expected CN=`gdata.youtube.com'
- */
-define('YT_COMMENTS_REQUEST_PREFIX', 'https://gdata.youtube.com/feeds/api/');
-define('YT_COMMENTS_SSL_CNMATCH',    '*.google.com');
+define('YT_COMMENTS_REQUEST_PREFIX',
+                              'https://gdata.youtube.com/feeds/api/');
 
 /* ***************************************************************  */
 
 define('_YT_AUTH_OAUTH2_SCOPE',
-       'https://www.googleapis.com/auth/youtube');
+                           'https://www.googleapis.com/auth/youtube');
 
 /* ***************************************************************  */
