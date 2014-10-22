@@ -82,6 +82,7 @@ function google_api_recv($method, $params, $auth_platform=false)
   $tmp = http_receive($request, 'GET', $header);
   if (!$tmp) return false;
   list($json, $status) = $tmp;
+  if ($json === '') return "\n";
 
   $result = json_decode($json, true);
   if (!$result) return false;
@@ -89,28 +90,24 @@ function google_api_recv($method, $params, $auth_platform=false)
   return $result;
 }
 
-function google_api_post($method, $params, $content_type=false,
-                         $content=false, $auth_platform=false)
+function google_api_post($method, $params, $content=false,
+                         $content_type=false, $auth_platform=false)
 {
   $request = _GOOGLE_REQUEST_PREFIX .'/'. $method
     ._GOOGLE_REQUEST_DEFAULT. '&' .$params;
 
-  $header = array(
-                  $content_type
-                  ? 'Content-Type: ' .$content_type
-                  : 'Content-Type: application/x-www-form-urlencoded'
-  );
+  $header = array();
   _google_api_httpheader_auth($header, $auth_platform);
 
   /* Do not display $request because of the API key  */
   //debug_api_info_incr('cnt_google_api', 1, $request);
   debug_api_info_incr('cnt_google_api', 1);
 
-  $tmp = http_receive($request, 'POST', $header, $content);
+  $tmp = http_receive($request, 'POST', $header, $content,
+                      $content_type);
   if (!$tmp) return false;
   list($json, $status) = $tmp;
-  // TODO: $json is '' if $status == 204 ...
-  // TODO: replace all file_get_contents ...
+  if ($json === '') return "\n";
 
   $result = json_decode($json, true);
   if (!$result) return false;

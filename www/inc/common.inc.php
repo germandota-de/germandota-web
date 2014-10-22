@@ -65,6 +65,12 @@ define('COMMON_HTACCESS_FILEROOT',
  * to write these files.
  */
 
+if (!function_exists('curl_init')) {
+  die('<font color="#ff0000">CURL not installed!  On a Debian system'
+      .' try <code>apt-get install php5-curl</code> and restart Apache'
+      .'</font>');
+}
+
 if (!file_exists(COMMON_CONF_FILEROOT)) {
   die('<font color="#ff0000">config.inc.php not found! Copy it from'
       .' config.template.inc.php and make necessary changes on the'

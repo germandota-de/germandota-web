@@ -20,25 +20,31 @@ include_once dirname(__FILE__). '/common.inc.php';
 
 define('HTTP_TIMEOUT_S',                5);
 
-function http_receive($url, $method='GET', $header=array(), $content='')
+function http_receive($url, $method='GET', $header=array(), $content='',
+                      $content_type=false)
 {
   $content_length = strlen($content);
+  $content_type = $content_type? $content_type
+    : 'application/x-www-form-urlencoded';
 
   debug_api_info_incr('cnt_http', 1,
                       $method .' Content-Length: ' .$content_length);
 
   $curl_method_val = true;
   switch ($method) {
-  case 'GET': $curl_method = CURLOPT_HTTPGET; break;
+  case 'GET': $curl_method = CURLOPT_HTTPGET;
+    break;
   case 'POST': $curl_method = CURLOPT_POST;
+    $header[count($header)] = 'Content-Type: ' .$content_type;
     $header[count($header)] = 'Content-Length: ' .$content_length;
     break;
   case 'PUT': $curl_method = CURLOPT_PUT;
+    $header[count($header)] = 'Content-Type: ' .$content_type;
     $header[count($header)] = 'Content-Length: ' .$content_length;
     break;
-  case 'HEAD': $curl_method = CURLOPT_NOBODY; break;
-  case 'DELETE':
-    $curl_method = CURLOPT_CUSTOMREQUEST;
+  case 'HEAD': $curl_method = CURLOPT_NOBODY;
+    break;
+  case 'DELETE': $curl_method = CURLOPT_CUSTOMREQUEST;
     $curl_method_val = 'DELETE';
     break;
   default: return false;
@@ -62,13 +68,8 @@ function http_receive($url, $method='GET', $header=array(), $content='')
   curl_close($ch);
   if ($result_data === false) return false;
 
-  // TODO: 204 is a valid response ...
-  // TODO: output error if CURL is not installed ...
-  if ($result_status == 204 && $result_data === '')
-    $result_data = "\n";
-  else if ($result_status != 200)
-    error_log('HTTP ERROR '
-              .$result_status. ': ' .$result_data);
+  if ($result_status != 200 && $result_status != 204)
+    error_log('HTTP ERROR ' .$result_status. ': ' .$result_data);
 
   return array($result_data, $result_status);
 }
