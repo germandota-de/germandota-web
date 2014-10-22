@@ -100,6 +100,9 @@ function oauth2_login_2errormsg($error_resp)
 
 /* ***************************************************************  */
 
+/* Returns: TRUE on success, FALSE on error, String(error_response) on
+ * remote error.
+ */
 function __oauth2_token_post_setsession($auth_array, $code,
                                         $code_is_refreshtoken)
 {
@@ -128,19 +131,21 @@ function __oauth2_token_post_setsession($auth_array, $code,
   $time_stamp = time();
   list($status_ok, $status, $json)
     = http_receive($auth_array['url_token'], 'POST', array(), $data);
-  if (!$status_ok) return false;
+
+  /* Error response will be returned with HTTP CODE 400 (Bad Request).
+   * See RFC 6749 section 5.2.
+   */
+  if ($status != 400 && !$status_ok) return false;
 
   $token_resp = json_decode($json, true);
   if (!$token_resp) return false;
 
-  /* Error response described in RFC 6749 section 5.2.
-   *
-   * We can't really catch this because the Auth Server responses with
-   * HTTP 400 (Bad Request).  But in this case file_get_contents() is
-   * returning FALSE.
-   */
-  // TODO: Should now catchable ...
-  if (isset($token_resp['error'])) return false;
+  /* Error responses described in RFC 6749 section 5.2.  */
+  if (isset($token_resp['error'])) {
+    // TODO ...
+    var_dump($token_resp['error']);
+    return false;
+  }
 
   if (!session_oauth2token_set($auth_array['platform'], $time_stamp,
                                $token_resp)) return false;
