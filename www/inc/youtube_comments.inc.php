@@ -57,9 +57,8 @@ function _yt_comments_apiv2_list($method, $start_index, $max_results,
                       $method .' - index ' .$start_index. '..'
                       .($start_index+$max_results). ' - ' .$params);
 
-  $tmp = http_receive($request);
-  if (!$tmp) return false;
-  list($json, $status) = $tmp;
+  list($status_ok, $status, $json) = http_receive($request);
+  if (!$status_ok) return false;
 
   $result = json_decode($json, true);
   if (!$result) return false;

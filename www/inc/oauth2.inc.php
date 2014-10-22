@@ -126,9 +126,9 @@ function __oauth2_token_post_setsession($auth_array, $code,
     . ($code_is_refreshtoken? 'yes': 'no'));
 
   $time_stamp = time();
-  $tmp = http_receive($auth_array['url_token'], 'POST', array(), $data);
-  if (!$tmp) return false;
-  list($json, $status) = $tmp;
+  list($status_ok, $status, $json)
+    = http_receive($auth_array['url_token'], 'POST', array(), $data);
+  if (!$status_ok) return false;
 
   $token_resp = json_decode($json, true);
   if (!$token_resp) return false;
@@ -139,6 +139,7 @@ function __oauth2_token_post_setsession($auth_array, $code,
    * HTTP 400 (Bad Request).  But in this case file_get_contents() is
    * returning FALSE.
    */
+  // TODO: Should now catchable ...
   if (isset($token_resp['error'])) return false;
 
   if (!session_oauth2token_set($auth_array['platform'], $time_stamp,
@@ -181,20 +182,38 @@ function oauth2_logged_in($platform)
     || $refresh_token !== false;
 }
 
+function oauth2_logout($platform)
+{
+  session_oauth2token_delete($platform);
+}
+
 function oauth2_token_get($auth_array)
 {
-  $tmp = session_oauth2token_get($auth_array['platform']);
-  if (!$tmp) return false;
+  $platform = $auth_array['platform'];
+
+  $tmp = session_oauth2token_get($platform);
+  if (!$tmp) {
+    _e('oauth2_token_get', '1 Logging user out');
+    oauth2_logout($platform);
+    return false;
+  }
   list($required, $refresh_token) = $tmp;
 
   if (_oauth2_accesstoken_expired($required)) {
 
     if (!$refresh_token
-        || !_oauth2_refresh_post_setsession($auth_array, $refresh_token))
+        || !_oauth2_refresh_post_setsession($auth_array, $refresh_token)) {
+      _e('oauth2_token_get', '2 Logging user out');
+      oauth2_logout($platform);
       return false;
+    }
 
-    $tmp = session_oauth2token_get($auth_array['platform']);
-    if (!$tmp) return false;
+    $tmp = session_oauth2token_get($platform);
+    if (!$tmp) {
+      _e('oauth2_token_get', '3 Logging user out');
+      oauth2_logout($platform);
+      return false;
+    }
     list($required, $refresh_token) = $tmp;
   }
 

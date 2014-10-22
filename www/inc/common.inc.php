@@ -152,6 +152,16 @@ function _o_html($str)
   echo htmlspecialchars_decode(_o_get($str), ENT_QUOTES);
 }
 
+function _e($function_name, $msg, $sensitive=false)
+{
+  $out = 'ERROR ' .$function_name. '(): ' .$msg;
+
+  if (CONFIG_SECURITY_LOG_SENSITIVE && $sensitive)
+    $out .= ' - [[ ' .$sensitive. ' ]]';
+
+  error_log($out);
+}
+
 function common_print_htmltitle($title)
 {
 ?>

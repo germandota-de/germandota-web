@@ -19,7 +19,22 @@
 include_once dirname(__FILE__). '/common.inc.php';
 
 define('HTTP_TIMEOUT_S',                5);
+define('HTTP_STATUS_ERROR',             700);
 
+/* ***************************************************************  */
+
+function _http_status_ok($status)
+{
+  return $status >= 200 && $status < 300;
+}
+
+/* ***************************************************************  */
+
+function _http_receive_error()
+{
+  return array(_http_status_ok(HTTP_STATUS_ERROR), HTTP_STATUS_ERROR,
+               '- Connection Error -');
+}
 function http_receive($url, $method='GET', $header=array(), $content='',
                       $content_type=false)
 {
@@ -48,7 +63,8 @@ function http_receive($url, $method='GET', $header=array(), $content='',
   case 'DELETE': $curl_method = CURLOPT_CUSTOMREQUEST;
     $curl_method_val = 'DELETE';
     break;
-  default: return false;
+  default:
+    return _http_receive_error();
   }
 
   $curl_options = array(CURLOPT_URL => $url,
@@ -61,18 +77,21 @@ function http_receive($url, $method='GET', $header=array(), $content='',
   if (count($header) != 0) $curl_options[CURLOPT_HTTPHEADER] = $header;
   if ($content != '') $curl_options[CURLOPT_POSTFIELDS] = $content;
 
-  if (!($ch = curl_init())) return false;
+  if (!($ch = curl_init())) return _http_receive_error();
   if (!curl_setopt_array($ch, $curl_options)) {
-    curl_close($ch); return false;
+    curl_close($ch); return _http_receive_error();
   }
   $result_data = curl_exec($ch);
   $result_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+  $result_status_ok = _http_status_ok($result_status);
 
   curl_close($ch);
-  if ($result_data === false) return false;
+  if ($result_data === false) return _http_receive_error();
 
-  if ($result_status != 200 && $result_status != 204)
-    error_log('HTTP ERROR ' .$result_status. ': ' .$result_data);
+  if (!$result_status_ok) {
+    _e('http_receive', 'HTTP STATUS ' .$result_status,
+       $url. ' - ' .$result_data);
+  }
 
-  return array($result_data, $result_status);
+  return array($result_status_ok, $result_status, $result_data);
 }
