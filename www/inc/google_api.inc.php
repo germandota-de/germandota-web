@@ -33,30 +33,25 @@ define('_GOOGLE_REQUEST_DEFAULT',
         */
        );
 
-define('_GOOGLE_OAUTH2_PRE',
+define('GOOGLE_OAUTH2_LOGIN_PRE',
        'https://accounts.google.com/o/oauth2/auth');
-define('_GOOGLE_OAUTH2_TOKEN_PRE',
+define('GOOGLE_OAUTH2_LOGIN_POST',
+       //'&approval_prompt=auto&access_type=offline&login_hint=email@addre.ss');
+       '&approval_prompt=auto&access_type=offline');
+define('GOOGLE_OAUTH2_TOKEN_PRE',
        'https://accounts.google.com/o/oauth2/token');
-
-/* ***************************************************************  */
-
-function _google_oautharray_new($platform)
-{
-  return array('url_token' => _GOOGLE_OAUTH2_TOKEN_PRE,
-               'client_id' => CONFIG_GOOGLE_CLIENT_ID,
-               'client_secret' => CONFIG_GOOGLE_CLIENT_SECRET,
-               'platform' => $platform
-               );
-}
 
 /* ***************************************************************  */
 
 function _google_api_httpheader_auth(&$header, $auth_platform=false)
 {
   if ($auth_platform) {
+    // TODO: Access token via parameter
+    /*
     $tmp = oauth2_token_get(_google_oautharray_new($auth_platform));
     if (!$tmp) return false;
     list($token_type, $access_token) = $tmp;
+    */
 
     if ($token_type != 'Bearer')
       _e('_google_api_httpheader_auth',
@@ -114,27 +109,6 @@ function google_api_post($method, $params, $content=false,
   if (!$result) return false;
 
   return $result;
-}
-
-/* ***************************************************************  */
-
-function google_oauth2_urlget_setsession($scope, $platform, $callback,
-                                         $args)
-{
-  return oauth2_login_urlget_setsession(
-    _GOOGLE_OAUTH2_PRE, CONFIG_GOOGLE_CLIENT_ID, $scope,
-    '&approval_prompt=auto&access_type=offline',
-  //'&approval_prompt=auto&access_type=offline&login_hint=email@addre.ss',
-    $platform, $callback, $args
-  );
-}
-
-/* ***************************************************************  */
-
-function google_oauth2_setsession($platform, $code)
-{
-  return oauth2_token_post_setsession(
-                            _google_oautharray_new($platform), $code);
 }
 
 /* ***************************************************************  */

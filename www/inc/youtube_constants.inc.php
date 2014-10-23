@@ -16,6 +16,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+if (!defined('YT_INCLUDED')) die('Include youtube.inc.php!');
+
+/* ***************************************************************  */
+
 define('_YT_REQUEST_METHOD_PREFIX',     'youtube/v3/');
 
 define('YT_PLAYLISTS_MAXRESULTS',       3);

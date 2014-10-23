@@ -16,10 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once dirname(__FILE__). '/common.inc.php';
-include_once dirname(__FILE__). '/youtube_constants.inc.php';
-
-include_once dirname(__FILE__). '/google_api.inc.php';
+if (!defined('YT_INCLUDED')) die('Include youtube.inc.php!');
 
 /* Youtube Data API v3 Reference:
  *

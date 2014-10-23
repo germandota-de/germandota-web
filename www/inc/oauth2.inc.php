@@ -29,7 +29,7 @@ define('_OAUTH2_REDIRECT_URI',
        COMMON_SERVER_PROTOCOL. '://' .COMMON_SERVER_NAME. '/'
        .COMMON_DIR_OAUTH2_ABS);
 
-define('OAUTH2_PLATFORM_YOUTUBE',       'youtube');
+$oauth2_platforms_data = array();
 
 /* ***************************************************************  */
 
@@ -47,9 +47,11 @@ function oauth2_redirect_params_print($platform, $callback, $args)
   }
 }
 
-function oauth2_login_urlget_setsession(
-  $url_pre, $client_id, $scope, $url_post, $platform, $callback, $args)
+function oauth2_login_urlget_setsession($platform, $callback, $args)
 {
+  global $oauth2_platforms_data;
+  $pf_data = $oauth2_platforms_data[$platform];
+
   /* Must be application/x-www-form-urlencoded (RFC 6749 section
    * 3.1.2.)
    */
@@ -57,10 +59,10 @@ function oauth2_login_urlget_setsession(
 
   $id = session_oauth2login_set($platform, $callback, $args);
 
-  return $url_pre. '?response_type=code'
-    .'&client_id=' .CONFIG_GOOGLE_CLIENT_ID
-    .'&redirect_uri=' .$redirect_uri .'&scope=' .$scope
-    .'&state=' .$id. $url_post;
+  return $pf_data['oauth2_url_login_pre']. '?response_type=code'
+    .'&client_id=' .$pf_data['oauth2_client_id']
+    .'&redirect_uri=' .$redirect_uri .'&scope=' .$pf_data['oauth2_scope']
+    .'&state=' .$id. $pf_data['oauth2_url_login_post'];
 }
 
 function oauth2_login_id2vars($id)
@@ -93,6 +95,8 @@ function oauth2_login_2errormsg($error_resp)
   case 'temporarily_unavailable':
     return 'Authorization Server seems to be overloaded'
       .' (503 Service Unavailable)';
+
+    // TODO: Adding token errors ...
   }
 
   return $error_resp;
@@ -103,9 +107,12 @@ function oauth2_login_2errormsg($error_resp)
 /* Returns: TRUE on success, FALSE on error, String(error_response) on
  * remote error.
  */
-function __oauth2_token_post_setsession($auth_array, $code,
+function __oauth2_token_post_setsession($platform, $code,
                                         $code_is_refreshtoken)
 {
+  global $oauth2_platforms_data;
+  $pf_data = $oauth2_platforms_data[$platform];
+
   /* Must be application/x-www-form-urlencoded (RFC 6749 section
    * 4.1.3.)
    */
@@ -119,18 +126,18 @@ function __oauth2_token_post_setsession($auth_array, $code,
     $auth_param = 'code=' .$code;
   }
 
-  $data = $auth_param. '&client_id=' .$auth_array['client_id']
-    .'&client_secret=' .$auth_array['client_secret']. '&redirect_uri='
+  $data = $auth_param. '&client_id=' .$pf_data['oauth2_client_id']
+    .'&client_secret=' .$pf_data['oauth2_client_secret']. '&redirect_uri='
     .$redirect_uri. '&grant_type=' .$grant_type;
 
   /* Do not display $data because of the client secret  */
   debug_api_info_incr('cnt_oauth2_auth', 1,
-    'Platform: ' .$auth_array['platform']. ' - Refresh-Token: '
-    . ($code_is_refreshtoken? 'yes': 'no'));
+                      'Platform: ' .$platform. ' - Refresh-Token: '
+                      . ($code_is_refreshtoken? 'yes': 'no'));
 
   $time_stamp = time();
   list($status_ok, $status, $json)
-    = http_receive($auth_array['url_token'], 'POST', array(), $data);
+    = http_receive($pf_data['oauth2_url_token'], 'POST', array(), $data);
 
   /* Error response will be returned with HTTP CODE 400 (Bad Request).
    * See RFC 6749 section 5.2.
@@ -141,30 +148,32 @@ function __oauth2_token_post_setsession($auth_array, $code,
   if (!$token_resp) return false;
 
   /* Error responses described in RFC 6749 section 5.2.  */
-  if (isset($token_resp['error'])) {
-    // TODO ...
-    var_dump($token_resp['error']);
-    return false;
-  }
+  if (isset($token_resp['error'])) return $token_resp['error'];
 
-  if (!session_oauth2token_set($auth_array['platform'], $time_stamp,
-                               $token_resp)) return false;
+  if (!session_oauth2token_set($platform, $time_stamp, $token_resp))
+    return false;
 
   return true;
 }
 
-function oauth2_token_post_setsession($auth_array, $code)
+/* Returns: TRUE on success, FALSE on error, String(error_response) on
+ * remote error.
+ */
+function oauth2_token_post_setsession($platform, $code)
 {
-  debug_api_info_incr('cnt_' .$auth_array['platform']. '_auth', 1);
+  debug_api_info_incr('cnt_' .$platform. '_auth', 1);
 
-  return __oauth2_token_post_setsession($auth_array, $code, false);
+  return __oauth2_token_post_setsession($platform, $code, false);
 }
 
-function _oauth2_refresh_post_setsession($auth_array, $refresh_token)
+/* Returns: TRUE on success, FALSE on error, String(error_response) on
+ * remote error.
+ */
+function _oauth2_refresh_post_setsession($platform, $refresh_token)
 {
-  debug_api_info_incr('cnt_' .$auth_array['platform']. '_refresh', 1);
+  debug_api_info_incr('cnt_' .$platform. '_refresh', 1);
 
-  return __oauth2_token_post_setsession($auth_array, $refresh_token,
+  return __oauth2_token_post_setsession($platform, $refresh_token,
                                         true);
 }
 
@@ -192,10 +201,11 @@ function oauth2_logout($platform)
   session_oauth2token_delete($platform);
 }
 
-function oauth2_token_get($auth_array)
+/* Returns: array() on success, FALSE on error, String(error_response)
+ * on remote error.
+ */
+function oauth2_token_get($platform)
 {
-  $platform = $auth_array['platform'];
-
   $tmp = session_oauth2token_get($platform);
   if (!$tmp) {
     _e('oauth2_token_get', '1 Logging user out');
@@ -206,23 +216,30 @@ function oauth2_token_get($auth_array)
 
   if (_oauth2_accesstoken_expired($required)) {
 
-    if (!$refresh_token
-        || !_oauth2_refresh_post_setsession($auth_array, $refresh_token)) {
+    if (!$refresh_token) {
       _e('oauth2_token_get', '2 Logging user out');
       oauth2_logout($platform);
       return false;
     }
 
+    $tmp = _oauth2_refresh_post_setsession($platform, $refresh_token);
+    if ($tmp !== true) {
+      _e('oauth2_token_get', '3 Logging user out');
+      oauth2_logout($platform);
+      return $tmp;
+    }
+
     $tmp = session_oauth2token_get($platform);
     if (!$tmp) {
-      _e('oauth2_token_get', '3 Logging user out');
+      _e('oauth2_token_get', '4 Logging user out');
       oauth2_logout($platform);
       return false;
     }
     list($required, $refresh_token) = $tmp;
   }
 
-  return array($required['token_type'], $required['access_token']);
+  return array('token_type' => $required['token_type'],
+               'access_token' => $required['access_token']);
 }
 
 /* ***************************************************************  */

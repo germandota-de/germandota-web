@@ -35,11 +35,12 @@ define('OAUTH2_CALLBACKS_PREFIX',            'oauth2_cb_');
  *   array($title, $html_output, $js_onload);
  */
 
-function oauth2_cb_youtube_video_like_1($video_id)
+function oauth2_cb_youtube_video_like_1($video_id, $access_array)
 {
   $thousands = CONFIG_NUMBERS_THOUSANDS;
   $locale = CONFIG_NUMBERS_LOCALE;
 
+  // TODO: Using $access_array ...
   if (yt_recv_video_rate_auth($video_id, 'like')) {
     $title = 'Liked :D';
     $html_output = 'Yeeah you like it xD ...';
@@ -82,11 +83,17 @@ function oauth2_callback_callable($platform, $callback, $args)
                                                $args));
 }
 
-/* Returns FALSE on any error  */
+/* Returns: array() on success, FALSE on error, String(error_response)
+ * on remote error.
+ */
 function oauth2_callback_call($platform, $callback, $args)
 {
-  return call_user_func_array(_oauth2_callback_2str($platform, $callback,
-                                                    $args), $args);
+  $access_array = oauth2_token_get($platform);
+  if (!$access_array || is_string($access_array)) return $access_array;
+
+  $function_name = _oauth2_callback_2str($platform, $callback, $args);
+  $args[count($args)] = $access_array;
+  return call_user_func_array($function_name, $args);
 }
 
 /* ***************************************************************  */
