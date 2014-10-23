@@ -91,4 +91,11 @@ function session_oauth2token_get($platform)
   return array($required, $refresh_token);
 }
 
+function session_oauth2token_delete($platform)
+{
+  $i = SESSION_PRE_OAUTH2TOKEN .$platform;
+
+  if (isset($_SESSION[$i])) unset($_SESSION[$i]);
+}
+
 /* ***************************************************************  */

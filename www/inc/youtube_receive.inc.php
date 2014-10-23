@@ -16,10 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once dirname(__FILE__). '/common.inc.php';
-include_once dirname(__FILE__). '/youtube_constants.inc.php';
-
-include_once dirname(__FILE__). '/google_api.inc.php';
+if (!defined('YT_INCLUDED')) die('Include youtube.inc.php!');
 
 /* Youtube Data API v3 Reference:
  *
@@ -37,12 +34,12 @@ function _yt_api_list($method, $part, $params='')
     'part=' .$part. ($params == ''? '': '&' .$params));
 }
 
-function _yt_api_rate_auth($item, $params)
+function _yt_api_rate_auth($access_array, $item, $params)
 {
   debug_api_info_incr('cnt_youtube_rate', 1, $item .' - '. $params);
 
   return google_api_post(_YT_REQUEST_METHOD_PREFIX .$item. '/rate',
-                         $params, false, NULL, OAUTH2_PLATFORM_YOUTUBE);
+                         $params, false, false, $access_array);
 }
 
 /* ***************************************************************  */
@@ -170,9 +167,10 @@ function yt_recv_video($vid)
   return $result;
 }
 
-function yt_recv_video_rate_auth($vid, $rate)
+function yt_recv_video_rate_auth($access_array, $vid, $rate)
 {
-  $result = _yt_api_rate_auth('videos', 'id='. $vid .'&rating=' .$rate);
+  $result = _yt_api_rate_auth($access_array, 'videos',
+                              'id='. $vid .'&rating=' .$rate);
 
   return $result !== false;
 }

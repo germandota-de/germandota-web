@@ -16,8 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once dirname(__FILE__). '/common.inc.php';
-include_once dirname(__FILE__). '/youtube_constants.inc.php';
+if (!defined('YT_INCLUDED')) die('Include youtube.inc.php!');
 
 include_once dirname(__FILE__). '/google_plus_api.inc.php';
 
@@ -57,10 +56,8 @@ function _yt_comments_apiv2_list($method, $start_index, $max_results,
                       $method .' - index ' .$start_index. '..'
                       .($start_index+$max_results). ' - ' .$params);
 
-  $json = file_get_contents($request, false, stream_context_create(
-    array('ssl' => array('CN_match' => YT_COMMENTS_SSL_CNMATCH))
-  ));
-  if (!$json) return false;
+  list($status_ok, $status, $json) = http_receive($request);
+  if (!$status_ok) return false;
 
   $result = json_decode($json, true);
   if (!$result) return false;

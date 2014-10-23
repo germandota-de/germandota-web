@@ -170,7 +170,8 @@ III.  Installing Apache httpd on a Debian system
 
 1. Install Apache httpd via apt package manager as root
 
-     root$> apt-get install libapache2-mod-php
+     root$> apt-get install libapache2-mod-php5
+     root$> apt-get install php5-curl
 
 2. Change as root the directive DocumentRoot in the configuration file
 

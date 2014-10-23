@@ -65,6 +65,12 @@ define('COMMON_HTACCESS_FILEROOT',
  * to write these files.
  */
 
+if (!function_exists('curl_init')) {
+  die('<font color="#ff0000">CURL not installed!  On a Debian system'
+      .' try <code>apt-get install php5-curl</code> and restart Apache'
+      .'</font>');
+}
+
 if (!file_exists(COMMON_CONF_FILEROOT)) {
   die('<font color="#ff0000">config.inc.php not found! Copy it from'
       .' config.template.inc.php and make necessary changes on the'
@@ -144,6 +150,16 @@ function _o($str)
 function _o_html($str)
 {
   echo htmlspecialchars_decode(_o_get($str), ENT_QUOTES);
+}
+
+function _e($function_name, $msg, $sensitive=false)
+{
+  $out = 'ERROR ' .$function_name. '(): ' .$msg;
+
+  if (CONFIG_SECURITY_LOG_SENSITIVE && $sensitive)
+    $out .= ' - [[ ' .$sensitive. ' ]]';
+
+  error_log($out);
 }
 
 function common_print_htmltitle($title)
@@ -369,4 +385,5 @@ function common_html_js_onload($js_code)
 
 /* ***************************************************************  */
 
+include_once dirname(__FILE__). '/http.inc.php';
 include_once dirname(__FILE__). '/session.inc.php';
