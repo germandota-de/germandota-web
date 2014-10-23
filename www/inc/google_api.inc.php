@@ -33,85 +33,51 @@ define('_GOOGLE_REQUEST_DEFAULT',
         */
        );
 
-define('_GOOGLE_OAUTH2_PRE',
+define('GOOGLE_OAUTH2_LOGIN_PRE',
        'https://accounts.google.com/o/oauth2/auth');
-define('_GOOGLE_OAUTH2_TOKEN_PRE',
+define('GOOGLE_OAUTH2_LOGIN_POST',
+       //'&approval_prompt=auto&access_type=offline&login_hint=email@addre.ss');
+       '&approval_prompt=auto&access_type=offline');
+define('GOOGLE_OAUTH2_TOKEN_PRE',
        'https://accounts.google.com/o/oauth2/token');
 
 /* ***************************************************************  */
 
-function _google_oautharray_new($platform)
+function _google_api_httpheader_auth(&$header, $access_array=false)
 {
-  return array('url_token' => _GOOGLE_OAUTH2_TOKEN_PRE,
-               'client_id' => CONFIG_GOOGLE_CLIENT_ID,
-               'client_secret' => CONFIG_GOOGLE_CLIENT_SECRET,
-               'platform' => $platform
-               );
+  if ($access_array) {
+    $token_type = $access_array['token_type'];
+
+    if ($token_type != 'Bearer') {
+      _e('_google_api_httpheader_auth', 'Token type not supported: `'
+         .$token_type. '\'');
+    }
+
+    $header[count($header)]
+      = 'Authorization: Bearer ' .$access_array['access_token'];
+  }
+
+  return true;
 }
 
 /* ***************************************************************  */
 
-function _google_api_http_get_authcontext($auth_platform=false)
-{
-  $header = false;
-
-  if ($auth_platform) {
-    $tmp = oauth2_token_get(_google_oautharray_new($auth_platform));
-    if (!$tmp) return NULL;
-    list($token_type, $access_token) = $tmp;
-
-    $header = 'Authorization: Bearer ' .$access_token;
-  }
-
-  $http = array('method' => 'GET');
-  if ($header) $http['header'] = $header;
-
-  return stream_context_create(array(
-    'http' => $http
-  ));
-}
-
-function _google_api_http_post_authcontext(
-  $auth_platform=false, $content_type=false, $content=NULL)
-{
-  $header = $content_type
-    ? 'Content-type: ' .$content_type
-    : 'Content-type: application/x-www-form-urlencoded';
-
-  if ($auth_platform) {
-    $tmp = oauth2_token_get(_google_oautharray_new($auth_platform));
-    if (!$tmp) return NULL;
-    list($token_type, $access_token) = $tmp;
-
-    $header .= "\nAuthorization: Bearer " .$access_token;
-  }
-
-  if (!$content) $content = "\n";
-
-  return stream_context_create(array(
-    'http' => array(
-      'method'  => 'POST',
-      'header'  => $header,
-      'content' => $content)
-  ));
-}
-
-/* ***************************************************************  */
-
-function google_api_recv($method, $params, $auth_platform=false)
+function google_api_recv($method, $params, $access_array=false)
 {
   $request = _GOOGLE_REQUEST_PREFIX .'/'. $method
     ._GOOGLE_REQUEST_DEFAULT. '&' .$params;
 
-  $context = _google_api_http_get_authcontext($auth_platform);
+  $header = array();
+  if (!_google_api_httpheader_auth($header, $access_array))
+    return false;
 
   /* Do not display $request because of the API key  */
-  //debug_api_info_incr('cnt_google_api', 1, $request);
-  debug_api_info_incr('cnt_google_api', 1);
+  debug_api_info_incr('cnt_google_api', 1, 'method: ' .$method);
 
-  $json = file_get_contents($request, false, $context);
+  list($status_ok, $status, $json)
+    = http_receive($request, 'GET', $header);
+  if (!$status_ok) return false;
   if ($json === '') return "\n";
-  if (!$json) return false;
 
   $result = json_decode($json, true);
   if (!$result) return false;
@@ -119,48 +85,28 @@ function google_api_recv($method, $params, $auth_platform=false)
   return $result;
 }
 
-function google_api_post($method, $params, $content_type=false,
-                         $content=NULL, $auth_platform=false)
+function google_api_post($method, $params, $content=false,
+                         $content_type=false, $access_array=false)
 {
   $request = _GOOGLE_REQUEST_PREFIX .'/'. $method
     ._GOOGLE_REQUEST_DEFAULT. '&' .$params;
 
-  $context = _google_api_http_post_authcontext($auth_platform,
-                                               $content_type, $content);
+  $header = array();
+  if (!_google_api_httpheader_auth($header, $access_array))
+    return false;
 
   /* Do not display $request because of the API key  */
-  //debug_api_info_incr('cnt_google_api', 1, $request);
-  debug_api_info_incr('cnt_google_api', 1);
+  debug_api_info_incr('cnt_google_api', 1, 'method: ' .$method);
 
-  $json = file_get_contents($request, false, $context);
+  list($status_ok, $status, $json)
+    = http_receive($request, 'POST', $header, $content, $content_type);
+  if (!$status_ok) return false;
   if ($json === '') return "\n";
-  if (!$json) return false;
 
   $result = json_decode($json, true);
   if (!$result) return false;
 
   return $result;
-}
-
-/* ***************************************************************  */
-
-function google_oauth2_urlget_setsession($scope, $platform, $callback,
-                                         $args)
-{
-  return oauth2_login_urlget_setsession(
-    _GOOGLE_OAUTH2_PRE, CONFIG_GOOGLE_CLIENT_ID, $scope,
-    '&approval_prompt=auto&access_type=offline',
-  //'&approval_prompt=auto&access_type=offline&login_hint=email@addre.ss',
-    $platform, $callback, $args
-  );
-}
-
-/* ***************************************************************  */
-
-function google_oauth2_setsession($platform, $code)
-{
-  return oauth2_token_post_setsession(
-                            _google_oautharray_new($platform), $code);
 }
 
 /* ***************************************************************  */

@@ -39,11 +39,13 @@ function _init_error($state, $error, $ignore_state=false)
     if (!$tmp) return false;
   }
 
-  $global_error_msg = oauth2_login_2errormsg($error);
+  $global_error_msg = oauth2_2errormsg($error);
 
   return 'error';
 }
 
+define('_INIT_AUTH_DEFAULT_ERROR',
+       'Could not check your identity :( ...');
 function _init_auth($state, $code,
                     $platform=false, $callback=false, $args=false)
 {
@@ -55,19 +57,28 @@ function _init_auth($state, $code,
     if (!$tmp) return false;
     list($platform, $callback, $args) = $tmp;
 
-    /* Do only send code request if $state is valid  */
-    if ($platform == OAUTH2_PLATFORM_YOUTUBE)
-      $session_result = yt_auth_setsession($code);
-    else
+    /* Not really necessary, because session will not set in that
+     * case.
+     */
+    if (!oauth2_callback_callable($platform, $callback, $args))
       return false;
 
-    if (!$session_result)
-      return _init_error(false, 'Could not check your identity :(', true);
+    /* Do only send code request if $state is valid  */
+    $session_result
+      = oauth2_token_post_setsession($platform, $code);
+    if (is_string($session_result))
+      return _init_error(false, $session_result, true);
+    else if (!$session_result)
+      return _init_error(false, _INIT_AUTH_DEFAULT_ERROR, true);
   }
 
-  $tmp = oauth2_callback_call($platform, $callback, $args);
-  if (!$tmp) return false;
-  list($global_title, $global_html_output, $global_js_onload) = $tmp;
+  $callback_result = oauth2_callback_call($platform, $callback, $args);
+  if (is_string($callback_result))
+    return _init_error(false, $callback_result, true);
+  else if (!$callback_result) return false;
+
+  list($global_title, $global_html_output, $global_js_onload)
+    = $callback_result;
 
   return 'auth';
 }
@@ -90,11 +101,8 @@ function _init_redirect($platform, $callback)
   if (!oauth2_callback_callable($platform, $callback, $global_args))
     return false;
 
-  if ($platform == OAUTH2_PLATFORM_YOUTUBE)
-    $global_redirect_link = yt_auth_urlget_setsession($callback,
-                                                      $global_args);
-  else
-    return false;
+  $global_redirect_link =
+    oauth2_login_urlget_setsession($platform, $callback, $global_args);
 
   $global_redirect_href = common_url_amp($global_redirect_link);
 

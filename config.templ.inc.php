@@ -101,6 +101,16 @@ define('CONFIG_ABOUT_CONTACT_HTML',
 
 /* ***************************************************************  */
 
+/* If TRUE the Apache error log files could contain sensitive data
+ * such like API keys, client secrets, passwords, etc.
+ *
+ * If other people have access to your Apache log files set it to
+ * FALSE!
+ */
+define('CONFIG_SECURITY_LOG_SENSITIVE',      false);
+
+/* ***************************************************************  */
+
 /* We are searching for contributors.  It's nice if here is a link to
  * https://github.com/germandota-de :))
  */

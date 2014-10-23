@@ -16,10 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-include_once dirname(__FILE__). '/common.inc.php';
-include_once dirname(__FILE__). '/youtube_constants.inc.php';
-
-include_once dirname(__FILE__). '/google_api.inc.php';
+if (!defined('YT_INCLUDED')) die('Include youtube.inc.php!');
 
 /* Progamming Guide:
  *
@@ -42,21 +39,6 @@ function yt_auth_print_form($submit_class, $alt, $descr, $callback,
     ?> title="<? _o($descr); ?>"><?
 
   ?></form><?
-}
-
-/* ***************************************************************  */
-
-function yt_auth_urlget_setsession($callback, $args)
-{
-  return google_oauth2_urlget_setsession(
-    _YT_AUTH_OAUTH2_SCOPE, OAUTH2_PLATFORM_YOUTUBE, $callback, $args);
-}
-
-/* ***************************************************************  */
-
-function yt_auth_setsession($code)
-{
-  return google_oauth2_setsession(OAUTH2_PLATFORM_YOUTUBE, $code);
 }
 
 /* ***************************************************************  */
