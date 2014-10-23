@@ -45,7 +45,7 @@ $_debug_api_info
           'cnt_google_plus'             => 0,
           '+++'                         => 0,
           'cnt_oauth2_auth'             => 0,
-          'cnt_youtube_auth'            => 0,
+          'cnt_youtube_token'           => 0,
           'cnt_youtube_refresh'         => 0,
           );
 

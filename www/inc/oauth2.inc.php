@@ -72,7 +72,7 @@ function oauth2_login_id2vars($id)
 
 /* ***************************************************************  */
 
-function oauth2_login_2errormsg($error_resp)
+function oauth2_2errormsg($error_resp)
 {
   /* Possible error responses are described in RFC 6749 section
    * 4.1.2.1.
@@ -82,7 +82,7 @@ function oauth2_login_2errormsg($error_resp)
   case 'invalid_request':
     return 'You has been sent garbage';
   case 'unauthorized_client':
-    return 'Authorization request denied';
+    return 'Authorization request denied (GRANT_TYPE denied)';
   case 'access_denied':
     return 'Access denied';
   case 'unsupported_response_type':
@@ -96,7 +96,18 @@ function oauth2_login_2errormsg($error_resp)
     return 'Authorization Server seems to be overloaded'
       .' (503 Service Unavailable)';
 
-    // TODO: Adding token errors ...
+  /* Possible error responses for token request are described in RFC
+   * 6749 section 5.2.
+   */
+  //case 'invalid_request': implemented above
+  case 'invalid_client':
+    return 'Invalid CLIENT_ID or CLIENT_SECRET configured';
+  case 'invalid_grant':
+    return 'Invalid CODE or REFRESH_TOKEN';
+  //case 'unauthorized_client': implemented above
+  case 'unsupported_grant_type':
+    return 'GRANT_TYPE not supported';
+  //case 'invalid_scope': implemented above
   }
 
   return $error_resp;
@@ -161,7 +172,7 @@ function __oauth2_token_post_setsession($platform, $code,
  */
 function oauth2_token_post_setsession($platform, $code)
 {
-  debug_api_info_incr('cnt_' .$platform. '_auth', 1);
+  debug_api_info_incr('cnt_' .$platform. '_token', 1);
 
   return __oauth2_token_post_setsession($platform, $code, false);
 }
@@ -208,7 +219,8 @@ function oauth2_token_get($platform)
 {
   $tmp = session_oauth2token_get($platform);
   if (!$tmp) {
-    _e('oauth2_token_get', '1 Logging user out');
+    _e('oauth2_token_get',
+       'No session information available.  Logging user out');
     oauth2_logout($platform);
     return false;
   }
@@ -217,28 +229,35 @@ function oauth2_token_get($platform)
   if (_oauth2_accesstoken_expired($required)) {
 
     if (!$refresh_token) {
-      _e('oauth2_token_get', '2 Logging user out');
+      _e('oauth2_token_get',
+         'Refreshing triggered without Refresh Token.  Logging user'
+         .' out');
       oauth2_logout($platform);
       return false;
     }
 
     $tmp = _oauth2_refresh_post_setsession($platform, $refresh_token);
     if ($tmp !== true) {
-      _e('oauth2_token_get', '3 Logging user out');
+      _e('oauth2_token_get',
+         'Authorization Server responses `' .$tmp. '\'.  Logging user'
+         .' out');
       oauth2_logout($platform);
       return $tmp;
     }
 
     $tmp = session_oauth2token_get($platform);
     if (!$tmp) {
-      _e('oauth2_token_get', '4 Logging user out');
+      _e('oauth2_token_get',
+         'No session information available after Refrshing.  Logging'
+         .' user out');
       oauth2_logout($platform);
       return false;
     }
     list($required, $refresh_token) = $tmp;
   }
 
-  return array('token_type' => $required['token_type'],
+  return array('platform' => $platform,
+               'token_type' => $required['token_type'],
                'access_token' => $required['access_token']);
 }
 

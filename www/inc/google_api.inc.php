@@ -43,20 +43,18 @@ define('GOOGLE_OAUTH2_TOKEN_PRE',
 
 /* ***************************************************************  */
 
-function _google_api_httpheader_auth(&$header, $auth_platform=false)
+function _google_api_httpheader_auth(&$header, $access_array=false)
 {
-  if ($auth_platform) {
-    // TODO: Access token via parameter
-    /*
-    $tmp = oauth2_token_get(_google_oautharray_new($auth_platform));
-    if (!$tmp) return false;
-    list($token_type, $access_token) = $tmp;
-    */
+  if ($access_array) {
+    $token_type = $access_array['token_type'];
 
-    if ($token_type != 'Bearer')
-      _e('_google_api_httpheader_auth',
-         'Token type not supported: `' .$token_type. '\'');
-    $header[count($header)] = 'Authorization: Bearer ' .$access_token;
+    if ($token_type != 'Bearer') {
+      _e('_google_api_httpheader_auth', 'Token type not supported: `'
+         .$token_type. '\'');
+    }
+
+    $header[count($header)]
+      = 'Authorization: Bearer ' .$access_array['access_token'];
   }
 
   return true;
@@ -64,13 +62,13 @@ function _google_api_httpheader_auth(&$header, $auth_platform=false)
 
 /* ***************************************************************  */
 
-function google_api_recv($method, $params, $auth_platform=false)
+function google_api_recv($method, $params, $access_array=false)
 {
   $request = _GOOGLE_REQUEST_PREFIX .'/'. $method
     ._GOOGLE_REQUEST_DEFAULT. '&' .$params;
 
   $header = array();
-  if (!_google_api_httpheader_auth($header, $auth_platform))
+  if (!_google_api_httpheader_auth($header, $access_array))
     return false;
 
   /* Do not display $request because of the API key  */
@@ -88,13 +86,13 @@ function google_api_recv($method, $params, $auth_platform=false)
 }
 
 function google_api_post($method, $params, $content=false,
-                         $content_type=false, $auth_platform=false)
+                         $content_type=false, $access_array=false)
 {
   $request = _GOOGLE_REQUEST_PREFIX .'/'. $method
     ._GOOGLE_REQUEST_DEFAULT. '&' .$params;
 
   $header = array();
-  if (!_google_api_httpheader_auth($header, $auth_platform))
+  if (!_google_api_httpheader_auth($header, $access_array))
     return false;
 
   /* Do not display $request because of the API key  */

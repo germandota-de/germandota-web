@@ -39,11 +39,13 @@ function _init_error($state, $error, $ignore_state=false)
     if (!$tmp) return false;
   }
 
-  $global_error_msg = oauth2_login_2errormsg($error);
+  $global_error_msg = oauth2_2errormsg($error);
 
   return 'error';
 }
 
+define('_INIT_AUTH_DEFAULT_ERROR',
+       'Could not check your identity :( ...');
 function _init_auth($state, $code,
                     $platform=false, $callback=false, $args=false)
 {
@@ -64,16 +66,19 @@ function _init_auth($state, $code,
     /* Do only send code request if $state is valid  */
     $session_result
       = oauth2_token_post_setsession($platform, $code);
-
     if (is_string($session_result))
       return _init_error(false, $session_result, true);
     else if (!$session_result)
-      return _init_error(false, 'Could not check your identity :(', true);
+      return _init_error(false, _INIT_AUTH_DEFAULT_ERROR, true);
   }
 
-  $tmp = oauth2_callback_call($platform, $callback, $args);
-  if (!$tmp) return false;
-  list($global_title, $global_html_output, $global_js_onload) = $tmp;
+  $callback_result = oauth2_callback_call($platform, $callback, $args);
+  if (is_string($callback_result))
+    return _init_error(false, $callback_result, true);
+  else if (!$callback_result) return false;
+
+  list($global_title, $global_html_output, $global_js_onload)
+    = $callback_result;
 
   return 'auth';
 }

@@ -34,12 +34,12 @@ function _yt_api_list($method, $part, $params='')
     'part=' .$part. ($params == ''? '': '&' .$params));
 }
 
-function _yt_api_rate_auth($item, $params)
+function _yt_api_rate_auth($access_array, $item, $params)
 {
   debug_api_info_incr('cnt_youtube_rate', 1, $item .' - '. $params);
 
   return google_api_post(_YT_REQUEST_METHOD_PREFIX .$item. '/rate',
-                         $params, false, false, OAUTH2_PLATFORM_YOUTUBE);
+                         $params, false, false, $access_array);
 }
 
 /* ***************************************************************  */
@@ -167,9 +167,10 @@ function yt_recv_video($vid)
   return $result;
 }
 
-function yt_recv_video_rate_auth($vid, $rate)
+function yt_recv_video_rate_auth($access_array, $vid, $rate)
 {
-  $result = _yt_api_rate_auth('videos', 'id='. $vid .'&rating=' .$rate);
+  $result = _yt_api_rate_auth($access_array, 'videos',
+                              'id='. $vid .'&rating=' .$rate);
 
   return $result !== false;
 }
