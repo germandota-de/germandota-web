@@ -51,6 +51,7 @@ function _google_api_httpheader_auth(&$header, $access_array=false)
     if ($token_type != 'Bearer') {
       _e('_google_api_httpheader_auth', 'Token type not supported: `'
          .$token_type. '\'');
+      return false;
     }
 
     $header[count($header)]

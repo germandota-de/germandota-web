@@ -115,17 +115,6 @@ span.icon_text {
   width: 95%;
 }
 
-div.description {
-  padding-left: 8px;
-  padding-right: 8px;
-  padding-bottom: 8px;
-
-  overflow: auto;
-  overflow-x: hidden;
-
-  border-radius: 6px;
-}
-
 /* ***************************************************************  */
 
 img.gplus_profilelink {
@@ -345,6 +334,8 @@ a:hover.playlist_link {
 }
 
 div.lists_table_text_descr {
+  border-radius: 6px;
+
   padding-top: 8px;
 
   background-color: #d0d0d0;
@@ -489,6 +480,8 @@ a:hover.video_thumbs_table_pagelink {
 }
 
 div#video_description {
+  border-radius: 6px;
+
   margin-left: auto;
   margin-right: auto;
   width: 60%;
@@ -721,6 +714,8 @@ td.activity_table_descr {
 }
 
 div.activity_table_box {
+  border-radius: 6px;
+
   margin-top: 4px;
   margin-left: auto;
   margin-right: auto;
