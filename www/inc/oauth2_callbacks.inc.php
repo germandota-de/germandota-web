@@ -26,9 +26,9 @@ define('OAUTH2_CALLBACKS_PREFIX',            'oauth2_cb_');
  *
  * Callback must have the form:
  *
- *   oauth2_cb_<platform>_<name>_<arg_count>()
+ *   oauth2_cb_<platform>_<name>_<arg_count>(..., $access_array)
  * i.e.
- *   oauth2_cb_youtube_video_like_1($video_id)
+ *   oauth2_cb_youtube_video_like_1($video_id, $access_array)
  *
  * Returning must be FALSE on error or on success
  *

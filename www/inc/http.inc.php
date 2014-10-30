@@ -28,13 +28,14 @@ function _http_status_ok($status)
   return $status >= 200 && $status < 300;
 }
 
-/* ***************************************************************  */
-
 function _http_receive_error()
 {
   return array(_http_status_ok(HTTP_STATUS_ERROR), HTTP_STATUS_ERROR,
                '- Connection Error -');
 }
+
+/* ***************************************************************  */
+
 function http_receive($url, $method='GET', $header=array(), $content='',
                       $content_type=false)
 {
