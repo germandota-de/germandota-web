@@ -222,9 +222,9 @@ function common_time2url($s=0, $min=0, $h=0)
 function common_user_output_htmlin($str, $more_link='',
   $more_target='_self', $lines=0, $time_link='', $time_target='_self')
 {
-  $str = preg_replace('@([^"])(https?://[\S]+)@isu',
+  $str = preg_replace('@(^|[\s,.:;?!\n])(https?://[\S]+)@isu',
                       '\1<a target="_blank" href="\2">\2</a>', $str);
-  $str = preg_replace('@(\s)(www\.[\S]+)@isu',
+  $str = preg_replace('@(^|[\s,.:;?!\n])(www\.[\S]+)@isu',
                       '\1<a target="_blank" href="http://\2">\2</a>', $str);
   $str = preg_replace('@(^|[\s,.:;?!\n])\*(\w[^<>]*?)\*([\s,.:;?!]|$)@isu',
                       '\1<b>\2</b>\3', $str);
