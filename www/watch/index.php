@@ -216,7 +216,7 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
             .', '. yt_str2time_html($glob_yt_video['snippet']['publishedAt']));
         ?></span></td>
         <td></td>
-        <td class="video_videoframe_table_small">Subscribe <?
+        <td class="video_videoframe_table_small"><?
           yt_print_chanlink($glob_yt_video['snippet']['channelTitle'],
                             $glob_yt_video['snippet']['channelId']);
           ?> on
