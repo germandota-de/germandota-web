@@ -168,9 +168,9 @@ function yt_comments_strip_html($str)
   $str = preg_replace('@<a[^>]+class="[^"]+hashtag.*?>'
     .'#([^<]+)</a>@isu', '#\1', $str);
 
-  /* Google+ profile  */
+  /* All <a> using TARGET="_BLANK"  */
   $str = preg_replace(
-    '@(<a[^>]class="proflink")(.*?>)@isu', '\1 target="_blank"\2',
+    '@<a(\s+)([^>]+)>@isu', '<a\1target="_blank" \2>',
     $str);
 
   return $str;
