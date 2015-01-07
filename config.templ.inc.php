@@ -26,9 +26,11 @@
  *
  *   2. APIs -> 'Google+ API' set to ON
  *
- *   3. Credentials -> Public API access -> Server key
+ *   3. APIs -> 'Consent screen' will be shown to user during OAuth
  *
- *   4. Credentials -> OAuth -> Web application
+ *   4. Credentials -> Public API access -> Server key
+ *
+ *   5. Credentials -> OAuth -> Web application
  *
  *        * Authorized JavaScript origins:
  *          <leave blank>
