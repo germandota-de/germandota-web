@@ -87,6 +87,8 @@ define('CONFIG_PROJECT_NAME_SHORT',     'GermanDota');
  */
 define('CONFIG_PROJECT_NAME_POST',      'Community');
 
+/* Do also overwrite /www/favicon.ico with a correct logo
+ */
 define('CONFIG_PROJECT_LOGO_ABS',
        '/' .COMMON_DIR_INST_ABS. 'img/logo.32.png');
 
