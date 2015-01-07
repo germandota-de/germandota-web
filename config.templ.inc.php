@@ -52,9 +52,10 @@ define('CONFIG_GOOGLE_CLIENT_SECRET',
  * https://www.googleapis.com/youtube/v3/channels?key={API_KEY} \
  *   &forUsername=GermanDotaTV&part=id
  *
- * GermanDotaTV: UCeKFc-ydU9pWKa4tqK-vYSw
- * GameTube:     UC4exMFDKv2U6TGgi9pLQxPg
- * Gronkh:       UCYJ61XIK64sp6ZFFS8sctxw
+ * GermanDotaTV:      UCeKFc-ydU9pWKa4tqK-vYSw
+ * GermanHearthstone: UCOQjOA1DIKqpGfbpTwCtggg
+ * GameTube:          UC4exMFDKv2U6TGgi9pLQxPg
+ * Gronkh:            UCYJ61XIK64sp6ZFFS8sctxw
  */
 define('CONFIG_YT_CHANNELID',      'UCeKFc-ydU9pWKa4tqK-vYSw');
 
