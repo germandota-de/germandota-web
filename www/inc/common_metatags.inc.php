@@ -32,14 +32,22 @@ function _common_meta_byprop_print($prop, $cont)
 
 /* ***************************************************************  */
 
-function common_meta_printall($description)
+function common_meta_printall($description, $url=false)
 {
+  if (!$url) $url = COMMON_SERVER_REQUEST_URL;
+
   _common_meta_byname_print('robots', 'all');
 
   _common_meta_byname_print('generator', 'GermanDota.de Webcode');
   _common_meta_byname_print('abstract', 'Website of '
     .CONFIG_PROJECT_NAME_SHORT .' '. CONFIG_PROJECT_NAME_POST);
   _common_meta_byname_print('description', $description);
+
+  _common_meta_byprop_print('og:site_name',
+    CONFIG_PROJECT_NAME_SHORT .' '. CONFIG_PROJECT_NAME_POST);
+  _common_meta_byprop_print('og:url', $url);
+
+  // TODO Meta tags
 }
 
 /* ***************************************************************  */

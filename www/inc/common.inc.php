@@ -22,6 +22,9 @@ define('COMMON_USER_IP',           $_SERVER['REMOTE_ADDR']);
 define('COMMON_SERVER_NAME',       $_SERVER['SERVER_NAME']);
 define('COMMON_SERVER_PROTOCOL',   isset($_SERVER['HTTPS'])
        ? 'https': 'http');
+define('COMMON_SERVER_REQUEST_URL',
+       COMMON_SERVER_PROTOCOL. '://' .COMMON_SERVER_NAME
+       .$_SERVER['REQUEST_URI']);
 
 /* ***************************************************************  */
 /* Formats:
@@ -136,7 +139,9 @@ function common_print_htmltitle($title)
   echo "\n";
   common_meta_printall('Here is the social media stuff of '
     .CONFIG_PROJECT_NAME_SHORT .' '. CONFIG_PROJECT_NAME_POST. '.');
+  // TODO Parameters
 ?>
+
   <link rel="shortcut icon" type="image/x-icon" href="/<?
         echo COMMON_DIR_INST_ABS.CONFIG_PROJECT_FAVICON_ABS; ?>">
   <link rel="stylesheet" type="text/css" href="/<?
@@ -278,10 +283,9 @@ function common_url2hostname($url)
 
 function common_server_is_localhost()
 {
-  $glob_servername = $_SERVER['SERVER_NAME'];
-  return $glob_servername == '127.0.0.1'
-    || $glob_servername == '[::1]'
-    || $glob_servername == 'localhost';
+  return COMMON_SERVER_NAME == '127.0.0.1'
+    || COMMON_SERVER_NAME == '[::1]'
+    || COMMON_SERVER_NAME == 'localhost';
 }
 
 /* $menu_array = array(
