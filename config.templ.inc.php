@@ -90,8 +90,8 @@ define('CONFIG_PROJECT_NAME_POST',      'Community');
 
 /* Relative to /www/ - Preserve MIME-Type and file extension
  */
-define('CONFIG_PROJECT_LOGO_ABS',      'img/logo.32.png');
-define('CONFIG_PROJECT_FAVICON_ABS',   'favicon.ico');
+define('CONFIG_PROJECT_LOGO_ABS',       'img/logo.32.png');
+define('CONFIG_PROJECT_FAVICON_ABS',    'favicon.ico');
 
 /* Choose a directory name from /www/themes/
  */
