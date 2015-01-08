@@ -26,9 +26,11 @@
  *
  *   2. APIs -> 'Google+ API' set to ON
  *
- *   3. Credentials -> Public API access -> Server key
+ *   3. APIs -> 'Consent screen' will be shown to user during OAuth
  *
- *   4. Credentials -> OAuth -> Web application
+ *   4. Credentials -> Public API access -> Server key
+ *
+ *   5. Credentials -> OAuth -> Web application
  *
  *        * Authorized JavaScript origins:
  *          <leave blank>
@@ -50,9 +52,10 @@ define('CONFIG_GOOGLE_CLIENT_SECRET',
  * https://www.googleapis.com/youtube/v3/channels?key={API_KEY} \
  *   &forUsername=GermanDotaTV&part=id
  *
- * GermanDotaTV: UCeKFc-ydU9pWKa4tqK-vYSw
- * GameTube:     UC4exMFDKv2U6TGgi9pLQxPg
- * Gronkh:       UCYJ61XIK64sp6ZFFS8sctxw
+ * GermanDotaTV:      UCeKFc-ydU9pWKa4tqK-vYSw
+ * GermanHearthstone: UCOQjOA1DIKqpGfbpTwCtggg
+ * GameTube:          UC4exMFDKv2U6TGgi9pLQxPg
+ * Gronkh:            UCYJ61XIK64sp6ZFFS8sctxw
  */
 define('CONFIG_YT_CHANNELID',      'UCeKFc-ydU9pWKa4tqK-vYSw');
 
@@ -73,7 +76,8 @@ define('CONFIG_NUMBERS_POINT',          ',');  /* For EN: '.'   */
 
 /* ***************************************************************  */
 
-/* Only used for displaying on the site  */
+/* Only used for displaying on the site
+ */
 define('CONFIG_PROJECT_SITENAME',       'GermanDota.de');
 define('CONFIG_PROJECT_NAME_SHORT',     'GermanDota');
 
@@ -84,8 +88,10 @@ define('CONFIG_PROJECT_NAME_SHORT',     'GermanDota');
  */
 define('CONFIG_PROJECT_NAME_POST',      'Community');
 
-define('CONFIG_PROJECT_LOGO_ABS',
-       '/' .COMMON_DIR_INST_ABS. 'img/logo.32.png');
+/* Relative to /www/ - Preserve MIME-Type and file extension
+ */
+define('CONFIG_PROJECT_LOGO_ABS',       'img/logo.32.png');
+define('CONFIG_PROJECT_FAVICON_ABS',    'favicon.ico');
 
 /* Choose a directory name from /www/themes/
  */
