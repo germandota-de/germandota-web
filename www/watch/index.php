@@ -145,6 +145,8 @@ include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
 ?>
 
   <script type="text/javascript" src="https://apis.google.com/js/platform.js"></script><?
+  /* Needed for Youtube subscribe button only.  */
+
 common_print_htmltitle(
   ($glob_yt_list? '[' .$glob_yt_list['snippet']['title']. '] '
    .($glob_video_plposition+1). '. ': '')

@@ -85,13 +85,17 @@ function http_receive($url, $method='GET', $header=array(), $content='',
   $result_data = curl_exec($ch);
   $result_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
   $result_status_ok = _http_status_ok($result_status);
-
+  $result_error = curl_error($ch);
   curl_close($ch);
-  if ($result_data === false) return _http_receive_error();
+
+  if ($result_data === false) {
+    _e('http_receive', 'HTTP CONNECTION "' .$result_error. '"', $url);
+    return _http_receive_error();
+  }
 
   if (!$result_status_ok) {
     _e('http_receive', 'HTTP STATUS ' .$result_status,
-       $url. ' - ' .$result_data);
+       $url. ' - "' .$result_data. '"');
   }
 
   return array($result_status_ok, $result_status, $result_data);
