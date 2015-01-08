@@ -22,7 +22,8 @@ if (!defined('COMMON_EXIST')) exit();
 </head>
 <body onload="init()">
   <div class="theme_topnav">
-    <img id="theme_topnav_logo" src="<? echo CONFIG_PROJECT_LOGO_ABS; ?>" alt="(logo)">
+    <img id="theme_topnav_logo" src="/<?
+  echo COMMON_DIR_INST_ABS.CONFIG_PROJECT_LOGO_ABS; ?>" alt="(logo)">
     <span class="theme_topnav">
       <a class="theme_topnav_link" href="/<?
         echo COMMON_DIR_INST_ABS; ?>">Home</a>

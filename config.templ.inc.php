@@ -76,7 +76,8 @@ define('CONFIG_NUMBERS_POINT',          ',');  /* For EN: '.'   */
 
 /* ***************************************************************  */
 
-/* Only used for displaying on the site  */
+/* Only used for displaying on the site
+ */
 define('CONFIG_PROJECT_SITENAME',       'GermanDota.de');
 define('CONFIG_PROJECT_NAME_SHORT',     'GermanDota');
 
@@ -87,10 +88,10 @@ define('CONFIG_PROJECT_NAME_SHORT',     'GermanDota');
  */
 define('CONFIG_PROJECT_NAME_POST',      'Community');
 
-/* Do also overwrite /www/favicon.ico with a correct logo
+/* Relative to /www/ - Preserve MIME-Type and file extension
  */
-define('CONFIG_PROJECT_LOGO_ABS',
-       '/' .COMMON_DIR_INST_ABS. 'img/logo.32.png');
+define('CONFIG_PROJECT_LOGO_ABS',      'img/logo.32.png');
+define('CONFIG_PROJECT_FAVICON_ABS',   'favicon.ico');
 
 /* Choose a directory name from /www/themes/
  */
