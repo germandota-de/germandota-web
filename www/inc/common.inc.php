@@ -175,7 +175,7 @@ function common_print_htmltitle($title)
   ?>.">
   <meta name="robots" content="all">
   <link rel="shortcut icon" type="image/x-icon" href="/<?
-        echo COMMON_DIR_INST_ABS; ?>favicon.ico">
+        echo COMMON_DIR_INST_ABS.CONFIG_PROJECT_FAVICON_ABS; ?>">
   <link rel="stylesheet" type="text/css" href="/<?
         echo COMMON_DIR_INST_ABS; ?>default.css">
   <script type="text/javascript" src="/<?
