@@ -143,7 +143,7 @@ function common_print_htmltitle($title)
 ?>
 
   <link rel="shortcut icon" type="image/x-icon" href="/<?
-        echo COMMON_DIR_INST_ABS.CONFIG_PROJECT_FAVICON_ABS; ?>">
+        echo COMMON_DIR_INST_ABS.CONFIG_PROJECT_FAVICON; ?>">
   <link rel="stylesheet" type="text/css" href="/<?
         echo COMMON_DIR_INST_ABS; ?>default.css">
   <script type="text/javascript" src="/<?

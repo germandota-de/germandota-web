@@ -32,8 +32,12 @@ function _common_meta_byprop_print($prop, $cont)
 
 /* ***************************************************************  */
 
-function common_meta_printall($description, $url=false)
+function common_meta_printall($description, $image=false, $type=false,
+                              $url=false)
 {
+  if (!$image)
+    $image = '/' .COMMON_DIR_INST_ABS.CONFIG_PROJECT_LOGO_200;
+  if (!$type) $type = 'website';
   if (!$url) $url = COMMON_SERVER_REQUEST_URL;
 
   _common_meta_byname_print('robots', 'all');
@@ -46,6 +50,9 @@ function common_meta_printall($description, $url=false)
   _common_meta_byprop_print('og:site_name',
     CONFIG_PROJECT_NAME_SHORT .' '. CONFIG_PROJECT_NAME_POST);
   _common_meta_byprop_print('og:url', $url);
+  _common_meta_byprop_print('og:type', $type);
+  _common_meta_byprop_print('og:image', $image);
+  _common_meta_byprop_print('og:description', $description);
 
   // TODO Meta tags
 }

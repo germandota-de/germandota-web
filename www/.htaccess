@@ -18,9 +18,9 @@
 # pathes.
 
 # Not Found
-ErrorDocument 404 /errors/e404.php
+ErrorDocument 404 /develop/www/errors/e404.php
 # Forbidden
-ErrorDocument 403 /errors/e403.php
+ErrorDocument 403 /develop/www/errors/e403.php
 
 ######################################################################
 
