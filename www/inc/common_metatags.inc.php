@@ -38,7 +38,7 @@ function _common_meta_byprop_print($prop, $cont)
  *
  */
 function common_meta_printall($title, $description=false, $image=false,
-                              $type=false, $url=false)
+                              $type_array=false, $url=false)
 {
   if (!$description) {
     $description = 'Here is the social media stuff of '
@@ -48,7 +48,7 @@ function common_meta_printall($title, $description=false, $image=false,
     $image = COMMON_SERVER_REQUEST_PROTSERVER. '/'
       .COMMON_DIR_INST_ABS.CONFIG_PROJECT_LOGO_200;
   }
-  if (!$type) $type = 'website';
+  if (!$type_array) $type_array = array('type' => 'website');
   if (!$url) $url = COMMON_SERVER_REQUEST_URL;
 
   _common_meta_byname_print('robots', 'all');
@@ -60,11 +60,22 @@ function common_meta_printall($title, $description=false, $image=false,
 
   _common_meta_byprop_print('og:site_name', COMMON_PROJECT_NAME_FULL);
   _common_meta_byprop_print('og:url', $url);
-  _common_meta_byprop_print('og:type', $type);
+  _common_meta_byprop_print('og:type', $type_array['type']);
   _common_meta_byprop_print('og:image', $image);
   _common_meta_byprop_print('og:description', $description);
 
-  // TODO Meta tags
+  if ($type_array && preg_match('/^video/i', $type_array['type'])) {
+    _common_meta_byprop_print('og:video:type',
+                              'application/x-shockwave-flash');
+    _common_meta_byprop_print('og:video',
+                              'http:' .$type_array['video_url']);
+    _common_meta_byprop_print('og:video:secure_url',
+                              'https:' .$type_array['video_url']);
+    _common_meta_byprop_print('og:video:width',
+                              $type_array['video_width']);
+    _common_meta_byprop_print('og:video:height',
+                              $type_array['video_height']);
+  }
 }
 
 /* ***************************************************************  */

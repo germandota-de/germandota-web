@@ -139,10 +139,10 @@ define('COMMON_USER_NEWLINE',           "\n<br>");
 /* ***************************************************************  */
 
 function common_print_htmltitle($title, $description=false,
-  $image=false, $type=false, $url=false)
+  $image=false, $type_array=false, $url=false)
 {
   echo "\n";
-  common_meta_printall($title, $description, $image, $type, $url);
+  common_meta_printall($title, $description, $image, $type_array, $url);
 ?>
 
   <link rel="shortcut icon" type="image/x-icon" href="/<?
