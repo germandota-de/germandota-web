@@ -32,23 +32,33 @@ function _common_meta_byprop_print($prop, $cont)
 
 /* ***************************************************************  */
 
-function common_meta_printall($description, $image=false, $type=false,
-                              $url=false)
+/* Opengraph reference: http://ogp.me/
+ *
+ * Facebook debugger:   https://developers.facebook.com/tools/debug/
+ *
+ */
+function common_meta_printall($title, $description=false, $image=false,
+                              $type=false, $url=false)
 {
-  if (!$image)
-    $image = '/' .COMMON_DIR_INST_ABS.CONFIG_PROJECT_LOGO_200;
+  if (!$description) {
+    $description = 'Here is the social media stuff of '
+      .COMMON_PROJECT_NAME_FULL. '.';
+  }
+  if (!$image) {
+    $image = COMMON_SERVER_REQUEST_PROTSERVER. '/'
+      .COMMON_DIR_INST_ABS.CONFIG_PROJECT_LOGO_200;
+  }
   if (!$type) $type = 'website';
   if (!$url) $url = COMMON_SERVER_REQUEST_URL;
 
   _common_meta_byname_print('robots', 'all');
-
+  _common_meta_byprop_print('og:title', $title);
   _common_meta_byname_print('generator', 'GermanDota.de Webcode');
   _common_meta_byname_print('abstract', 'Website of '
-    .CONFIG_PROJECT_NAME_SHORT .' '. CONFIG_PROJECT_NAME_POST);
+                            .COMMON_PROJECT_NAME_FULL);
   _common_meta_byname_print('description', $description);
 
-  _common_meta_byprop_print('og:site_name',
-    CONFIG_PROJECT_NAME_SHORT .' '. CONFIG_PROJECT_NAME_POST);
+  _common_meta_byprop_print('og:site_name', COMMON_PROJECT_NAME_FULL);
   _common_meta_byprop_print('og:url', $url);
   _common_meta_byprop_print('og:type', $type);
   _common_meta_byprop_print('og:image', $image);

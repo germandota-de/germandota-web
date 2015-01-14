@@ -21,9 +21,11 @@
  */
 include_once dirname(__FILE__). '/../inc/common.inc.php';
 
+$glob_description
+  = 'WTF O_O ...';
 include_once dirname(__FILE__)
   .'/../themes/' .CONFIG_THEME. '/begin-head.inc.php';
-common_print_htmltitle('403 Forbidden');
+common_print_htmltitle('403 Forbidden', $glob_description);
 include_once dirname(__FILE__)
   .'/../themes/' .CONFIG_THEME. '/head-title.inc.php';
 common_print_title('403 Forbidden');
