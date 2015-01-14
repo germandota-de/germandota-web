@@ -22,9 +22,10 @@ define('COMMON_USER_IP',           $_SERVER['REMOTE_ADDR']);
 define('COMMON_SERVER_NAME',       $_SERVER['SERVER_NAME']);
 define('COMMON_SERVER_PROTOCOL',   isset($_SERVER['HTTPS'])
        ? 'https': 'http');
+define('COMMON_SERVER_REQUEST_PROTSERVER',
+       COMMON_SERVER_PROTOCOL. '://' .COMMON_SERVER_NAME);
 define('COMMON_SERVER_REQUEST_URL',
-       COMMON_SERVER_PROTOCOL. '://' .COMMON_SERVER_NAME
-       .$_SERVER['REQUEST_URI']);
+       COMMON_SERVER_REQUEST_PROTSERVER .$_SERVER['REQUEST_URI']);
 
 /* ***************************************************************  */
 /* Formats:
@@ -115,6 +116,9 @@ if (CONFIG_GOOGLE_CLIENT_SECRET == '')
 /* End of install stuff
  * ***************************************************************  */
 
+define('COMMON_PROJECT_NAME_FULL',
+       CONFIG_PROJECT_NAME_SHORT .' '. CONFIG_PROJECT_NAME_POST);
+
 define('COMMON_DIR_INC_ABS',
   COMMON_DIR_INST_ABS.COMMON_DIR_INC .'/');
 define('COMMON_DIR_ERRORS_ABS',
@@ -134,16 +138,15 @@ define('COMMON_USER_NEWLINE',           "\n<br>");
 
 /* ***************************************************************  */
 
-function common_print_htmltitle($title)
+function common_print_htmltitle($title, $description=false,
+  $image=false, $type_array=false, $url=false)
 {
   echo "\n";
-  common_meta_printall('Here is the social media stuff of '
-    .CONFIG_PROJECT_NAME_SHORT .' '. CONFIG_PROJECT_NAME_POST. '.');
-  // TODO Parameters
+  common_meta_printall($title, $description, $image, $type_array, $url);
 ?>
 
   <link rel="shortcut icon" type="image/x-icon" href="/<?
-        echo COMMON_DIR_INST_ABS.CONFIG_PROJECT_FAVICON_ABS; ?>">
+        echo COMMON_DIR_INST_ABS.CONFIG_PROJECT_FAVICON; ?>">
   <link rel="stylesheet" type="text/css" href="/<?
         echo COMMON_DIR_INST_ABS; ?>default.css">
   <script type="text/javascript" src="/<?

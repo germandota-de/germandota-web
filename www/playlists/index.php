@@ -42,8 +42,10 @@ if ($state_first_page) {
 
 /* ***************************************************************  */
 
+$glob_description
+  = 'Here are the playlists of ' .COMMON_PROJECT_NAME_FULL. '.';
 include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
-common_print_htmltitle('Playlists');
+common_print_htmltitle('Playlists', $glob_description);
 include_once '../themes/' .CONFIG_THEME. '/head-title.inc.php';
 common_print_title('Playlists');
 include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';

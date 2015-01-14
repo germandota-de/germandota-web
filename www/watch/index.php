@@ -147,13 +147,36 @@ include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
   <script type="text/javascript" src="https://apis.google.com/js/platform.js"></script><?
   /* Needed for Youtube subscribe button only.  */
 
-common_print_htmltitle(
-  ($glob_yt_list? '[' .$glob_yt_list['snippet']['title']. '] '
-   .($glob_video_plposition+1). '. ': '')
-  .$glob_yt_video['snippet']['title']);
+if (!isset($_GET['v']) && $glob_yt_list) {
+  $glob_title = $glob_yt_list['snippet']['title']. ' - Playlist';
+  $glob_description
+    = 'Watch playlist: "' .$glob_yt_list['snippet']['title']. '"';
+
+  $glob_image = $glob_yt_list['snippet']['thumbnails']['maxres'];
+} else {
+  $glob_title = $glob_yt_video['snippet']['title'];
+  $glob_title .= $glob_yt_list
+    ? ' [' .$glob_yt_list['snippet']['title']. ']': '';
+
+  $glob_description
+    = 'Watch video: "' .$glob_yt_video['snippet']['title']. '"';
+  $glob_description .= $glob_yt_list
+    ? ' in playlist [' .$glob_yt_list['snippet']['title']. ']': '';
+
+  $glob_image = $glob_yt_video['snippet']['thumbnails']['maxres'];
+} /* if (!isset($_GET['v']) && $glob_yt_list)  */
+
+common_print_htmltitle($glob_title, $glob_description,
+  $glob_image['url'],
+  array(
+    'type' => 'video',
+    'video_url' => '//www.youtube.com/v/'.$video_id.'?version=3&autohide=1',
+    'video_width' => $glob_image['width'],
+    'video_height' => $glob_image['height'],
+  ));
 include_once '../themes/' .CONFIG_THEME. '/head-title.inc.php';
-common_print_title(($glob_video_plposition+1)
-                   .'. '. $glob_yt_video['snippet']['title'], true);
+common_print_title(($glob_yt_list? ($glob_video_plposition+1). '. '
+                    : ''). $glob_yt_video['snippet']['title'], true);
 include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
 ?>
 
