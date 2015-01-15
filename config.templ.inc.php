@@ -59,6 +59,10 @@ define('CONFIG_GOOGLE_CLIENT_SECRET',
  */
 define('CONFIG_YT_CHANNELID',      'UCeKFc-ydU9pWKa4tqK-vYSw');
 
+/* Twitter username, including the beginning @ sign
+ */
+define('CONFIG_TWITTER_USER',      '@MopedTobias81');
+
 /* Date/Time format to use on the site.  Consider for details:
  *
  * http://www.php.net/date
