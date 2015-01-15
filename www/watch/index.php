@@ -141,12 +141,6 @@ function _page_td($token_name, $dir_str, $i_playlist, $text)
 
 /* ***************************************************************  */
 
-include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
-?>
-
-  <script type="text/javascript" src="https://apis.google.com/js/platform.js"></script><?
-  /* Needed for Youtube subscribe button only.  */
-
 if (!isset($_GET['v']) && $glob_yt_list) {
   $glob_title = $glob_yt_list['snippet']['title']. ' - Playlist';
   $glob_description
@@ -166,13 +160,38 @@ if (!isset($_GET['v']) && $glob_yt_list) {
   $glob_image = $glob_yt_video['snippet']['thumbnails']['maxres'];
 } /* if (!isset($_GET['v']) && $glob_yt_list)  */
 
+$glob_duration_s
+  = yt_timeat2sec($glob_yt_video['contentDetails']['duration']);
+
+$glob_flash_extension = '';
+if ($video_start) {
+  $glob_flash_extension .= '&start=' .yt_timeat2sec($video_start);
+} else if (isset($glob_yt_videoitem['contentDetails']['startAt'])) {
+  $glob_flash_extension .= '&start=' .yt_timeat2sec($video_start)
+    .yt_timeat2sec($glob_yt_videoitem['contentDetails']['startAt']);
+}
+if (isset($glob_yt_videoitem['contentDetails']['endAt'])) {
+  $glob_flash_extension .= '&end='
+    .yt_timeat2sec($glob_yt_videoitem['contentDetails']['endAt']);
+}
+
+/* ***************************************************************  */
+
+include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
+?>
+
+  <script type="text/javascript" src="https://apis.google.com/js/platform.js"></script><?
+  /* Needed for Youtube subscribe button only.  */
+
 common_print_htmltitle($glob_title, $glob_description,
   $glob_image['url'],
   array(
     'type' => 'video',
-    'video_url' => '//www.youtube.com/v/'.$video_id.'?version=3&autohide=1',
+    'video_url' => sprintf(YT_URL_FLASH_SHARE_FMT_S, $video_id)
+      .$glob_flash_extension,
     'video_width' => $glob_image['width'],
     'video_height' => $glob_image['height'],
+    'video_duration_s' => $glob_duration_s,
   ));
 include_once '../themes/' .CONFIG_THEME. '/head-title.inc.php';
 common_print_title(($glob_yt_list? ($glob_video_plposition+1). '. '
@@ -181,20 +200,9 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
 ?>
 
   <div id="video_videoframe">
-    <iframe width="853" height="480" src="//www.youtube.com/embed/<?
-      echo $video_id;
-    ?>?rel=0&amp;vq=hd720&amp;autoplay=1<?
-      if ($video_start) {
-        echo '&amp;start='
-        .yt_timeat2sec($video_start);
-      } else if (isset($glob_yt_videoitem['contentDetails']['startAt'])) {
-        echo '&amp;start='
-        .yt_timeat2sec($glob_yt_videoitem['contentDetails']['startAt']);
-      }
-
-      if (isset($glob_yt_videoitem['contentDetails']['endAt']))
-        echo '&amp;end='
-        .yt_timeat2sec($glob_yt_videoitem['contentDetails']['endAt']);
+    <iframe width="853" height="480" src="<?
+      _o(sprintf(YT_URL_FLASH_EMBED_FMT_S, $video_id)
+         .$glob_flash_extension);
     ?>" frameborder="0" allowfullscreen></iframe>
 
     <div id="video_videoframe_bottom">

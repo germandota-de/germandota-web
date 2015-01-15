@@ -34,7 +34,11 @@ function _common_meta_byprop_print($prop, $cont)
 
 /* Opengraph reference: http://ogp.me/
  *
- * Facebook debugger:   https://developers.facebook.com/tools/debug/
+ * Twitter reference  : https://dev.twitter.com/cards/markup
+ *
+ * Facebook debugger  : https://developers.facebook.com/tools/debug/
+ *
+ * Twitter debugger   : https://cards-dev.twitter.com/validator
  *
  */
 function common_meta_printall($title, $description=false, $image=false,
@@ -60,11 +64,19 @@ function common_meta_printall($title, $description=false, $image=false,
 
   _common_meta_byprop_print('og:site_name', COMMON_PROJECT_NAME_FULL);
   _common_meta_byprop_print('og:url', $url);
-  _common_meta_byprop_print('og:type', $type_array['type']);
-  _common_meta_byprop_print('og:image', $image);
   _common_meta_byprop_print('og:description', $description);
+  _common_meta_byprop_print('og:image', $image);
 
-  if ($type_array && preg_match('/^video/i', $type_array['type'])) {
+  _common_meta_byname_print('twitter:site', CONFIG_TWITTER_USER);
+  _common_meta_byname_print('twitter:title', $title);
+  _common_meta_byname_print('twitter:url', $url);
+  _common_meta_byname_print('twitter:description', $description);
+  _common_meta_byname_print('twitter:image', $image);
+
+  echo "\n";
+
+  if ($type_array && 'video' == $type_array['type']) {
+    _common_meta_byprop_print('og:type', 'video');
     _common_meta_byprop_print('og:video:type',
                               'application/x-shockwave-flash');
     _common_meta_byprop_print('og:video',
@@ -75,6 +87,20 @@ function common_meta_printall($title, $description=false, $image=false,
                               $type_array['video_width']);
     _common_meta_byprop_print('og:video:height',
                               $type_array['video_height']);
+    _common_meta_byprop_print('og:video:duration',
+                              $type_array['video_duration_s']);
+
+    _common_meta_byname_print('twitter:card', 'player');
+    _common_meta_byname_print('twitter:player',
+                              'https:' .$type_array['video_url']);
+    _common_meta_byname_print('twitter:player:width',
+                              $type_array['video_width']);
+    _common_meta_byname_print('twitter:player:height',
+                              $type_array['video_height']);
+  } else {
+    _common_meta_byprop_print('og:type', 'website');
+
+    _common_meta_byname_print('twitter:card', 'summary');
   }
 }
 

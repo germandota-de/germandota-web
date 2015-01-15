@@ -39,6 +39,11 @@ define('_YT_REQUEST_FIELDS_PAGING',
 define('YT_URL_WATCH',        'https://www.youtube.com/watch');
 define('YT_URL_CHANNEL',      'https://www.youtube.com/channel/');
 
+define('YT_URL_FLASH_EMBED_FMT_S',
+       '//www.youtube.com/embed/%s?rel=0&vq=hd720&autoplay=1');
+define('YT_URL_FLASH_SHARE_FMT_S',
+       '//www.youtube.com/v/%s?version=3&autohide=1');
+
 /* ***************************************************************  */
 
 define('YT_COMMENTS_PERPAGE',           8);
