@@ -160,20 +160,35 @@ if (!isset($_GET['v']) && $glob_yt_list) {
   $glob_image = $glob_yt_video['snippet']['thumbnails']['maxres'];
 } /* if (!isset($_GET['v']) && $glob_yt_list)  */
 
-$glob_duration_s
-  = yt_timeat2sec($glob_yt_video['contentDetails']['duration']);
-
 $glob_flash_extension = '';
 if ($video_start) {
-  $glob_flash_extension .= '&start=' .yt_timeat2sec($video_start);
+  $glob_duration_start_s = yt_timeat2sec($video_start);
+
+  $glob_flash_extension .= '&start=' .$glob_duration_start_s;
 } else if (isset($glob_yt_videoitem['contentDetails']['startAt'])) {
-  $glob_flash_extension .= '&start=' .yt_timeat2sec($video_start)
-    .yt_timeat2sec($glob_yt_videoitem['contentDetails']['startAt']);
-}
+  $glob_duration_start_s
+    = yt_timeat2sec($glob_yt_videoitem['contentDetails']['startAt']);
+
+  $glob_flash_extension .= '&start=' .$glob_duration_start_s;
+} else {
+  $glob_duration_start_s = 0;
+
+  $glob_flash_extension .= '';
+} /* if ($video_start)  */
+
 if (isset($glob_yt_videoitem['contentDetails']['endAt'])) {
-  $glob_flash_extension .= '&end='
-    .yt_timeat2sec($glob_yt_videoitem['contentDetails']['endAt']);
-}
+  $glob_duration_end_s
+    = yt_timeat2sec($glob_yt_videoitem['contentDetails']['endAt']);
+
+  $glob_flash_extension .= '&end=' .$glob_duration_end;
+} else {
+  $glob_duration_end_s
+    = yt_timeat2sec($glob_yt_video['contentDetails']['duration']);
+
+  $glob_flash_extension .= '';
+} /* if (isset($glob_yt_videoitem['contentDetails']['endAt']))  */
+
+$glob_duration_period_s = $glob_duration_end_s - $glob_duration_start_s;
 
 /* ***************************************************************  */
 
@@ -191,7 +206,7 @@ common_print_htmltitle($glob_title, $glob_description,
       .$glob_flash_extension,
     'video_width' => $glob_image['width'],
     'video_height' => $glob_image['height'],
-    'video_duration_s' => $glob_duration_s,
+    'video_duration_s' => $glob_duration_period_s,
   ));
 include_once '../themes/' .CONFIG_THEME. '/head-title.inc.php';
 common_print_title(($glob_yt_list? ($glob_video_plposition+1). '. '
