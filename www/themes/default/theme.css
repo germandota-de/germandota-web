@@ -259,6 +259,7 @@ table#live_videoframe {
 }
 table#live_videoframe td {
   text-align: center;
+  vertical-align: bottom;
   padding: 3px;
 }
 

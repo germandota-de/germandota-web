@@ -59,6 +59,10 @@ define('CONFIG_GOOGLE_CLIENT_SECRET',
  */
 define('CONFIG_YT_CHANNELID',      'UCeKFc-ydU9pWKa4tqK-vYSw');
 
+/* Twitch username
+ */
+define('CONFIG_TWITCH_USER',       'GermanDota');
+
 /* Twitter username, including the beginning @ sign
  */
 define('CONFIG_TWITTER_USER',      '@MopedTobias81');
