@@ -59,6 +59,14 @@ define('CONFIG_GOOGLE_CLIENT_SECRET',
  */
 define('CONFIG_YT_CHANNELID',      'UCeKFc-ydU9pWKa4tqK-vYSw');
 
+/* Twitch username
+ */
+define('CONFIG_TWITCH_USER',       'GermanDota');
+
+/* Twitter username, including the beginning @ sign
+ */
+define('CONFIG_TWITTER_USER',      '@MopedTobias81');
+
 /* Date/Time format to use on the site.  Consider for details:
  *
  * http://www.php.net/date
@@ -88,10 +96,12 @@ define('CONFIG_PROJECT_NAME_SHORT',     'GermanDota');
  */
 define('CONFIG_PROJECT_NAME_POST',      'Community');
 
-/* Relative to /www/ - Preserve MIME-Type and file extension
+/* Relative to /www/ - Preserve MIME-Type, resolution and file
+ * extension
  */
-define('CONFIG_PROJECT_LOGO_ABS',       'img/logo.32.png');
-define('CONFIG_PROJECT_FAVICON_ABS',    'favicon.ico');
+define('CONFIG_PROJECT_LOGO',           'img/logo.32.png');
+define('CONFIG_PROJECT_LOGO_200',       'img/logo.200.jpg');
+define('CONFIG_PROJECT_FAVICON',        'favicon.ico');
 
 /* Choose a directory name from /www/themes/
  */

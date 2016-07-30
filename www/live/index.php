@@ -18,6 +18,13 @@
 
 include_once '../inc/common.inc.php';
 
+$glob_twitch_player_server = COMMON_SERVER_PROTOCOL == 'https'
+  ? 'https://www-cdn.jtvnw.net/swflibs/TwitchPlayer.swf?'
+  : 'http://www.twitch.tv/widgets/live_embed_player.swf'
+  .'?hostname=www.twitch.tv&';
+$glob_twitch_player_url = $glob_twitch_player_server
+  .'channel=' .CONFIG_TWITCH_USER. '&auto_play=true&start_volume=50';
+
 include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
 common_print_htmltitle('Live Stream');
 include_once '../themes/' .CONFIG_THEME. '/head-title.inc.php';
@@ -33,25 +40,25 @@ include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
 
       <object height="480" width="787">
         <param name="movie"
-          value="http://www.twitch.tv/widgets/live_embed_player.swf?hostname=www.twitch.tv&amp;channel=germandota&amp;auto_play=true&amp;start_volume=50">
+          value="<? _o($glob_twitch_player_url); ?>">
         <param name="allowFullScreen" value="true">
         <param name="allowScriptAccess" value="always">
         <param name="allowNetworking" value="all">
         <param name="bgcolor" value="#000000">
-        <embed
-          src="http://www.twitch.tv/widgets/live_embed_player.swf?hostname=www.twitch.tv&amp;channel=germandota&amp;auto_play=true&amp;start_volume=50"
+        <embed src="<? _o($glob_twitch_player_url); ?>"
           type="application/x-shockwave-flash"
           height="480" width="787"
           allowfullscreen="true" allowscriptaccess="always"
           allownetworking="all" bgcolor="#000000">
       </object>
       <div id="live_videoframe_bottom">
-        <a href="http://www.twitch.tv/germandota">GermanDota live auf
-          www.twitch.tv</a>
+        <a href="http://www.twitch.tv/<?
+          echo CONFIG_TWITCH_USER;
+        ?>"><? echo CONFIG_TWITCH_USER; ?> live auf www.twitch.tv</a>
       </div>
     </td><td id="live_videoframe_chat">
       <iframe frameborder="0" scrolling="no"
-        src="http://twitch.tv/germandota/chat?popout="
+        src="http://twitch.tv/<? echo CONFIG_TWITCH_USER; ?>/chat?popout="
 
          height="502" width="350"></iframe>
          <!-- Do also change www/default.css -->

@@ -22,6 +22,10 @@ define('COMMON_USER_IP',           $_SERVER['REMOTE_ADDR']);
 define('COMMON_SERVER_NAME',       $_SERVER['SERVER_NAME']);
 define('COMMON_SERVER_PROTOCOL',   isset($_SERVER['HTTPS'])
        ? 'https': 'http');
+define('COMMON_SERVER_REQUEST_PROTSERVER',
+       COMMON_SERVER_PROTOCOL. '://' .COMMON_SERVER_NAME);
+define('COMMON_SERVER_REQUEST_URL',
+       COMMON_SERVER_REQUEST_PROTSERVER .$_SERVER['REQUEST_URI']);
 
 /* ***************************************************************  */
 /* Formats:
@@ -96,8 +100,11 @@ if (!preg_match('@^\s*ErrorDocument\s+[0-9]{3}\s+'
       .'/e{xyz}.php</code></p></font>');
 }
 
+/* Do only change the order if you know what you are doing  */
 include_once COMMON_CONF_FILEROOT;
-include_once dirname(__FILE__). '/debug.inc.php';
+include_once dirname(__FILE__). '/common_debug.inc.php';
+include_once dirname(__FILE__). '/common_output.inc.php';
+include_once dirname(__FILE__). '/common_metatags.inc.php';
 
 if (CONFIG_GOOGLE_APIKEY == '')
   die('CONFIG_GOOGLE_APIKEY not configured!');
@@ -108,6 +115,9 @@ if (CONFIG_GOOGLE_CLIENT_SECRET == '')
 
 /* End of install stuff
  * ***************************************************************  */
+
+define('COMMON_PROJECT_NAME_FULL',
+       CONFIG_PROJECT_NAME_SHORT .' '. CONFIG_PROJECT_NAME_POST);
 
 define('COMMON_DIR_INC_ABS',
   COMMON_DIR_INST_ABS.COMMON_DIR_INC .'/');
@@ -128,54 +138,15 @@ define('COMMON_USER_NEWLINE',           "\n<br>");
 
 /* ***************************************************************  */
 
-/* Convert all characters for HTML output and return/put to output
- * buffer.
- */
-function _o_get($str)
+function common_print_htmltitle($title, $description=false,
+  $image=false, $type_array=false, $url=false)
 {
-  $result = preg_replace('/\n/isu', COMMON_USER_NEWLINE,
-                         htmlentities($str, ENT_QUOTES, 'UTF-8'));
-
-  /* Remove UTF-8 Byte Order Marks EF BB BF (sent by ex. Youtube API)  */
-  $result = preg_replace("@\xef\xbb\xbf@", '', $result);
-
-  return $result;
-}
-function _o($str)
-{
-  echo _o_get($str);
-}
-
-/* Convert all characters for HTML output, but leave HTML tags plain  */
-function _o_html($str)
-{
-  echo htmlspecialchars_decode(_o_get($str), ENT_QUOTES);
-}
-
-function _e($function_name, $msg, $sensitive=false)
-{
-  $out = 'ERROR ' .$function_name. '(): ' .$msg;
-
-  if (CONFIG_SECURITY_LOG_SENSITIVE && $sensitive)
-    $out .= ' - [[ ' .$sensitive. ' ]]';
-
-  error_log($out);
-}
-
-function common_print_htmltitle($title)
-{
+  echo "\n";
+  common_meta_printall($title, $description, $image, $type_array, $url);
 ?>
 
-  <meta name="generator" content="GermanDota.de Webcode">
-  <meta name="abstract" content="Website of <?
-    _o(CONFIG_PROJECT_NAME_SHORT .' '. CONFIG_PROJECT_NAME_POST);
-  ?>">
-  <meta name="description" content="Here is the social media stuff of <?
-    _o(CONFIG_PROJECT_NAME_SHORT .' '. CONFIG_PROJECT_NAME_POST);
-  ?>.">
-  <meta name="robots" content="all">
   <link rel="shortcut icon" type="image/x-icon" href="/<?
-        echo COMMON_DIR_INST_ABS.CONFIG_PROJECT_FAVICON_ABS; ?>">
+        echo COMMON_DIR_INST_ABS.CONFIG_PROJECT_FAVICON; ?>">
   <link rel="stylesheet" type="text/css" href="/<?
         echo COMMON_DIR_INST_ABS; ?>default.css">
   <script type="text/javascript" src="/<?
@@ -315,10 +286,9 @@ function common_url2hostname($url)
 
 function common_server_is_localhost()
 {
-  $glob_servername = $_SERVER['SERVER_NAME'];
-  return $glob_servername == '127.0.0.1'
-    || $glob_servername == '[::1]'
-    || $glob_servername == 'localhost';
+  return COMMON_SERVER_NAME == '127.0.0.1'
+    || COMMON_SERVER_NAME == '[::1]'
+    || COMMON_SERVER_NAME == 'localhost';
 }
 
 /* $menu_array = array(

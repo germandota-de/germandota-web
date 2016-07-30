@@ -62,7 +62,8 @@ function yt_recv_playlists($page_token, $plid='')
 function yt_recv_playlist_short($plid)
 {
   $result = _yt_api_list('playlists', 'snippet',
-    'fields=items(snippet(publishedAt,title))&id=' .$plid);
+    'fields=items(snippet(publishedAt,title'
+    .',thumbnails/maxres(url,width,height)))&id=' .$plid);
   if (!$result || count($result['items']) == 0) return false;
 
   return $result;
@@ -159,7 +160,8 @@ function yt_recv_video($vid)
 {
   $result = _yt_api_list('videos', 'snippet,contentDetails,statistics',
     'fields=items('
-      .'snippet(publishedAt,channelId,channelTitle,title,description)'
+      .'snippet(publishedAt,channelId,channelTitle,title'
+      .',thumbnails/maxres(url,width,height),description)'
       .',contentDetails(duration),statistics(viewCount,likeCount'
       .',dislikeCount,commentCount))&id=' .$vid);
   if (!$result || count($result['items']) == 0) return false;

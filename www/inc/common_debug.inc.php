@@ -28,6 +28,7 @@ define('DEBUG_NO_JS_ONLOAD',            true);
 
 if (!DEBUG) {
 
+function _d($function_name, $msg, $sensitive=false) {}
 function debug_api_info_set($prop, $val) {}
 function debug_api_info_incr($prop, $val=1) {}
 function debug_api_info_print($prop=false) {}
@@ -50,6 +51,16 @@ $_debug_api_info
           );
 
 $_debug_stack = array();
+
+function _d($function_name, $msg, $sensitive=false)
+{
+  $out = 'DEBUG ' .$function_name. '(): ' .$msg;
+
+  if (CONFIG_SECURITY_LOG_SENSITIVE && $sensitive)
+    $out .= ' - [[ ' .$sensitive. ' ]]';
+
+  error_log($out);
+}
 
 function debug_api_info_set($prop, $val, $details='<set>')
 {

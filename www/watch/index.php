@@ -141,35 +141,83 @@ function _page_td($token_name, $dir_str, $i_playlist, $text)
 
 /* ***************************************************************  */
 
+if (!isset($_GET['v']) && $glob_yt_list) {
+  $glob_title = $glob_yt_list['snippet']['title']. ' - Playlist';
+  $glob_description
+    = 'Watch playlist: "' .$glob_yt_list['snippet']['title']. '"';
+
+  $glob_image = $glob_yt_list['snippet']['thumbnails']['maxres'];
+} else {
+  $glob_title = $glob_yt_video['snippet']['title'];
+  $glob_title .= $glob_yt_list
+    ? ' [' .$glob_yt_list['snippet']['title']. ']': '';
+
+  $glob_description
+    = 'Watch video: "' .$glob_yt_video['snippet']['title']. '"';
+  $glob_description .= $glob_yt_list
+    ? ' in playlist [' .$glob_yt_list['snippet']['title']. ']': '';
+
+  $glob_image = $glob_yt_video['snippet']['thumbnails']['maxres'];
+} /* if (!isset($_GET['v']) && $glob_yt_list)  */
+
+$glob_flash_extension = '';
+if ($video_start) {
+  $glob_duration_start_s = yt_timeat2sec($video_start);
+
+  $glob_flash_extension .= '&start=' .$glob_duration_start_s;
+} else if (isset($glob_yt_videoitem['contentDetails']['startAt'])) {
+  $glob_duration_start_s
+    = yt_timeat2sec($glob_yt_videoitem['contentDetails']['startAt']);
+
+  $glob_flash_extension .= '&start=' .$glob_duration_start_s;
+} else {
+  $glob_duration_start_s = 0;
+
+  $glob_flash_extension .= '';
+} /* if ($video_start)  */
+
+if (isset($glob_yt_videoitem['contentDetails']['endAt'])) {
+  $glob_duration_end_s
+    = yt_timeat2sec($glob_yt_videoitem['contentDetails']['endAt']);
+
+  $glob_flash_extension .= '&end=' .$glob_duration_end;
+} else {
+  $glob_duration_end_s
+    = yt_timeat2sec($glob_yt_video['contentDetails']['duration']);
+
+  $glob_flash_extension .= '';
+} /* if (isset($glob_yt_videoitem['contentDetails']['endAt']))  */
+
+$glob_duration_period_s = $glob_duration_end_s - $glob_duration_start_s;
+
+/* ***************************************************************  */
+
 include_once '../themes/' .CONFIG_THEME. '/begin-head.inc.php';
 ?>
 
   <script type="text/javascript" src="https://apis.google.com/js/platform.js"></script><?
-common_print_htmltitle(
-  ($glob_yt_list? '[' .$glob_yt_list['snippet']['title']. '] '
-   .($glob_video_plposition+1). '. ': '')
-  .$glob_yt_video['snippet']['title']);
+  /* Needed for Youtube subscribe button only.  */
+
+common_print_htmltitle($glob_title, $glob_description,
+  $glob_image['url'],
+  array(
+    'type' => 'video',
+    'video_url' => sprintf(YT_URL_FLASH_SHARE_FMT_S, $video_id)
+      .$glob_flash_extension,
+    'video_width' => $glob_image['width'],
+    'video_height' => $glob_image['height'],
+    'video_duration_s' => $glob_duration_period_s,
+  ));
 include_once '../themes/' .CONFIG_THEME. '/head-title.inc.php';
-common_print_title(($glob_video_plposition+1)
-                   .'. '. $glob_yt_video['snippet']['title'], true);
+common_print_title(($glob_yt_list? ($glob_video_plposition+1). '. '
+                    : ''). $glob_yt_video['snippet']['title'], true);
 include_once '../themes/' .CONFIG_THEME. '/title-content.inc.php';
 ?>
 
   <div id="video_videoframe">
-    <iframe width="853" height="480" src="//www.youtube.com/embed/<?
-      echo $video_id;
-    ?>?rel=0&amp;vq=hd720&amp;autoplay=1<?
-      if ($video_start) {
-        echo '&amp;start='
-        .yt_timeat2sec($video_start);
-      } else if (isset($glob_yt_videoitem['contentDetails']['startAt'])) {
-        echo '&amp;start='
-        .yt_timeat2sec($glob_yt_videoitem['contentDetails']['startAt']);
-      }
-
-      if (isset($glob_yt_videoitem['contentDetails']['endAt']))
-        echo '&amp;end='
-        .yt_timeat2sec($glob_yt_videoitem['contentDetails']['endAt']);
+    <iframe width="853" height="480" src="<?
+      _o(sprintf(YT_URL_FLASH_EMBED_FMT_S, $video_id)
+         .$glob_flash_extension);
     ?>" frameborder="0" allowfullscreen></iframe>
 
     <div id="video_videoframe_bottom">
